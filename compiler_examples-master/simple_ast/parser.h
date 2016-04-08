@@ -59,11 +59,12 @@ union YYSTYPE
 {
 #line 11 "parser.y" /* yacc.c:1909  */
 
+    string variavel;
     int integer;
     AST::Node *node;
     AST::Block *block;
 
-#line 67 "parser.h" /* yacc.c:1909  */
+#line 68 "parser.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

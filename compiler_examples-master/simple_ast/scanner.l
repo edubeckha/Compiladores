@@ -9,6 +9,7 @@ void yyerror(const char* s, ...);
 %option noyywrap nodefault yylineno
 
 digs [0-9]+
+letras [a-z]+[0-9]*
 
 %%
 
@@ -16,6 +17,7 @@ digs [0-9]+
 {digs}              {yylval.integer = std::atoi(yytext); return T_INT;}
 "+"                 {return T_PLUS;}
 "*"					{return T_MULT;}
+{letras}			{return T_VARIAVEL;}
 \n                  {return T_NL;}
 .                   {yyerror("Unknown token! %c\n", *yytext);} /*complains about every unknown character*/
 
