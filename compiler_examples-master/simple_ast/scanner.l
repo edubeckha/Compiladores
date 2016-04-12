@@ -8,7 +8,8 @@ void yyerror(const char* s, ...);
 
 %option noyywrap nodefault yylineno
 
-digs [0-9]+
+digsInt [0-9]+
+digsDouble [0-9]+\.[0-9]* 
 variavel [a-z][a-z0-9]*
 reservado def
 
@@ -16,7 +17,8 @@ reservado def
 
 [ \t]               ; //ignores spaces
 {reservado}			{return T_DEF;}
-{digs}              {yylval.integer = std::atoi(yytext); return T_INT;}
+{digsInt}           {yylval.integer = std::atoi(yytext); return T_INT;}
+{digsDouble}		{std::cout<<yytext<<std::endl;yylval.doubler = std::atof(yytext); std::cout<<T_DOUBLE<<std::endl; return T_DOUBLE;}
 "+"                 {return T_PLUS;}
 "*"					{return T_MULT;}
 {variavel}			{yylval.variavel = (char*) strdup(yytext); return T_VARIAVEL;}

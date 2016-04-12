@@ -17,6 +17,7 @@ class Node {
         virtual ~Node() {}
         virtual void printTree(){}
         virtual int computeTree(){return 0;}
+        virtual double computeTree(){return 0;}
 };
 
 class Integer : public Node {
@@ -25,6 +26,14 @@ class Integer : public Node {
         Integer(int value) : value(value) {  }
         void printTree();
         int computeTree();
+};
+
+class Double : public Node {
+    public:
+        double value;
+        Double(double value) : value(value) {  }
+        void printTree();
+        double computeTree();
 };
 
 class BinOp : public Node {
