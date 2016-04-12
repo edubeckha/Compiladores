@@ -11,3 +11,11 @@ Compiler Construction: Computer Science course at INE/UFSC
 * scanner.l: Flex scanner
 * main.cpp: C++ main file
 * Makefile: call *make* to compile
+
+
+
+TO DO:
+- Definição de tipos
+- def a -> int a, double b, a
+
+- Definição de escopos -> int a a = 2 {int a a = 5}
