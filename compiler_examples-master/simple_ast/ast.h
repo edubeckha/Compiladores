@@ -6,7 +6,7 @@
 namespace AST {
 
 //Binary operations
-enum Operation { plus mult };
+enum Operation { plus, mult };
 
 class Node;
 

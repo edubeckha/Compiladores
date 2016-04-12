@@ -45,10 +45,12 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    T_INT = 258,
-    T_PLUS = 259,
-    T_NL = 260,
-    T_MULT = 261
+    T_DEF = 258,
+    T_VARIAVEL = 259,
+    T_INT = 260,
+    T_PLUS = 261,
+    T_NL = 262,
+    T_MULT = 263
   };
 #endif
 
@@ -57,14 +59,14 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 11 "parser.y" /* yacc.c:1909  */
+#line 12 "parser.y" /* yacc.c:1909  */
 
-    string variavel;
+    const char* variavel;
     int integer;
     AST::Node *node;
     AST::Block *block;
 
-#line 68 "parser.h" /* yacc.c:1909  */
+#line 70 "parser.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

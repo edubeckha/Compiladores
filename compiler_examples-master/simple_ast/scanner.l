@@ -10,15 +10,16 @@ void yyerror(const char* s, ...);
 
 digs [0-9]+
 variavel [a-z][a-z0-9]*
+reservado def
 
 %%
 
 [ \t]               ; //ignores spaces
+{reservado}			{return T_DEF;}
 {digs}              {yylval.integer = std::atoi(yytext); return T_INT;}
 "+"                 {return T_PLUS;}
 "*"					{return T_MULT;}
-{variavel}			{yylval.id = (char*) strdup(yytext); return (IDENTIFIER);}
-"def" 				{return T_DEF;}
+{variavel}			{yylval.variavel = (char*) strdup(yytext); return T_VARIAVEL;}
 \n                  {return T_NL;}
 .                   {yyerror("Unknown token! %c\n", *yytext);} /*complains about every unknown character*/
 

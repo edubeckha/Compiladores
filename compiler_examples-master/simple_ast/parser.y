@@ -1,5 +1,6 @@
 %{
 #include "ast.h"
+//#include <string.h>
 AST::Block *programRoot; /* the root node of our program AST:: */
 extern int yylex();
 extern void yyerror(const char* s, ...);
@@ -9,7 +10,7 @@ extern void yyerror(const char* s, ...);
  * union informs the different ways we can store data
  */
 %union {
-    string variavel;
+    const char* variavel;
     int integer;
     AST::Node *node;
     AST::Block *block;
@@ -17,6 +18,7 @@ extern void yyerror(const char* s, ...);
 
 /* token defines our terminal symbols (tokens).
  */
+%token <reservado> T_DEF
 %token <variavel> T_VARIAVEL
 %token <integer> T_INT
 %token T_PLUS T_NL T_MULT
@@ -28,8 +30,8 @@ extern void yyerror(const char* s, ...);
  */
 %type <node> expr line
 %type <block> lines program
-%type <node> 
-
+/*%type <node> 
+*/
 
 /* Operator precedence for mathematical operators
  * The latest it is listed, the highest the precedence
@@ -60,7 +62,7 @@ expr    : T_INT { $$ = new AST::Integer($1); }
         | expr T_PLUS expr { $$ = new AST::BinOp($1,AST::plus,$3); }
         | expr T_MULT expr { $$ = new AST::BinOp($1, AST::mult, $3); }
         | expr error { yyerrok; $$ = $1; } /*just a point for error recovery*/
-        | 
+       // | 
         ;
 
 %%
