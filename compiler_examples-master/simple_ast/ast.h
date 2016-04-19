@@ -12,12 +12,21 @@ class Node;
 
 typedef std::vector<Node*> NodeList; //List of ASTs
 
+struct estruturaVariavel {
+    
+    bool ehDouble;
+
+    union tipoVariavel {
+        int i;
+        double d;
+    };
+};
+
 class Node {
     public:
         virtual ~Node() {}
         virtual void printTree(){}
-        virtual int computeTree(){return 0;}
-        virtual double computeTree(){return 0;}
+        virtual void* computeTree(){return 0;}
 };
 
 class Integer : public Node {
@@ -30,10 +39,10 @@ class Integer : public Node {
 
 class Double : public Node {
     public:
-        double value;
-        Double(double value) : value(value) {  }
-        void printTree();
-        double computeTree();
+       double value;
+       Double(double value) : value(value) { }
+       void printTree();
+       double computeTree();
 };
 
 class BinOp : public Node {
@@ -44,7 +53,7 @@ class BinOp : public Node {
         BinOp(Node *left, Operation op, Node *right) :
             left(left), right(right), op(op) { }
         void printTree();
-        int computeTree();
+        void* computeTree();
 };
 
 class Block : public Node {
@@ -52,7 +61,7 @@ class Block : public Node {
         NodeList lines;
         Block() { }
         void printTree();
-        int computeTree();
+        void* computeTree();
 };
 
 }

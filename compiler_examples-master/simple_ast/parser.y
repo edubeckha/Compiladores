@@ -62,7 +62,7 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
 expr    : T_INT { $$ = new AST::Integer($1); }
         | expr T_PLUS expr { $$ = new AST::BinOp($1,AST::plus,$3); }
         | expr T_MULT expr { $$ = new AST::BinOp($1, AST::mult, $3); }
-    //    | expr error { yyerrok; $$ = $1; } /*just a point for error recovery*/
+    //  | expr error { yyerrok; $$ = $1; } /*just a point for error recovery*/
         | T_DOUBLE { $$ = new AST::Double($1); }
         ;
 

@@ -18,7 +18,7 @@ reservado def
 [ \t]               ; //ignores spaces
 {reservado}			{return T_DEF;}
 {digsInt}           {yylval.integer = std::atoi(yytext); return T_INT;}
-{digsDouble}		{std::cout<<yytext<<std::endl;yylval.doubler = std::atof(yytext); std::cout<<T_DOUBLE<<std::endl; return T_DOUBLE;}
+{digsDouble}		{std::cout<<yytext<<std::endl;yylval.doubler = std::atof(yytext); return T_DOUBLE;}
 "+"                 {return T_PLUS;}
 "*"					{return T_MULT;}
 {variavel}			{yylval.variavel = (char*) strdup(yytext); return T_VARIAVEL;}
