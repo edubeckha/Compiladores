@@ -17,5 +17,7 @@ Compiler Construction: Computer Science course at INE/UFSC
 TO DO:
 - Definição de tipos
 - def a -> int a, double b, a
-
 - Definição de escopos -> int a a = 2 {int a a = 5}
+- Protótipo de funções
+- Definição de funções
+- Uso de funções (int minhaFun(int a){})
