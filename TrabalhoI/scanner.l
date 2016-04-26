@@ -15,10 +15,9 @@ varReal [0-9]+.[0-9]* | [0-9]*.[0-9]+
 %%
 
 [ \t]               ; //ignores spaces
-{nome}				{yylval.nome = (char*) strdup(yytext); return T_NOME;}
-{inteiro}			{RETURN T_DECLINT;}
-{real}				{RETURN T_DECREAL;}
-{booleano}			{RETURN T_DECBOOL;}
+"inteiro"			{RETURN T_DECLINT;}
+"real"				{RETURN T_DECREAL;}
+"booleano"			{RETURN T_DECBOOL;}
 {varInteiro}        {yylval.integer = std::atoi(yytext); return T_INT;}
 {varReal}			{yylval.doubler = std::atof(yytext); return T_REAL;}
 "TRUE"				{RETURN T_BOOLTRUE;}
@@ -38,8 +37,9 @@ varReal [0-9]+.[0-9]* | [0-9]*.[0-9]+
 "~"					{RETURN T_UNIBOOL;}
 ":="				{RETURN T_ATRIBUICAO;}
 "("					{RETURN T_ABREPAR;}
-")"					{RETURN T_FECHAPAR;}	
+")"					{RETURN T_FECHAPAR;}
 ";"					{RETURN T_FINALEXP;}
+{nome}				{yylval.nome = (char*) strdup(yytext); return T_NOME;}
 \n                  {return T_NL;}
 .                   {yyerror("Unknown token! %c\n", *yytext);} /*complains about every unknown character*/
 
