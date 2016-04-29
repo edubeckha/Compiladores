@@ -7,26 +7,16 @@ namespace AST {
 
 //Binary operations
 enum Operation { plus, mult };
+enum Tipo { inteiro, real, booleano };
 
 class Node;
 
 typedef std::vector<Node*> NodeList; //List of ASTs
 
-struct estruturaVariavel {
-    
-    bool ehDouble;
-
-    union tipoVariavel {
-        int i;
-        double d;
-    };
-};
-
 class Node {
     public:
         virtual ~Node() {}
         virtual void printTree(){}
-        virtual void* computeTree(){return 0;}
 };
 
 class Integer : public Node {
@@ -34,15 +24,15 @@ class Integer : public Node {
         int value;
         Integer(int value) : value(value) {  }
         void printTree();
-        int computeTree();
 };
 
-class Double : public Node {
+
+class Nome : public Node {
     public:
-       double value;
-       Double(double value) : value(value) { }
-       void printTree();
-       double computeTree();
+        char* value;
+        char* tipo;
+        Nome(char* tipo ,char* value) : tipo(tipo),  value(value) { }
+        void printTree();
 };
 
 class BinOp : public Node {
@@ -53,7 +43,6 @@ class BinOp : public Node {
         BinOp(Node *left, Operation op, Node *right) :
             left(left), right(right), op(op) { }
         void printTree();
-        void* computeTree();
 };
 
 class Block : public Node {
@@ -61,7 +50,6 @@ class Block : public Node {
         NodeList lines;
         Block() { }
         void printTree();
-        void* computeTree();
 };
 
 }

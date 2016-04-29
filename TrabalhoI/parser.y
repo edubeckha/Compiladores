@@ -9,6 +9,7 @@ extern void yyerror(const char* s, ...);
  * union informs the different ways we can store data
  */
 %union {
+    char* tipo;
     char* nome;
     int inteiro;
     double real;
@@ -20,9 +21,11 @@ extern void yyerror(const char* s, ...);
 /* token defines our terminal symbols (tokens).
  */
 
-%token T_DECLINT T_DECLREAL T_DECLBOOL
+%token T_ATRIBUICAO T_DECLNOME T_FINALEXP
 
-%token <nome> T_NOME
+
+%token <tipo> T_DECLINT
+%token <nome> T_NOME 
 %token <inteiro> T_INT
 %token <real> T_REAL
 %token <boolean> T_BOOLTRUE T_BOOLFALSE
@@ -43,8 +46,6 @@ extern void yyerror(const char* s, ...);
 /* Operator precedence for mathematical operators
  * The latest it is listed, the highest the precedence
  */
-
-
 
 
 /* %left T_PLUS
@@ -97,13 +98,12 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | expr T_NL /*$$ = $1 when nothing is said*/
         ;
 
-expr    : T_INT { $$ = new AST::Integer($1); }
-        | expr T_PLUS expr { $$ = new AST::BinOp($1,AST::plus,$3); }
-        | expr T_MULT expr { $$ = new AST::BinOp($1, AST::mult, $3); }
-    //  | expr error { yyerrok; $$ = $1; } /*just a point for error recovery*/
-        | T_DOUBLE { $$ = new AST::Double($1); }
+expr    : T_DECLINT T_DECLNOME T_NOME T_FINALEXP 
+            { $$ = new AST::Nome($1,$3); } 
+
+
+    //  | expr error { yyerrok; $$ = $1; } 
         ;
 
 %%
-
 
