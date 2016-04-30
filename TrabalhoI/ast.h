@@ -27,10 +27,11 @@ class Integer : public Node {
 };
 
 
-class Nome : public Node {
+class Variavel : public Node {
     public:
+        char* tipoVariavel;
         char* value;
-        Nome(char* value) : value(value) {  }
+        Variavel(char* tipoVariavel, char* value) : tipoVariavel(tipoVariavel), value(value) {  }
         void printTree();
 };
 

@@ -30,7 +30,7 @@ void Block::printTree(){
 }
 
 
-void Nome::printTree(){
-    std::cout << "O usuário declarou um com nome: " << value << std::endl;
+void Variavel::printTree(){
+    std::cout << "O usuário declarou um "  << tipoVariavel << " com nome: " << value << std::endl;
 }
 

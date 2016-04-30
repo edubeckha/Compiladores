@@ -15,6 +15,9 @@ varReal [0-9]+.[0-9]*|[0-9]*.[0-9]+
 %%
 
 [ \t]               ; //ignores spaces
+"inteiro"			{yylval.tipo = (char*) strdup(yytext); return T_DECLINT;}
+"real"				{yylval.tipo = (char*) strdup(yytext); return T_DECLREAL;}
+"booleano"				{yylval.tipo = (char*) strdup(yytext); return T_DECLBOOL;}
 ":"					{return T_DECLNOME;}
 ":="				{return T_ATRIBUICAO;}
 ";"					{return T_FINALEXP;}
