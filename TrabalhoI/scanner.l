@@ -15,11 +15,11 @@ varReal [0-9]+.[0-9]*|[0-9]*.[0-9]+
 %%
 
 [ \t]               ; //ignores spaces
-"inteiro"			{return T_DECLINT;}
 ":"					{return T_DECLNOME;}
 ":="				{return T_ATRIBUICAO;}
 ";"					{return T_FINALEXP;}
-{nome}				{yylval.nome = (char*) strdup(yytext); return T_NOME;}
+{nome}				{yylval.nome = (char*) strdup(yytext); std::cout << yylval.nome << std::endl; return T_NOME;}
+\n 					{return T_NL;}
 .                   {yyerror("Unknown token! %c\n", *yytext);} /*complains about every unknown character*/
 
 %%

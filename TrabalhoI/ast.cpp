@@ -31,6 +31,6 @@ void Block::printTree(){
 
 
 void Nome::printTree(){
-    std::cout << "O usuário declarou um tipo " << tipo << " com nome: " << value << std::endl;
+    std::cout << "O usuário declarou um com nome: " << value << std::endl;
 }
 

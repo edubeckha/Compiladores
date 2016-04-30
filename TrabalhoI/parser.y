@@ -9,11 +9,7 @@ extern void yyerror(const char* s, ...);
  * union informs the different ways we can store data
  */
 %union {
-    char* tipo;
     char* nome;
-    int inteiro;
-    double real;
-    bool boolean;
     AST::Node *node;
     AST::Block *block;
 }
@@ -24,11 +20,7 @@ extern void yyerror(const char* s, ...);
 %token T_ATRIBUICAO T_DECLNOME T_FINALEXP
 
 
-%token <tipo> T_DECLINT
 %token <nome> T_NOME 
-%token <inteiro> T_INT
-%token <real> T_REAL
-%token <boolean> T_BOOLTRUE T_BOOLFALSE
 
 %token T_NL
 
@@ -98,8 +90,7 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | expr T_NL /*$$ = $1 when nothing is said*/
         ;
 
-expr    : T_DECLINT T_DECLNOME T_NOME T_FINALEXP 
-            { $$ = new AST::Nome($1,$3); } 
+expr    : T_NOME { std::cout << $1 << std::endl; $$ = new AST::Nome($1); } 
 
 
     //  | expr error { yyerrok; $$ = $1; } 

@@ -30,8 +30,7 @@ class Integer : public Node {
 class Nome : public Node {
     public:
         char* value;
-        char* tipo;
-        Nome(char* tipo ,char* value) : tipo(tipo),  value(value) { }
+        Nome(char* value) : value(value) {  }
         void printTree();
 };
 
