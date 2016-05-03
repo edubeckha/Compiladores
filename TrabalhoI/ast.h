@@ -10,7 +10,7 @@ namespace AST {
 
 //Binary operations
 enum Operation { plus, times, assign };
-
+enum Tipo { inteiro, real, booleano };
 class Node;
 
 typedef std::vector<Node*> NodeList; //List of ASTs
@@ -33,6 +33,13 @@ public:
         double value;
         Doubler(double value) : value(value) { }
         void printTree();
+};
+
+class TipoVariavel : public Node {
+    public:
+    Tipo tipo;
+    TipoVariavel(Tipo tipo1) : tipo(tipo1) { std::cout << tipo << std::endl; }
+    void printTree(); 
 };
 
 class BinOp : public Node {

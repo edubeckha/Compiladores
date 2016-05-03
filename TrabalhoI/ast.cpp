@@ -42,3 +42,14 @@ void Variable::printTree(){
     std::cout << id;
 }
 
+void TipoVariavel::printTree(){
+    std::cout << "asdasdasdas" <<std::endl;
+    switch(tipo){
+        case inteiro: std::cout << "Foram declaradas variáveis do tipo inteiro: " <<std::endl; break;
+        case real: std::cout << "Foram declaradas variáveis do tipo real: " <<std::endl; break;
+        case booleano: std::cout << "Foram declaradas variáveis do tipo booleano: " <<std::endl; break;
+    }
+
+    return;
+}
+
