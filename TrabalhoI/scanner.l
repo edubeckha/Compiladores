@@ -8,21 +8,51 @@ void yyerror(const char* s, ...);
 
 %option noyywrap nodefault yylineno
 
+digs [0-9]+
 nome [a-z]+
-varInteiro [0-9]+
-varReal [0-9]+.[0-9]*|[0-9]*.[0-9]+
 
 %%
 
 [ \t]               ; //ignores spaces
-"inteiro"			{yylval.tipo = (char*) strdup(yytext); return T_DECLINT;}
-"real"				{yylval.tipo = (char*) strdup(yytext); return T_DECLREAL;}
-"booleano"				{yylval.tipo = (char*) strdup(yytext); return T_DECLBOOL;}
-":"					{return T_DECLNOME;}
-":="				{return T_ATRIBUICAO;}
+
+"inteiro"			{return T_DINT;}
+"real"				{return T_DREAL;}
+"booleano"				{return T_DBOOL;}
+
+{digs}              {yylval.integer = std::atoi(yytext); return T_INT;}
+{digs}./{digs}		{yylval.doubler = std::atof(yytext); return T_DOUBLE;}
+"TRUE"				{return T_BOOLTRUE;}
+"FALSE"				{return T_BOOLFALSE;}
+
+
+
+"+"                 {return T_PLUS;}
+"-"                 {return T_SUB;}
+"*"                 {return T_TIMES;}
+"/"                 {return T_DIV;}
+
+":"                 {return T_DEF;}
+","                 {return T_COMMA;}
+"="                 {return T_ASSIGN;}
+"~="				{return T_DIFERENTE;}
+">"					{return T_MAIOR;}
+"<"					{return T_MENOR;}
+">="				{return T_MAIORIGUAL;}
+"<="				{return T_MENORIGUAL;}
+
+"AND"				{return T_AND;}
+"OR"				{return T_OR;}
+
+"~"					{return T_UNIBOOL;}
+":="				{return T_ATRI;}
+
+"("					{return T_PARA;}
+")"					{return T_PARAF;}
+
+
 ";"					{return T_FINALEXP;}
-{nome}				{yylval.nome = (char*) strdup(yytext); std::cout << yylval.nome << std::endl; return T_NOME;}
-\n 					{return T_NL;}
+"\n"                {return T_NL;}
+{nome}              {yylval.name = strdup(yytext); return T_ID;}
 .                   {yyerror("Unknown token! %c\n", *yytext);} /*complains about every unknown character*/
 
 %%
