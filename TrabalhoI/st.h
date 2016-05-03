@@ -13,6 +13,7 @@ class Symbol;
 enum Type { integer };
 enum Kind { variable };
 
+
 typedef std::map<std::string,Symbol> SymbolList; //Set of Symbols
 
 class Symbol {
@@ -33,9 +34,9 @@ class SymbolTable {
         /*checkId returns true if the variable has been defined and false if it does not exist*/
         bool checkId(std::string id) {return entryList.find(id) != entryList.end();}
         void addSymbol(std::string id, Symbol newsymbol) {entryList[id] = newsymbol;}
-        AST::Node* newVariable(std::string id, AST::Node* next);
-        AST::Node* assignVariable(std::string id);
-        AST::Node* useVariable(std::string id);
+        AST::Node* newVariable(std::string id, AST::Tipo tipo,  AST::Node* next);
+        AST::Node* assignVariable(std::string id, AST::Tipo tipo);
+        AST::Node* useVariable(std::string id, AST::Tipo tipo);
 };
 
 }

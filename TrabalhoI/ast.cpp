@@ -45,21 +45,35 @@ void Block::printTree(){
 }
 
 void Variable::printTree(){
+    if(!printed){
+        printed = true;
+        std::cout << "Definidas variaveis do tipo ";
+         switch(tipo){
+        case inteiro: std::cout << "inteiro: "; break;
+        case real: std::cout << "real: " ;break;
+        case booleano: std::cout << "booleano: "; break;
+        default: std::cout << " indefinido: "; break;
+    }
+    }
+   
     if (next != NULL){
         next->printTree();
         std::cout << ", ";
+    } else {
+        printed = false;
     }
     std::cout << id;
 }
 
-void TipoVariavel::printTree(){
-    std::cout << "asdasdasdas" <<std::endl;
+
+Tipo Variable::retornaTipoAPartirDeInteiro(int tipo){
     switch(tipo){
-        case inteiro: std::cout << "Foram declaradas variáveis do tipo inteiro: " <<std::endl; break;
-        case real: std::cout << "Foram declaradas variáveis do tipo real: " <<std::endl; break;
-        case booleano: std::cout << "Foram declaradas variáveis do tipo booleano: " <<std::endl; break;
+        case 0: return inteiro;
+        case 1: return real;
+        case 2: return booleano;
     }
 
-    return;
+    return inteiro;
 }
+
 

@@ -10,7 +10,9 @@ namespace AST {
 
 	//Binary operations
 	enum Operation { plus, sub, times, divi, assign, maior, menor, maiorigual, menorigual, ande, ore, unibool, atri };
-	enum Tipo { inteiro, real, booleano };
+	enum Tipo { inteiro, real, booleano, indefinido };
+	static bool printed = false;
+
 	class Node;
 
 	typedef std::vector<Node*> NodeList; //List of ASTs
@@ -35,13 +37,6 @@ namespace AST {
 	        void printTree();
 	};
 
-	class TipoVariavel : public Node {
-	    public:
-	    Tipo tipo;
-	    TipoVariavel(Tipo tipo1) : tipo(tipo1) { std::cout << tipo << std::endl; }
-	    void printTree(); 
-	};
-
 	class BinOp : public Node {
 	    public:
 	        Operation op;
@@ -62,8 +57,11 @@ namespace AST {
 	class Variable : public Node {
 	     public:
 	         std::string id;
+	         Tipo tipo;
 	         Node *next;
-	         Variable(std::string id, Node *next) : id(id), next(next) { }
+	         Variable(std::string id, Tipo tipo, Node *next) : id(id), tipo(tipo), next(next) { }
 	         void printTree();
+
+	         static Tipo retornaTipoAPartirDeInteiro(int tipo);
 	};
 }

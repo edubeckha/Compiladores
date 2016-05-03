@@ -70,8 +70,9 @@ ST::SymbolTable symtab;  /* main symbol table */
 AST::Block *programRoot; /* the root node of our program AST:: */
 extern int yylex();
 extern void yyerror(const char* s, ...);
+static int tipoVariavel;
 
-#line 75 "parser.cpp" /* yacc.c:339  */
+#line 76 "parser.cpp" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -142,7 +143,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 15 "parser.y" /* yacc.c:355  */
+#line 16 "parser.y" /* yacc.c:355  */
 
     int integer;
     double doubler;
@@ -151,7 +152,7 @@ union YYSTYPE
     AST::Block *block;
     const char *name;
 
-#line 155 "parser.cpp" /* yacc.c:355  */
+#line 156 "parser.cpp" /* yacc.c:355  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -166,7 +167,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 170 "parser.cpp" /* yacc.c:358  */
+#line 171 "parser.cpp" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -466,7 +467,7 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    58,    58,    61,    62,    63,    66,    67,    68,    69,
+       0,    59,    59,    62,    63,    64,    67,    68,    69,    70,
       73,    74,    75,    76,    77,    80,    81,    82,    85,    86
 };
 #endif
@@ -1257,45 +1258,44 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 58 "parser.y" /* yacc.c:1646  */
+#line 59 "parser.y" /* yacc.c:1646  */
     { programRoot = (yyvsp[0].block); }
-#line 1263 "parser.cpp" /* yacc.c:1646  */
+#line 1264 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 61 "parser.y" /* yacc.c:1646  */
+#line 62 "parser.y" /* yacc.c:1646  */
     { (yyval.block) = new AST::Block(); if((yyvsp[0].node) != NULL) (yyval.block)->lines.push_back((yyvsp[0].node)); }
-#line 1269 "parser.cpp" /* yacc.c:1646  */
+#line 1270 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 62 "parser.y" /* yacc.c:1646  */
+#line 63 "parser.y" /* yacc.c:1646  */
     { if((yyvsp[0].node) != NULL) (yyvsp[-1].block)->lines.push_back((yyvsp[0].node)); }
-#line 1275 "parser.cpp" /* yacc.c:1646  */
+#line 1276 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 63 "parser.y" /* yacc.c:1646  */
+#line 64 "parser.y" /* yacc.c:1646  */
     { yyerrok; }
-#line 1281 "parser.cpp" /* yacc.c:1646  */
+#line 1282 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 66 "parser.y" /* yacc.c:1646  */
+#line 67 "parser.y" /* yacc.c:1646  */
     { (yyval.node) = NULL; }
-#line 1287 "parser.cpp" /* yacc.c:1646  */
+#line 1288 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 68 "parser.y" /* yacc.c:1646  */
-    { (yyval.node) = (yyvsp[-3].node); }
-#line 1293 "parser.cpp" /* yacc.c:1646  */
+#line 69 "parser.y" /* yacc.c:1646  */
+    { (yyval.node) = (yyvsp[-1].node); }
+#line 1294 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 69 "parser.y" /* yacc.c:1646  */
-    {  AST::Node* node = symtab.assignVariable((yyvsp[-2].name));
-                                (yyval.node) = new AST::BinOp(node,AST::assign,(yyvsp[0].node)); }
+#line 70 "parser.y" /* yacc.c:1646  */
+    {  AST::Node* node = symtab.assignVariable((yyvsp[-2].name), AST::Variable::retornaTipoAPartirDeInteiro(tipoVariavel)); (yyval.node) = new AST::BinOp(node,AST::assign,(yyvsp[0].node)); }
 #line 1300 "parser.cpp" /* yacc.c:1646  */
     break;
 
@@ -1313,7 +1313,7 @@ yyreduce:
 
   case 12:
 #line 75 "parser.y" /* yacc.c:1646  */
-    { (yyval.node) = symtab.useVariable((yyvsp[0].name)); }
+    { (yyval.node) = symtab.useVariable((yyvsp[0].name), AST::Variable::retornaTipoAPartirDeInteiro(tipoVariavel)); }
 #line 1318 "parser.cpp" /* yacc.c:1646  */
     break;
 
@@ -1331,31 +1331,31 @@ yyreduce:
 
   case 15:
 #line 80 "parser.y" /* yacc.c:1646  */
-    { std::cout << "asdasd" << std::endl; (yyval.node) = new AST::TipoVariavel(AST::inteiro); }
+    { tipoVariavel = 0; }
 #line 1336 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 16:
 #line 81 "parser.y" /* yacc.c:1646  */
-    { (yyval.node) = new AST::TipoVariavel(AST::real); }
+    { tipoVariavel = 1; }
 #line 1342 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 17:
 #line 82 "parser.y" /* yacc.c:1646  */
-    { (yyval.node) = new AST::TipoVariavel(AST::booleano); }
+    { tipoVariavel = 2; }
 #line 1348 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 18:
 #line 85 "parser.y" /* yacc.c:1646  */
-    { (yyval.node) = symtab.newVariable((yyvsp[0].name), NULL); }
+    { (yyval.node) = new AST::Variable((yyvsp[0].name), AST::Variable::retornaTipoAPartirDeInteiro(tipoVariavel), NULL) ;}
 #line 1354 "parser.cpp" /* yacc.c:1646  */
     break;
 
   case 19:
 #line 86 "parser.y" /* yacc.c:1646  */
-    { (yyval.node) = symtab.newVariable((yyvsp[0].name), (yyvsp[-2].node)); }
+    { (yyval.node) = symtab.newVariable((yyvsp[0].name),AST::Variable::retornaTipoAPartirDeInteiro(tipoVariavel), (yyvsp[-2].node)); }
 #line 1360 "parser.cpp" /* yacc.c:1646  */
     break;
 

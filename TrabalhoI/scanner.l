@@ -15,12 +15,16 @@ nome [a-z]+
 
 [ \t]               ; //ignores spaces
 
-"inteiro"			{return T_DINT;}
+"int"			{return T_DINT;}
 "real"				{return T_DREAL;}
-"booleano"				{return T_DBOOL;}
+"bool"				{return T_DBOOL;}
 
 {digs}              {yylval.integer = std::atoi(yytext); return T_INT;}
+
 {digs}\.{digs}		{yylval.doubler = std::atof(yytext); return T_DOUBLE;}
+\.{digs} 			{yylval.doubler = std::atof(yytext); return T_DOUBLE;}
+{digs}\.		 	{yylval.doubler = std::atof(yytext); return T_DOUBLE;}
+
 "TRUE"				{return T_BOOLTRUE;}
 "FALSE"				{return T_BOOLFALSE;}
 
