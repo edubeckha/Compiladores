@@ -66,8 +66,7 @@ lines   : line { $$ = new AST::Block(); if($1 != NULL) $$->lines.push_back($1); 
 line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | expr T_FINALEXP /*$$ = $1 when nothing is said*/
         | tipoVariavel T_DEF varlist T_FINALEXP { $$ = $1; }
-        | T_ID T_ASSIGN expr {  AST::Node* node = symtab.assignVariable($1);
-                                $$ = new AST::BinOp(node,AST::assign,$3); }
+        | T_ID T_ASSIGN expr {  AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node,AST::assign,$3); }
         ;
 
 expr    : T_INT { $$ = new AST::Integer($1); }
@@ -77,7 +76,7 @@ expr    : T_INT { $$ = new AST::Integer($1); }
         | expr T_TIMES expr { $$ = new AST::BinOp($1,AST::times,$3); }
         ;
 
-tipoVariavel : T_DINT { std::cout << "asdasd" << std::endl; $$ = new AST::TipoVariavel(AST::inteiro); } 
+tipoVariavel : T_DINT { $$ = new AST::TipoVariavel(AST::inteiro); } 
              | T_DREAL { $$ = new AST::TipoVariavel(AST::real); }
              | T_DBOOL { $$ = new AST::TipoVariavel(AST::booleano); }
              ;

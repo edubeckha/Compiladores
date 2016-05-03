@@ -20,8 +20,18 @@ void BinOp::printTree(){
     left->printTree();
     switch(op){
         case plus: std::cout << " + "; break;
+        case sub: std::cout << " - "; break;
         case times: std::cout << " * "; break;
+        case divi: std::cout << " / "; break;
         case assign: std::cout << " = "; break;
+        case maior: std::cout << " > "; break;
+        case menor: std::cout << " < "; break;
+        case maiorigual: std::cout << " >= "; break;
+        case menorigual: std::cout << " <= "; break;
+        case ande: std::cout << " AND "; break;
+        case ore: std::cout << " OR "; break;
+        case unibool: std::cout << " ~ "; break;
+        case atri: std::cout << " := "; break;
     }
     right->printTree();
     return;
