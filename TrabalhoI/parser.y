@@ -71,6 +71,7 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         ;
 
 expr    : T_INT { $$ = new AST::Integer($1); }
+        | T_DOUBLE { $$ = new AST::Doubler($1); }
         | T_ID { $$ = symtab.useVariable($1); }
         | expr T_PLUS expr { $$ = new AST::BinOp($1,AST::plus,$3); }
         | expr T_TIMES expr { $$ = new AST::BinOp($1,AST::times,$3); }

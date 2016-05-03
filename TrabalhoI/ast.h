@@ -19,7 +19,6 @@ class Node {
     public:
         virtual ~Node() {}
         virtual void printTree(){}
-        virtual int computeTree(){return 0;}
 };
 
 class Integer : public Node {
@@ -27,7 +26,13 @@ class Integer : public Node {
         int value;
         Integer(int value) : value(value) {  }
         void printTree();
-        int computeTree();
+};
+
+class Doubler : public Node {
+public:
+        double value;
+        Doubler(double value) : value(value) { }
+        void printTree();
 };
 
 class BinOp : public Node {
@@ -38,7 +43,6 @@ class BinOp : public Node {
         BinOp(Node *left, Operation op, Node *right) :
             left(left), right(right), op(op) { }
         void printTree();
-        int computeTree();
 };
 
 class Block : public Node {
@@ -46,7 +50,6 @@ class Block : public Node {
         NodeList lines;
         Block() { }
         void printTree();
-        int computeTree();
 };
 
 class Variable : public Node {
@@ -55,7 +58,6 @@ class Variable : public Node {
          Node *next;
          Variable(std::string id, Node *next) : id(id), next(next) { }
          void printTree();
-         int computeTree();
 };
 
 }

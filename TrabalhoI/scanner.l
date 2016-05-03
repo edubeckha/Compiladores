@@ -20,7 +20,7 @@ nome [a-z]+
 "booleano"				{return T_DBOOL;}
 
 {digs}              {yylval.integer = std::atoi(yytext); return T_INT;}
-{digs}./{digs}		{yylval.doubler = std::atof(yytext); return T_DOUBLE;}
+{digs}\.{digs}		{yylval.doubler = std::atof(yytext); return T_DOUBLE;}
 "TRUE"				{return T_BOOLTRUE;}
 "FALSE"				{return T_BOOLFALSE;}
 
