@@ -6,6 +6,7 @@ AST::Block *programRoot; /* the root node of our program AST:: */
 extern int yylex();
 extern void yyerror(const char* s, ...);
 static AST::Tipo tipoVariavel = AST::indefinido;
+static AST::Operation operacao;
 %}
 
 %define parse.trace
@@ -35,7 +36,7 @@ static AST::Tipo tipoVariavel = AST::indefinido;
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
-%type <node> expr line varlist tipoVariavel
+%type <node> expr line varlist 
 %type <block> lines program
 
 
@@ -61,10 +62,17 @@ lines   : line { $$ = new AST::Block(); if($1 != NULL) $$->lines.push_back($1); 
         ;
 
 line    : T_NL { $$ = NULL; } /*nothing here to be used */
+
         | expr T_FINALEXP /*$$ = $1 when nothing is said*/
+
         | tipoVariavel T_DEF varlist T_FINALEXP { $$ = $3; }
+
         | T_ID T_ASSIGN expr T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node,AST::assign,$3);}
-        | T_ID T_ASSIGN T_SUB T_ID T_FINALEXP {AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node,AST::sub,node);}        ;
+
+        | T_ID T_ASSIGN T_SUB T_ID T_FINALEXP {AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node,AST::sub,node);}   
+
+        | T_ID T_ASSIGN expr { ; }
+        ;
 
 expr    : T_INT { $$ = new AST::Integer($1); }
         
@@ -81,12 +89,22 @@ expr    : T_INT { $$ = new AST::Integer($1); }
         | expr T_TIMES expr { $$ = new AST::BinOp($1,AST::times,$3); }
 
         | expr T_DIV expr { $$ = new AST::BinOp($1,AST::divi,$3); }
+
+        | expr tipoOperacaoLogica expr {$$ = new AST::BinOp($1, operacao, $3);}
         ;
 
 tipoVariavel : T_DINT { tipoVariavel = AST::inteiro; } 
              | T_DREAL { tipoVariavel = AST::real; }
              | T_DBOOL { tipoVariavel = AST::booleano; }
              ;
+
+tipoOperacaoLogica : T_MAIOR  {operacao = AST::maior;}
+                 | T_MENOR {operacao = AST::menor;}
+                 | T_MAIORIGUAL {operacao = AST::maiorigual;}
+                 | T_MENORIGUAL {operacao = AST::menorigual;}
+                 | T_AND {operacao = AST::ande;}
+                 | T_OR {operacao = AST::ore;}
+                 ;
 
 varlist : T_ID { $$ = symtab.newVariable($1, tipoVariavel, NULL);}
         | varlist T_COMMA T_ID { $$ = symtab.newVariable($3, tipoVariavel, $1); }
