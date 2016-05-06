@@ -35,7 +35,7 @@ nome [a-z]+
 
 ":"                 {return T_DEF;}
 ","                 {return T_COMMA;}
-"="                 {return T_ASSIGN;}
+":="                 {return T_ASSIGN;}
 "~="				{return T_DIFERENTE;}
 ">"					{return T_MAIOR;}
 "<"					{return T_MENOR;}
@@ -46,7 +46,6 @@ nome [a-z]+
 "OR"				{return T_OR;}
 
 "~"					{return T_UNIBOOL;}
-":="				{return T_ATRI;}
 
 "("					{return T_PARA;}
 ")"					{return T_PARAF;}

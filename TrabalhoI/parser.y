@@ -5,7 +5,7 @@ ST::SymbolTable symtab;  /* main symbol table */
 AST::Block *programRoot; /* the root node of our program AST:: */
 extern int yylex();
 extern void yyerror(const char* s, ...);
-static int tipoVariavel;
+static AST::Tipo tipoVariavel = AST::indefinido;
 %}
 
 %define parse.trace
@@ -63,25 +63,33 @@ lines   : line { $$ = new AST::Block(); if($1 != NULL) $$->lines.push_back($1); 
 line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | expr T_FINALEXP /*$$ = $1 when nothing is said*/
         | tipoVariavel T_DEF varlist T_FINALEXP { $$ = $3; }
-        //| tipoVariavel T_DEF T_ID T_FINALEXP { $$ = symtab.newVariable($3,AST::Variable::retornaTipoAPartirDeInteiro(tipoVariavel), $1); }
-        | T_ID T_ASSIGN expr { AST::Node* node = symtab.assignVariable($1, AST::Variable::retornaTipoAPartirDeInteiro(tipoVariavel)); $$ = new AST::BinOp(node,AST::assign,$3);}
-        ;
+        | T_ID T_ASSIGN expr T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node,AST::assign,$3);}
+        | T_ID T_ASSIGN T_SUB T_ID T_FINALEXP {AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node,AST::sub,node);}        ;
 
 expr    : T_INT { $$ = new AST::Integer($1); }
+        
         | T_DOUBLE { $$ = new AST::Doubler($1); }
+        
         | T_BOOLTRUE { $$ = new AST::Boolean($1); }
-     	| T_ID { $$ = symtab.useVariable($1, AST::Variable::retornaTipoAPartirDeInteiro(tipoVariavel)); }
+     	
+        | T_ID { $$ = symtab.useVariable($1); }
+
         | expr T_PLUS expr { $$ = new AST::BinOp($1,AST::plus,$3); }
+
+        | expr T_SUB expr { $$ = new AST::BinOp($1,AST::sub,$3); }
+
         | expr T_TIMES expr { $$ = new AST::BinOp($1,AST::times,$3); }
+
+        | expr T_DIV expr { $$ = new AST::BinOp($1,AST::divi,$3); }
         ;
 
-tipoVariavel : T_DINT { tipoVariavel = 0; } 
-             | T_DREAL { tipoVariavel = 1; }
-             | T_DBOOL { tipoVariavel = 2; }
+tipoVariavel : T_DINT { tipoVariavel = AST::inteiro; } 
+             | T_DREAL { tipoVariavel = AST::real; }
+             | T_DBOOL { tipoVariavel = AST::booleano; }
              ;
 
-varlist : T_ID { $$ = new AST::Variable($1, AST::Variable::retornaTipoAPartirDeInteiro(tipoVariavel), NULL) ;}
-        | varlist T_COMMA T_ID { $$ = symtab.newVariable($3,AST::Variable::retornaTipoAPartirDeInteiro(tipoVariavel), $1); }
+varlist : T_ID { $$ = symtab.newVariable($1, tipoVariavel, NULL);}
+        | varlist T_COMMA T_ID { $$ = symtab.newVariable($3, tipoVariavel, $1); }
         ;
 
 %%

@@ -9,10 +9,12 @@ extern void yyerror(const char *s, ...);
 namespace AST {
 
 	//Binary operations
-	enum Operation { plus, sub, times, divi, assign, maior, menor, maiorigual, menorigual, ande, ore, unibool, atri };
+	enum Operation { plus, sub, times, divi, assign, maior, menor, maiorigual, menorigual, ande, ore, unibool };
 	enum Tipo { inteiro, real, booleano, indefinido };
 	static bool printed = false;
 
+
+	
 	class Node;
 
 	typedef std::vector<Node*> NodeList; //List of ASTs
@@ -69,6 +71,6 @@ namespace AST {
 	         Variable(std::string id, Tipo tipo, Node *next) : id(id), tipo(tipo), next(next) { }
 	         void printTree();
 
-	         static Tipo retornaTipoAPartirDeInteiro(int tipo);
-	};
+
+	         };
 }
