@@ -37,6 +37,13 @@ namespace AST {
 	        void printTree();
 	};
 
+	class Boolean : public Node {
+	public:
+	        bool value;
+	        Boolean(bool value) : value(value) { }
+	        void printTree();
+	};
+
 	class BinOp : public Node {
 	    public:
 	        Operation op;

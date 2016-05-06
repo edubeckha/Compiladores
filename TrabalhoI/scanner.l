@@ -15,7 +15,7 @@ nome [a-z]+
 
 [ \t]               ; //ignores spaces
 
-"int"			{return T_DINT;}
+"int"				{return T_DINT;}
 "real"				{return T_DREAL;}
 "bool"				{return T_DBOOL;}
 
@@ -27,8 +27,6 @@ nome [a-z]+
 
 "TRUE"				{return T_BOOLTRUE;}
 "FALSE"				{return T_BOOLFALSE;}
-
-
 
 "+"                 {return T_PLUS;}
 "-"                 {return T_SUB;}

@@ -16,6 +16,11 @@ void Doubler::printTree(){
     return;
 }
 
+void Boolean::printTree(){
+    std::cout << "\nPrintando um booleano com valor: " << value << std::endl;
+    return;
+}
+
 void BinOp::printTree(){
     left->printTree();
     switch(op){
@@ -48,12 +53,12 @@ void Variable::printTree(){
     if(!printed){
         printed = true;
         std::cout << "Definidas variaveis do tipo ";
-         switch(tipo){
-        case inteiro: std::cout << "inteiro: "; break;
-        case real: std::cout << "real: " ;break;
-        case booleano: std::cout << "booleano: "; break;
-        default: std::cout << " indefinido: "; break;
-    }
+        switch(tipo){
+	        case inteiro: std::cout << "inteiro: "; break;
+	        case real: std::cout << "real: " ;break;
+	        case booleano: std::cout << "booleano: "; break;
+	        default: std::cout << " indefinido: "; break;
+	    }
     }
    
     if (next != NULL){

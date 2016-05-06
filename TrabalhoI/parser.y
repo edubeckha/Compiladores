@@ -16,6 +16,7 @@ static int tipoVariavel;
 %union {
     int integer;
     double doubler;
+    bool bolean;
     const char* booleano;
     AST::Node *node;
     AST::Block *block;
@@ -30,17 +31,12 @@ static int tipoVariavel;
 %token <name> T_ID
 %token T_DINT T_DREAL T_DBOOL T_PLUS T_SUB T_TIMES T_DIV T_DEF T_COMMA T_ASSIGN T_DIFERENTE T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_UNIBOOL T_ATRI T_PARA T_PARAF T_FINALEXP T_NL 
 
-
-
-
 /* type defines the type of our nonterminal symbols.
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
 %type <node> expr line varlist tipoVariavel
 %type <block> lines program
-
-
 
 
 /* Operator precedence for mathematical operators
@@ -67,12 +63,14 @@ lines   : line { $$ = new AST::Block(); if($1 != NULL) $$->lines.push_back($1); 
 line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | expr T_FINALEXP /*$$ = $1 when nothing is said*/
         | tipoVariavel T_DEF varlist T_FINALEXP { $$ = $3; }
-        | T_ID T_ASSIGN expr {  AST::Node* node = symtab.assignVariable($1, AST::Variable::retornaTipoAPartirDeInteiro(tipoVariavel)); $$ = new AST::BinOp(node,AST::assign,$3); }
+        //| tipoVariavel T_DEF T_ID T_FINALEXP { $$ = symtab.newVariable($3,AST::Variable::retornaTipoAPartirDeInteiro(tipoVariavel), $1); }
+        | T_ID T_ASSIGN expr { AST::Node* node = symtab.assignVariable($1, AST::Variable::retornaTipoAPartirDeInteiro(tipoVariavel)); $$ = new AST::BinOp(node,AST::assign,$3);}
         ;
 
 expr    : T_INT { $$ = new AST::Integer($1); }
         | T_DOUBLE { $$ = new AST::Doubler($1); }
-        | T_ID { $$ = symtab.useVariable($1, AST::Variable::retornaTipoAPartirDeInteiro(tipoVariavel)); }
+        | T_BOOLTRUE { $$ = new AST::Boolean($1); }
+     	| T_ID { $$ = symtab.useVariable($1, AST::Variable::retornaTipoAPartirDeInteiro(tipoVariavel)); }
         | expr T_PLUS expr { $$ = new AST::BinOp($1,AST::plus,$3); }
         | expr T_TIMES expr { $$ = new AST::BinOp($1,AST::times,$3); }
         ;
