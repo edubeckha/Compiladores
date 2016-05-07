@@ -11,7 +11,8 @@ namespace AST {
 	//Binary operations
 	enum Operation { plus, sub, times, divi, assign, maior, menor, maiorigual, menorigual, ande, ore, unibool, unario, declaracao };
 	enum Tipo { inteiro, real, booleano, indefinido };
-
+ 	static std::string tipoParaString(Tipo tipo);
+ 	
 	class Node;
 	typedef std::vector<Node*> NodeList; //List of ASTs
 
@@ -61,7 +62,7 @@ namespace AST {
 	         Node *next;
 	         Variable(std::string id, Tipo tipo, Node *next) : id(id), tipo(tipo), next(next) { }
 	         void printTree();
-	         std::string tipoParaString(Tipo tipo);
+	        
 	};
 
 	class UniOp : public Node {

@@ -32,7 +32,7 @@ void BinOp::printTree(){
         //esse dynamic cast pode ser uma saida, mas provavelmente estou criando um overhead desnecessario fazendo essas conversoes enquanto ha um jeito mais facil de realizar esse print...
         case assign: 
         std::cout << "Atribuicao de valor para variavel do tipo"<< 
-        dynamic_cast<Variable*>(left)->tipoParaString(dynamic_cast<Variable*>(left)->tipo); 
+        AST::tipoParaString(dynamic_cast<Variable*>(left)->tipo); 
         left->printTree(); 
         std::cout << ": "; 
         right->printTree(); 
@@ -117,9 +117,9 @@ void BinOp::printTree(){
 
         //ajeitar esses dynamics depois....
         case unario: 
-        std::cout << "Atribuicao de valor para variavel do tipo " << dynamic_cast<Variable*>(left)->tipoParaString(dynamic_cast<Variable*>(left)->tipo);
+        std::cout << "Atribuicao de valor para variavel do tipo " << AST::tipoParaString(dynamic_cast<Variable*>(left)->tipo);
         left->printTree(); std::cout << ": "; 
-        std::cout << " (not unario " << dynamic_cast<Variable*>(left)->tipoParaString(dynamic_cast<Variable*>(left)->tipo) << ") "; 
+        std::cout << " (not unario " << AST::tipoParaString(dynamic_cast<Variable*>(left)->tipo) << ") "; 
         right->printTree(); 
         break;
 
@@ -146,17 +146,19 @@ void Variable::printTree(){
 void UniOp::printTree(){
     switch(op){
         case declaracao:
-        std::cout << "Declaracao de variavel do tipo" << node->tipoParaString(node->tipo) << ": "; node->printTree();
+        std::cout << "Declaracao de variavel do tipo" << AST::tipoParaString(node->tipo) << ": "; node->printTree();
         break;
         default: std::cout << "Operacao nao reconhecida!!! (Ou ainda nao tratada pelo compileiro)." << std::endl;
     }
 }
 
 void Arranjo::printTree(){
-    std::cout << "I HAVENT DONE ANYTHING YET!" << std::endl;
+    std::cout << "Declaracao de arranjo " << AST::tipoParaString(tipoArranjo) << " de tamanho ";
+    tamanhoArranjo->printTree();
+    std::cout << ": " << id << std::endl;
 }
 
-std::string Variable::tipoParaString(Tipo tipo){
+std::string AST::tipoParaString(Tipo tipo){
     switch(tipo){
         case inteiro : return " inteiro ";
         case real : return " real ";
