@@ -7,27 +7,32 @@ extern ST::SymbolTable symtab;
 
 /* Print methods */
 void Integer::printTree(){
-    std::cout << "(variavel inteira " << value << ") ";
+    std::cout << "(valor inteiro " << value << ")";
     return;
 }
 
 void Doubler::printTree(){
-    std::cout << "(variavel real " << value << ") ";
+    std::cout << "(valor real " << value << ")";
     return;
 }
 
 void Boolean::printTree(){
-    std::cout << "(variavel booleana " << value << ") ";
+    std::cout << "(valor booleano " << value << ")";
     return;
 }
 
 void BinOp::printTree(){
+    
     switch(op){
-        case assign: std::cout << "Atribuicao de valor para variavel: "; break;
-        case plus: std::cout << " + "; break;
-        case sub: std::cout << " - "; break;
-        case times: std::cout << " * "; break;
-        case divi: std::cout << " / "; break;
+        //esse dynamic cast pode ser uma saida, mas provavelmente estou criando um overhead desnecessario fazendo essas conversoes enquanto ha um jeito mais facil de realizar esse print...
+        case assign: std::cout << "Atribuicao de valor para variavel do tipo"<< dynamic_cast<Variable*>(left)->tipoParaString(dynamic_cast<Variable*>(left)->tipo); left->printTree(); std::cout << ": "; right->printTree(); break;
+
+        case plus: std::cout << "("; left->printTree(); std::cout << " (soma real) "; right->printTree(); std::cout << ")"; break;
+
+        case sub: std::cout << "("; left->printTree(); std::cout << " - "; right->printTree(); std::cout << ")"; break;
+        case times: std::cout << "("; left->printTree(); std::cout << " * "; right->printTree(); std::cout << ")"; break;
+        case divi: std::cout << "("; left->printTree(); std::cout << " / "; right->printTree(); std::cout << ")"; break;
+        
         case maior: std::cout << " > "; break;
         case menor: std::cout << " < "; break;
         case maiorigual: std::cout << " >= "; break;
@@ -38,8 +43,6 @@ void BinOp::printTree(){
         default: std::cout << "Operador nao tratado" << std::endl; break;
     }
     
-    left->printTree();
-    right->printTree();
     return;
 }
 

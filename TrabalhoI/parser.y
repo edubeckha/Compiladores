@@ -85,7 +85,6 @@ expr    : T_INT { $$ = new AST::Integer($1); }
         | T_ID { $$ = symtab.useVariable($1); }
 
         | expr tipoOperacao expr {$$ = new AST::BinOp($1, operacao, $3);}        
-
         ;
 
 tipoVariavel : T_DINT { tipoVariavel = AST::inteiro; } 
