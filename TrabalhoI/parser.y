@@ -6,7 +6,6 @@ AST::Block *programRoot; /* the root node of our program AST:: */
 extern int yylex();
 extern void yyerror(const char* s, ...);
 static AST::Tipo tipoVariavel = AST::indefinido;
-static AST::Operation operacao;
 %}
 
 %define parse.trace
@@ -21,6 +20,7 @@ static AST::Operation operacao;
     const char* booleano;
     AST::Node *node;
     AST::Block *block;
+    AST::Operation operacao;
     const char *name;
 }
 
@@ -38,6 +38,7 @@ static AST::Operation operacao;
  */
 %type <node> expr line varlist
 %type <block> lines program
+%type <operacao> tipoOperacao
 
 
 /* Operator precedence for mathematical operators
@@ -45,6 +46,7 @@ static AST::Operation operacao;
  */
 %left T_PLUS T_SUB
 %left T_TIMES T_DIV
+
 %nonassoc error
 
 /* Starting rule 
@@ -69,14 +71,16 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
 
         | T_ID T_ASSIGN expr T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node,AST::assign,$3);}
 
-        | T_ID T_ASSIGN T_SUB T_INT { operacao = AST::unario; AST::Node* node = symtab.assignVariable($1); $$ = new AST::UniOp(node, operacao); }
+        | T_ID T_ASSIGN T_SUB T_INT { AST::Node* node = symtab.assignVariable($1); $$ = new AST::UniOp(node, AST::unario); }
 
-        | T_ID T_ASSIGN T_SUB T_DOUBLE { operacao = AST::unario; AST::Node* node = symtab.assignVariable($1); $$ = new AST::UniOp(node, operacao); }
+        | T_ID T_ASSIGN T_SUB T_DOUBLE { AST::Node* node = symtab.assignVariable($1); $$ = new AST::UniOp(node, AST::unario); }
 
-        | T_ID T_ASSIGN T_UNIBOOL T_ID { operacao = AST::unibool; AST::Node* node = symtab.assignVariable($1); $$ = new AST::UniOp(node, operacao); }
+        | T_ID T_ASSIGN T_UNIBOOL T_ID { AST::Node* node = symtab.assignVariable($1); $$ = new AST::UniOp(node, AST::unibool); }
         ;
 
-expr    : T_INT { $$ = new AST::Integer($1); }
+expr    : T_PARA expr T_PARAF { $$ = $2; }
+
+        | T_INT { $$ = new AST::Integer($1); }
         
         | T_DOUBLE { $$ = new AST::Doubler($1); }
         
@@ -84,7 +88,7 @@ expr    : T_INT { $$ = new AST::Integer($1); }
      	
         | T_ID { $$ = symtab.useVariable($1); }
 
-        | expr tipoOperacao expr {$$ = new AST::BinOp($1, operacao, $3);}        
+        | expr tipoOperacao expr {$$ = new AST::BinOp($1, $2, $3);}        
         ;
 
 tipoVariavel : T_DINT { tipoVariavel = AST::inteiro; } 
@@ -92,16 +96,16 @@ tipoVariavel : T_DINT { tipoVariavel = AST::inteiro; }
              | T_DBOOL { tipoVariavel = AST::booleano; }
              ;
 
-tipoOperacao : T_PLUS {operacao = AST::plus;}
-             | T_SUB {operacao = AST::sub;}
-             | T_TIMES {operacao = AST::times;}
-             | T_DIV {operacao = AST::divi;}
-             | T_MAIOR  {operacao = AST::maior;}
-             | T_MENOR {operacao = AST::menor;}
-             | T_MAIORIGUAL {operacao = AST::maiorigual;}
-             | T_MENORIGUAL {operacao = AST::menorigual;}
-             | T_AND {operacao = AST::ande;}
-             | T_OR {operacao = AST::ore;}
+tipoOperacao : T_PLUS {$$ = AST::plus;}
+             | T_SUB {$$ = AST::sub;}
+             | T_TIMES {$$ = AST::times;}
+             | T_DIV {$$ = AST::divi;}
+             | T_MAIOR  {$$ = AST::maior;}
+             | T_MENOR {$$ = AST::menor;}
+             | T_MAIORIGUAL {$$ = AST::maiorigual;}
+             | T_MENORIGUAL {$$ = AST::menorigual;}
+             | T_AND {$$ = AST::ande;}
+             | T_OR {$$ = AST::ore;}
              ;
 
 varlist : T_ID { $$ = symtab.newVariable($1, tipoVariavel, NULL); }

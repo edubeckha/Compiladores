@@ -29,9 +29,9 @@ void BinOp::printTree(){
 
         case plus: std::cout << "("; left->printTree(); std::cout << " (soma real) "; right->printTree(); std::cout << ")"; break;
 
-        case sub: std::cout << "("; left->printTree(); std::cout << " - "; right->printTree(); std::cout << ")"; break;
-        case times: std::cout << "("; left->printTree(); std::cout << " * "; right->printTree(); std::cout << ")"; break;
-        case divi: std::cout << "("; left->printTree(); std::cout << " / "; right->printTree(); std::cout << ")"; break;
+        case sub: std::cout << "("; left->printTree(); std::cout << " (subtracao real) "; right->printTree(); std::cout << ")"; break;
+        case times: std::cout << "("; left->printTree(); std::cout << " (multiplicacao real) "; right->printTree(); std::cout << ")"; break;
+        case divi: std::cout << "("; left->printTree(); std::cout << " (divisao real) "; right->printTree(); std::cout << ")"; break;
         
         case maior: std::cout << " > "; break;
         case menor: std::cout << " < "; break;

@@ -81,7 +81,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 17 "parser.y" /* yacc.c:1909  */
+#line 16 "parser.y" /* yacc.c:1909  */
 
     int integer;
     double doubler;
@@ -89,9 +89,10 @@ union YYSTYPE
     const char* booleano;
     AST::Node *node;
     AST::Block *block;
+    AST::Operation operacao;
     const char *name;
 
-#line 95 "parser.h" /* yacc.c:1909  */
+#line 96 "parser.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
