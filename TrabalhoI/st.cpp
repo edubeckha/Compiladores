@@ -28,3 +28,6 @@ AST::Node* SymbolTable::useVariable(std::string id){
     return new AST::Variable(id, entryList[id].type, NULL); //Creates variable node anyway
 }
 
+AST::Tipo SymbolTable::returnType(std::string id){
+    return entryList[id].type;
+}

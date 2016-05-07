@@ -22,7 +22,12 @@ void Boolean::printTree(){
 }
 
 void BinOp::printTree(){
-    
+    /*std::cout << "somente um teste "<< std::endl;
+    left->printTree();
+    std::cout << " \n direita "<< std::endl;
+    right->printTree();
+    std::cout << "---------------------------- "<< std::endl;
+    return;*/
     switch(op){
         //esse dynamic cast pode ser uma saida, mas provavelmente estou criando um overhead desnecessario fazendo essas conversoes enquanto ha um jeito mais facil de realizar esse print...
         case assign: 

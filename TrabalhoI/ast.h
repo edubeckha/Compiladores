@@ -11,7 +11,7 @@ namespace AST {
 	//Binary operations
 	enum Operation { plus, sub, times, divi, assign, maior, menor, maiorigual, menorigual, ande, ore, unibool, unario, declaracao };
 	enum Tipo { inteiro, real, booleano, indefinido };
-	
+
 	class Node;
 	typedef std::vector<Node*> NodeList; //List of ASTs
 
@@ -46,6 +46,7 @@ namespace AST {
 	class BinOp : public Node {
 	    public:
 	        Operation op;
+	        Tipo tipoRetorno;
 	        Node *left;
 	        Node *right;
 	        BinOp(Node *left, Operation op, Node *right) :
