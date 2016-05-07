@@ -36,7 +36,7 @@ static AST::Operation operacao;
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
-%type <node> expr line varlist 
+%type <node> expr line varlist
 %type <block> lines program
 
 
@@ -65,13 +65,15 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
 
         | expr T_FINALEXP /*$$ = $1 when nothing is said*/
 
-        | tipoVariavel T_DEF varlist T_FINALEXP { $$ = $3; }
+        | tipoVariavel T_DEF varlist T_FINALEXP { $$ = new AST::UniOp($3, AST::declaracao); }
 
         | T_ID T_ASSIGN expr T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node,AST::assign,$3);}
 
-        | T_ID T_ASSIGN T_SUB T_ID T_FINALEXP {AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node,AST::sub,node);}   
+        | T_ID T_ASSIGN T_SUB T_INT { operacao = AST::unario; AST::Node* node = symtab.assignVariable($1); $$ = new AST::UniOp(node, operacao); }
 
-        | T_ID T_ASSIGN expr { ; }
+        | T_ID T_ASSIGN T_SUB T_DOUBLE { operacao = AST::unario; AST::Node* node = symtab.assignVariable($1); $$ = new AST::UniOp(node, operacao); }
+
+        | T_ID T_ASSIGN T_UNIBOOL T_ID { operacao = AST::unibool; AST::Node* node = symtab.assignVariable($1); $$ = new AST::UniOp(node, operacao); }
         ;
 
 expr    : T_INT { $$ = new AST::Integer($1); }
@@ -82,15 +84,8 @@ expr    : T_INT { $$ = new AST::Integer($1); }
      	
         | T_ID { $$ = symtab.useVariable($1); }
 
-        | expr T_PLUS expr { $$ = new AST::BinOp($1,AST::plus,$3); }
+        | expr tipoOperacao expr {$$ = new AST::BinOp($1, operacao, $3);}        
 
-        | expr T_SUB expr { $$ = new AST::BinOp($1,AST::sub,$3); }
-
-        | expr T_TIMES expr { $$ = new AST::BinOp($1,AST::times,$3); }
-
-        | expr T_DIV expr { $$ = new AST::BinOp($1,AST::divi,$3); }
-
-        | expr tipoOperacaoLogica expr {$$ = new AST::BinOp($1, operacao, $3);}
         ;
 
 tipoVariavel : T_DINT { tipoVariavel = AST::inteiro; } 
@@ -98,15 +93,19 @@ tipoVariavel : T_DINT { tipoVariavel = AST::inteiro; }
              | T_DBOOL { tipoVariavel = AST::booleano; }
              ;
 
-tipoOperacaoLogica : T_MAIOR  {operacao = AST::maior;}
-                 | T_MENOR {operacao = AST::menor;}
-                 | T_MAIORIGUAL {operacao = AST::maiorigual;}
-                 | T_MENORIGUAL {operacao = AST::menorigual;}
-                 | T_AND {operacao = AST::ande;}
-                 | T_OR {operacao = AST::ore;}
-                 ;
+tipoOperacao : T_PLUS {operacao = AST::plus;}
+             | T_SUB {operacao = AST::sub;}
+             | T_TIMES {operacao = AST::times;}
+             | T_DIV {operacao = AST::divi;}
+             | T_MAIOR  {operacao = AST::maior;}
+             | T_MENOR {operacao = AST::menor;}
+             | T_MAIORIGUAL {operacao = AST::maiorigual;}
+             | T_MENORIGUAL {operacao = AST::menorigual;}
+             | T_AND {operacao = AST::ande;}
+             | T_OR {operacao = AST::ore;}
+             ;
 
-varlist : T_ID { $$ = symtab.newVariable($1, tipoVariavel, NULL);}
+varlist : T_ID { $$ = symtab.newVariable($1, tipoVariavel, NULL); }
         | varlist T_COMMA T_ID { $$ = symtab.newVariable($3, tipoVariavel, $1); }
         ;
 

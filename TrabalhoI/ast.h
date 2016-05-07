@@ -9,14 +9,10 @@ extern void yyerror(const char *s, ...);
 namespace AST {
 
 	//Binary operations
-	enum Operation { plus, sub, times, divi, assign, maior, menor, maiorigual, menorigual, ande, ore, unibool };
+	enum Operation { plus, sub, times, divi, assign, maior, menor, maiorigual, menorigual, ande, ore, unibool, unario, declaracao };
 	enum Tipo { inteiro, real, booleano, indefinido };
-	static bool printed = false;
-
-
 	
 	class Node;
-
 	typedef std::vector<Node*> NodeList; //List of ASTs
 
 	class Node {
@@ -56,13 +52,6 @@ namespace AST {
 	        void printTree();
 	};
 
-	class Block : public Node {
-	    public:
-	        NodeList lines;
-	        Block() { }
-	        void printTree();
-	};
-
 	class Variable : public Node {
 	     public:
 	         std::string id;
@@ -70,7 +59,23 @@ namespace AST {
 	         Node *next;
 	         Variable(std::string id, Tipo tipo, Node *next) : id(id), tipo(tipo), next(next) { }
 	         void printTree();
+	         std::string tipoParaString(Tipo tipo);
+	};
+
+	class UniOp : public Node {
+	public:
+		Operation op;
+		AST::Variable *node;
+		UniOp(Node* node, Operation op) : node(dynamic_cast<Variable*>(node)), op(op) { }
+		void printTree();
+	};
+
+	class Block : public Node {
+	    public:
+	        NodeList lines;
+	        Block() { }
+	        void printTree();
+	};
 
 
-	         };
 }

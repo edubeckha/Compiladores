@@ -7,37 +7,38 @@ extern ST::SymbolTable symtab;
 
 /* Print methods */
 void Integer::printTree(){
-    std::cout << value;
+    std::cout << "(variavel inteira " << value << ") ";
     return;
 }
 
 void Doubler::printTree(){
-    std::cout << "Printando um double com valor: " << value << std::endl;
+    std::cout << "(variavel real " << value << ") ";
     return;
 }
 
 void Boolean::printTree(){
-    std::cout << "\nPrintando um booleano com valor: " << value << std::endl;
+    std::cout << "(variavel booleana " << value << ") ";
     return;
 }
 
 void BinOp::printTree(){
-    left->printTree();
     switch(op){
+        case assign: std::cout << "Atribuicao de valor para variavel: "; break;
         case plus: std::cout << " + "; break;
         case sub: std::cout << " - "; break;
         case times: std::cout << " * "; break;
         case divi: std::cout << " / "; break;
-        
-        case assign: std::cout << " := "; break;
         case maior: std::cout << " > "; break;
         case menor: std::cout << " < "; break;
         case maiorigual: std::cout << " >= "; break;
         case menorigual: std::cout << " <= "; break;
         case ande: std::cout << " AND "; break;
         case ore: std::cout << " OR "; break;
-        case unibool: std::cout << " ~ "; break;
+
+        default: std::cout << "Operador nao tratado" << std::endl; break;
     }
+    
+    left->printTree();
     right->printTree();
     return;
 }
@@ -50,25 +51,32 @@ void Block::printTree(){
 }
 
 void Variable::printTree(){
-    if(!printed){
-        printed = true;
-        std::cout << "Definidas variaveis do tipo ";
-        switch(tipo){
-	        case inteiro: std::cout << "inteiro: "; break;
-	        case real: std::cout << "real: " ;break;
-	        case booleano: std::cout << "booleano: "; break;
-	        default: std::cout << " indefinido: "; break;
-	    }
-    }
-   
     if (next != NULL){
         next->printTree();
         std::cout << ", ";
-    } else {
-        printed = false;
-    }
+    } 
     std::cout << id;
 }
+
+void UniOp::printTree(){
+    switch(op){
+        case declaracao:
+        std::cout << "Declaracao de variavel do tipo" << node->tipoParaString(node->tipo) << ": "; node->printTree();
+        break;
+        default: std::cout << "Operacao nao reconhecida!!! (Ou ainda nao tratada pelo compileiro)." << std::endl;
+    }
+}
+
+std::string Variable::tipoParaString(Tipo tipo){
+    switch(tipo){
+        case inteiro : return " inteiro: ";
+        case real : return " real: ";
+        case booleano : return " booleano: ";
+        default : return " indefinido: ";
+    }
+}
+
+
 
 
 
