@@ -40,6 +40,7 @@ namespace AST {
 	        bool value;
 	        Boolean(bool value) : value(value) { }
 	        void printTree();
+	        std::string tipoParaString(){if(value) return "TRUE"; return "FALSE";}
 	};
 
 	class BinOp : public Node {

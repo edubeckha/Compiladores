@@ -17,7 +17,7 @@ void Doubler::printTree(){
 }
 
 void Boolean::printTree(){
-    std::cout << "(valor booleano " << value << ")";
+    std::cout << "(valor booleano " << tipoParaString() << ")";
     return;
 }
 
@@ -27,22 +27,22 @@ void BinOp::printTree(){
         //esse dynamic cast pode ser uma saida, mas provavelmente estou criando um overhead desnecessario fazendo essas conversoes enquanto ha um jeito mais facil de realizar esse print...
         case assign: std::cout << "Atribuicao de valor para variavel do tipo"<< dynamic_cast<Variable*>(left)->tipoParaString(dynamic_cast<Variable*>(left)->tipo); left->printTree(); std::cout << ": "; right->printTree(); break;
 
-        case plus: std::cout << "("; left->printTree(); std::cout << " (soma real) "; right->printTree(); std::cout << ")"; break;
+        case plus: std::cout << "("; left->printTree(); std::cout << " (soma) "; right->printTree(); std::cout << ")"; break;
 
-        case sub: std::cout << "("; left->printTree(); std::cout << " (subtracao real) "; right->printTree(); std::cout << ")"; break;
-        case times: std::cout << "("; left->printTree(); std::cout << " (multiplicacao real) "; right->printTree(); std::cout << ")"; break;
-        case divi: std::cout << "("; left->printTree(); std::cout << " (divisao real) "; right->printTree(); std::cout << ")"; break;
+        case sub: std::cout << "("; left->printTree(); std::cout << " (subtracao) "; right->printTree(); std::cout << ")"; break;
+        case times: std::cout << "("; left->printTree(); std::cout << " (multiplicacao) "; right->printTree(); std::cout << ")"; break;
+        case divi: std::cout << "("; left->printTree(); std::cout << " (divisao) "; right->printTree(); std::cout << ")"; break;
         
-        case maior: std::cout << " > "; break;
-        case menor: std::cout << " < "; break;
-        case maiorigual: std::cout << " >= "; break;
-        case menorigual: std::cout << " <= "; break;
-        case ande: std::cout << " AND "; break;
-        case ore: std::cout << " OR "; break;
+        case maior: std::cout << "("; left->printTree(); std::cout << " (maior que) "; right->printTree(); std::cout << ")"; break;
+        case menor: std::cout << "("; left->printTree(); std::cout << " (menor que) "; right->printTree(); std::cout << ")"; break;
+        case maiorigual: std::cout << "("; left->printTree(); std::cout << " (maior ou igual que) "; right->printTree(); std::cout << ")"; break;
+        case menorigual: std::cout << "("; left->printTree(); std::cout << " (menor ou igual que) "; right->printTree(); std::cout << ")"; break;
+        
+        case ande: std::cout << "("; left->printTree(); std::cout << " (AND) "; right->printTree(); std::cout << ")"; break;
+        case ore: std::cout << "("; left->printTree(); std::cout << " (OR) "; right->printTree(); std::cout << ")"; break;
 
         default: std::cout << "Operador nao tratado" << std::endl; break;
-    }
-    
+    }  
     return;
 }
 

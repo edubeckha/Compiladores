@@ -84,7 +84,9 @@ expr    : T_PARA expr T_PARAF { $$ = $2; }
         
         | T_DOUBLE { $$ = new AST::Doubler($1); }
         
-        | T_BOOLTRUE { $$ = new AST::Boolean($1); }
+        | T_BOOLTRUE { $$ = new AST::Boolean(true); }
+
+        | T_BOOLFALSE { $$ = new AST::Boolean(false); }
      	
         | T_ID { $$ = symtab.useVariable($1); }
 
