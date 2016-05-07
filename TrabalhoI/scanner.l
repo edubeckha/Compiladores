@@ -54,7 +54,7 @@ nome [a-z]+
 ";"					{return T_FINALEXP;}
 "\n"                {return T_NL;}
 {nome}              {yylval.name = strdup(yytext); return T_ID;}
-.                   {yyerror("Unknown token! %c\n", *yytext);} /*complains about every unknown character*/
+.                   {yyerror("Erro lexico: simbolo desconhecido %c\n", *yytext);} 
 
 %%
 
