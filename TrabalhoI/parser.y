@@ -38,7 +38,7 @@ static AST::Tipo tipoVariavel = AST::indefinido;
  */
 %type <node> expr line varlist
 %type <block> lines program
-%type <operacao> tipoOperacao
+%type <operacao> tipoOperacao exprUni
 
 
 /* Operator precedence for mathematical operators
@@ -69,27 +69,21 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
 
         | tipoVariavel T_DEF varlist T_FINALEXP { $$ = new AST::UniOp($3, AST::declaracao); }
 
-        | T_ID T_ASSIGN expr T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node,AST::assign,$3);}
+        | T_ID T_ASSIGN expr T_INT T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node,AST::assign,$3);}
 
-        | T_ID T_ASSIGN T_SUB T_INT { AST::Node* node = symtab.assignVariable($1); $$ = new AST::UniOp(node, AST::unario); }
+        | T_ID T_ASSIGN exprUni T_INT T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unario); }
+        ;
 
-        | T_ID T_ASSIGN T_SUB T_DOUBLE { AST::Node* node = symtab.assignVariable($1); $$ = new AST::UniOp(node, AST::unario); }
-
-        | T_ID T_ASSIGN T_UNIBOOL T_ID { AST::Node* node = symtab.assignVariable($1); $$ = new AST::UniOp(node, AST::unibool); }
+exprUni : T_SUB  { $$ = AST::unario;}
+        | T_UNIBOOL { $$ = AST::unibool ;}
         ;
 
 expr    : T_PARA expr T_PARAF { $$ = $2; }
-
-        | T_INT { $$ = new AST::Integer($1); }
-        
+        | T_INT { $$ = new AST::Integer($1); } 
         | T_DOUBLE { $$ = new AST::Doubler($1); }
-        
         | T_BOOLTRUE { $$ = new AST::Boolean(true); }
-
         | T_BOOLFALSE { $$ = new AST::Boolean(false); }
-     	
         | T_ID { $$ = symtab.useVariable($1); }
-
         | expr tipoOperacao expr {$$ = new AST::BinOp($1, $2, $3);}        
         ;
 

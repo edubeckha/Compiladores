@@ -8,7 +8,7 @@ void yyerror(const char* s, ...);
 
 %option noyywrap nodefault yylineno
 
-digs [0-9]+
+digs [+|-]?[0-9]+
 nome [a-z]+
 
 %%
