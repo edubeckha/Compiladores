@@ -79,5 +79,14 @@ namespace AST {
 	        void printTree();
 	};
 
+	//comecando a tratar arranjos
+	class Arranjo : public Node {
+	public:
+		Tipo tipoArranjo;
+		Node* tamanhoArranjo;
+		std::string id;
+		Arranjo(Tipo tipoArranjo,Node* tamanhoArranjo, std::string id) : tipoArranjo(tipoArranjo), tamanhoArranjo(tamanhoArranjo), id(id) { }
+	    void printTree();
+	};
 
 }

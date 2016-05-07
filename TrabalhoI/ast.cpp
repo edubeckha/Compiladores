@@ -152,6 +152,10 @@ void UniOp::printTree(){
     }
 }
 
+void Arranjo::printTree(){
+    std::cout << "I HAVENT DONE ANYTHING YET!" << std::endl;
+}
+
 std::string Variable::tipoParaString(Tipo tipo){
     switch(tipo){
         case inteiro : return " inteiro ";
