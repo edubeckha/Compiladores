@@ -18,6 +18,11 @@ nome [a-z]+
 "int"				{return T_DINT;}
 "real"				{return T_DREAL;}
 "bool"				{return T_DBOOL;}
+"def"				{return T_DEFI;}
+"fun"				{return T_FUN;}
+"end"				{return T_END;}
+"return"			{return T_RETO;}
+"decl"				{return T_DECL;}
 
 {digs}              {yylval.integer = std::atoi(yytext); return T_INT;}
 
@@ -61,6 +66,6 @@ nome [a-z]+
 void yyerror(const char *s, ...){
     va_list ap;
     va_start(ap, s);
-    std::fprintf(stderr, "Line %d: error: ", yylineno);
+    std::fprintf(stderr, "Linha %d: erro: ", yylineno);
     std::vfprintf(stderr, s, ap);
 }

@@ -162,6 +162,11 @@ std::string Variable::tipoParaString(Tipo tipo){
 }
 
 
-
+void Funcao::printTree(){
+    if (right != NULL){
+        right->printTree();
+        std::cout << "Definição de função inteira: "<<id;
+    } 
+}
 
 

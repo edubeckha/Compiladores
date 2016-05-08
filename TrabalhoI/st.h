@@ -37,6 +37,7 @@ class SymbolTable {
         AST::Node* assignVariable(std::string id);
         AST::Node* useVariable(std::string id);
         AST::Tipo returnType(std::string id);
+        AST::Node* newFunction(std::string id, AST::Tipo tipoVariavel, AST::Node* next);
 };
 
 }

@@ -31,3 +31,14 @@ AST::Node* SymbolTable::useVariable(std::string id){
 AST::Tipo SymbolTable::returnType(std::string id){
     return entryList[id].type;
 }
+
+AST::Node* SymbolTable::newFunction(std::string id, AST::Tipo tipoVariavel, AST::Node* next){
+    std::cout<<"Criando nova função"<<std::endl;
+    if( checkId(id) )
+        yyerror("Erro semantico: função %s já existe.\n", id.c_str());
+    else {
+        Symbol entry(tipoVariavel, function, 0, false);
+        addSymbol(id,entry);
+    }
+    return new AST::Funcao(id, tipoVariavel, next);
+}
