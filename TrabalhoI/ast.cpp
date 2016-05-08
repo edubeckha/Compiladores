@@ -119,7 +119,7 @@ void BinOp::printTree(){
         case unario: 
         std::cout << "Atribuicao de valor para variavel do tipo " << dynamic_cast<Variable*>(left)->tipoParaString(dynamic_cast<Variable*>(left)->tipo);
         left->printTree(); std::cout << ": "; 
-        std::cout << " (not unario " << dynamic_cast<Variable*>(left)->tipoParaString(dynamic_cast<Variable*>(left)->tipo) << ") "; 
+        std::cout << " (menos unario " << dynamic_cast<Variable*>(left)->tipoParaString(dynamic_cast<Variable*>(left)->tipo) << ") "; 
         right->printTree(); 
         break;
 
