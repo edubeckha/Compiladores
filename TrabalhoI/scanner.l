@@ -35,10 +35,11 @@ nome [a-z]+
 
 ":"                 {return T_DEF;}
 ","                 {return T_COMMA;}
-":="                 {return T_ASSIGN;}
+":="                {return T_ASSIGN;}
 "~="				{return T_DIFERENTE;}
 ">"					{return T_MAIOR;}
 "<"					{return T_MENOR;}
+"="					{return T_IGUAL;}
 ">="				{return T_MAIORIGUAL;}
 "<="				{return T_MENORIGUAL;}
 

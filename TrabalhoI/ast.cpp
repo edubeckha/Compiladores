@@ -152,6 +152,27 @@ void UniOp::printTree(){
     }
 }
 
+void Igual::printTree(){
+    switch(op){
+        case igual:
+            std::cout<<"Atribuicao de valor para variavel booleana "<<id;
+            std::cout << ": ("; left->printTree(); 
+            std::cout << " (igual booleano) "; 
+            right->printTree();
+            std::cout << ")"; 
+        break;
+        case diferente:
+            std::cout<<"Atribuicao de valor para variavel booleana "<<id;
+            std::cout << ": ("; left->printTree(); 
+            std::cout << " (diferente booleano) "; 
+            right->printTree();
+            std::cout << ")"; 
+        break;
+
+        default: std::cout << "Igualdade não respeitada." << std::endl;
+    }
+}
+
 std::string Variable::tipoParaString(Tipo tipo){
     switch(tipo){
         case inteiro : return " inteiro ";
