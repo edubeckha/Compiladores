@@ -69,16 +69,16 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | tipoVariavel T_DEF varlist T_FINALEXP { $$ = new AST::UniOp($3, AST::declaracao); }
         | T_ID T_ASSIGN expr T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node,AST::assign,$3);}
         
-        //| T_ID T_ASSIGN T_SUB expr T_FINALEXP { AST::Node* node = symtab.assignVariable($1); AST::Node* node1 = symtab.assignVariable("teste"); $$ = new AST::BinOp(node, AST::unario, node1 ); }
         | T_ID T_ASSIGN T_SUB T_INT T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unario, new AST::Integer(-$4) ); }
         | T_ID T_ASSIGN T_SUB T_DOUBLE T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unario, new AST::Doubler(-$4) ); }
         | T_ID T_ASSIGN T_UNIBOOL bool T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unibool, new AST::Boolean(!$4)); }
 
-//      para aceitar -(id) ou -(int) ou -(real) ou ~(bool). falta -(expressao)
         | T_ID T_ASSIGN T_SUB T_PARA T_INT T_PARAF T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unario, new AST::Integer(-$5) ); }
         | T_ID T_ASSIGN T_SUB T_PARA T_DOUBLE T_PARAF T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unario, new AST::Doubler(-$5) ); }
         | T_ID T_ASSIGN T_SUB T_PARA T_ID T_PARAF T_FINALEXP { AST::Node* node = symtab.assignVariable($1); AST::Node* node1 = symtab.assignVariable($5); $$ = new AST::BinOp(node, AST::unario, node1 ); }
         | T_ID T_ASSIGN T_UNIBOOL T_PARA bool T_PARAF T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unibool, new AST::Boolean(!$5)); }
+
+        | T_ID T_ASSIGN T_SUB T_ID T_FINALEXP { AST::Node* node = symtab.assignVariable($1); AST::Node* node1 = symtab.assignVariable($4); $$ = new AST::BinOp(node, AST::unario, node1 ); }
 
         | T_ID T_ASSIGN T_UNIBOOL T_PARA T_ID T_PARAF T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unibool, new AST::Boolean(!$5)); }
         | T_ID T_ASSIGN T_UNIBOOL T_ID T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unibool, new AST::Boolean(!$4)); }
