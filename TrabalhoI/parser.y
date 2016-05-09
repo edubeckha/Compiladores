@@ -36,9 +36,9 @@ static AST::Tipo tipoVariavel = AST::indefinido;
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
-%type <node> expr line varlist
+%type <node> expr line varlist indiceArranjo
 %type <block> lines program
-%type <operacao> tipoOperacao 
+%type <operacao> tipoOperacao operacaoArranjo
 %type <boolean> bool
 
 
@@ -74,8 +74,16 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | T_ID T_ASSIGN T_UNIBOOL bool T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unibool, new AST::Boolean(!$4)); }
 
         //COMECANDO A TRATAR ARRANJOS AQUI
-        | tipoVariavel T_ARRA T_INT T_ARRAF T_DEF T_ID T_FINALEXP {$$ = symtab.newVariable($6, tipoVariavel, NULL); $$ = new AST::Arranjo(tipoVariavel, new AST::Integer($3),$6);};
+        | tipoVariavel T_ARRA indiceArranjo T_ARRAF T_DEF T_ID T_FINALEXP {$$ = symtab.newVariable($6, tipoVariavel, NULL); $$ = new AST::Arranjo(tipoVariavel, $3 ,$6);};
         ;
+
+indiceArranjo : T_INT operacaoArranjo indiceArranjo {$$ = new AST::BinOp(new AST::Integer($1), $2, $3);}
+              | T_ID operacaoArranjo indiceArranjo { AST::Node* node = symtab.useVariable($1);  $$ = new AST::BinOp(node, $2, $3);}
+              | T_ID {$$ = symtab.useVariable($1);}
+              | T_INT {$$ = new AST::Integer($1);}
+              ;
+
+operacaoArranjo : T_PLUS {$$ = AST::plus;}| T_SUB {$$ = AST::sub;}| T_TIMES {$$ = AST::times;}
 
 bool    : T_BOOLTRUE {$$ = new AST::Boolean(true);}
         | T_BOOLFALSE {$$ = new AST::Boolean(false);}

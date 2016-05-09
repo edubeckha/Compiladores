@@ -24,7 +24,7 @@ AST::Node* SymbolTable::assignVariable(std::string id){
 AST::Node* SymbolTable::useVariable(std::string id){
 	std::cout<<"Usando variavel: "<< id << std::endl;
     if (  !checkId(id) ) {yyerror("Erro semantico: variavel %s ainda nao declarada.\n", id.c_str());}
-    if (  !entryList[id].initialized ) {yyerror("Erro semantico: variavel %s ainda nao inicializada.\n", id.c_str());std::cout<<"blablabla "<<entryList[id].initialized<<std::endl;}
+    if (  !entryList[id].initialized ) {yyerror("Erro semantico: variavel %s ainda nao inicializada.\n", id.c_str());}
     return new AST::Variable(id, entryList[id].type, NULL); //Creates variable node anyway
 }
 
