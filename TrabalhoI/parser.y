@@ -38,7 +38,7 @@ static AST::Tipo tipoVariavel = AST::indefinido;
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
-%type <node> expr line varlist param declfunc funcBody
+%type <node> expr line varlist param funcBody
 /* decfuncbody*/
 %type <block> lines program
 %type <operacao> tipoOperacao 
@@ -77,13 +77,17 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         
         | T_ID T_ASSIGN T_UNIBOOL bool T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unibool, new AST::Boolean(!$4)); }
         
-        | T_DECL T_FUN tipoVariavel T_DEF T_ID declfunc T_FINALEXP { AST::Node* node = symtab.newFunction($5,AST::inteiro,NULL); $$ = new AST::Funcao($5, AST::inteiro, node); }
-        | T_DEFI T_FUN tipoVariavel T_DEF T_ID declfunc funcBody T_END T_DEFI { AST::Node* node = symtab.newFunction($5,AST::inteiro,$6); $$ = new AST::Funcao($5, AST::inteiro, node); }
-        //| T_DEFI T_FUN tipoVariavel T_DEF T_ID declfunc { AST::Node* node = symtab.newFunction($5,AST::inteiro,$6); $$ = new AST::Funcao($5, AST::inteiro, node); }
+        //declara funcao com e sem parametros
+        | T_DECL T_FUN tipoVariavel T_DEF T_ID T_PARA param T_PARAF T_FINALEXP { AST::Node* node = symtab.newFunction($5,AST::inteiro,NULL); $$ = new AST::Funcao($5, AST::inteiro, node); }
+        | T_DECL T_FUN tipoVariavel T_DEF T_ID T_PARA T_PARAF T_FINALEXP { AST::Node* node = symtab.newFunction($5,AST::inteiro,NULL); $$ = new AST::Funcao($5, AST::inteiro, node); }
+        
+        //define a funcao
+        | T_DEFI T_FUN T_DINT T_DEF T_ID T_PARA param T_PARAF funcBody T_END T_DEFI {std::cout<<"define"<<std::endl; AST::Node* node = symtab.newFunction($5,AST::inteiro,$7); $$ = new AST::Funcao($5, AST::inteiro, node); }
+        | T_DEFI T_FUN T_DINT T_DEF T_ID T_PARA T_PARAF funcBody T_END T_DEFI {std::cout<<"define"<<std::endl; AST::Node* node = symtab.newFunction($5,AST::inteiro,NULL); $$ = new AST::Funcao($5, AST::inteiro, node); }
         ;
 
-funcBody : T_RETO expr T_FINALEXP 
-         | T_NL
+funcBody : T_RETO expr T_FINALEXP { std::cout<<"body"<<std::endl;$$ = $2;}
+        // | T_NL expr funcBody { AST::Node* node = symtab.assignVariable($2); $$ = new AST::BinOp(node,AST::assign,$3);}
          ;
 
 bool    : T_BOOLTRUE {$$ = new AST::Boolean(true);}
@@ -119,9 +123,6 @@ tipoOperacao : T_PLUS {$$ = AST::plus;}
 varlist : T_ID { $$ = symtab.newVariable($1, tipoVariavel, NULL); }
         | varlist T_COMMA T_ID { $$ = symtab.newVariable($3, tipoVariavel, $1); }
         ;
-
-declfunc : T_PARA param T_PARAF {$$ = $2;}
-         ;
 
 param : tipoVariavel T_DEF varlist T_COMMA param {$$ = new AST::UniOp($3, AST::declaracao); }
       | tipoVariavel T_DEF varlist { $$ = new AST::UniOp($3, AST::declaracao); }
