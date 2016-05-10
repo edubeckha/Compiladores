@@ -21,13 +21,12 @@ void Boolean::printTree(){
     return;
 }
 
+void Arranjo::printTree(){
+    std::cout << "arranjo " << AST::tipoParaString(tipoArranjo) << ": ";
+}
+
 void BinOp::printTree(){
-    /*std::cout << "somente um teste "<< std::endl;
-    left->printTree();
-    std::cout << " \n direita "<< std::endl;
-    right->printTree();
-    std::cout << "---------------------------- "<< std::endl;
-    return;*/
+
     switch(op){
         //esse dynamic cast pode ser uma saida, mas provavelmente estou criando um overhead desnecessario fazendo essas conversoes enquanto ha um jeito mais facil de realizar esse print...
         case assign: 
@@ -148,14 +147,8 @@ void UniOp::printTree(){
         case declaracao:
         std::cout << "Declaracao de variavel do tipo" << AST::tipoParaString(node->tipo) << ": "; node->printTree();
         break;
-        default: std::cout << "Operacao nao reconhecida!!! (Ou ainda nao tratada pelo compileiro)." << std::endl;
+        default: std::cout << "Operacao nao reconhecida!!!" << std::endl;
     }
-}
-
-void Arranjo::printTree(){
-    std::cout << "Declaracao de arranjo " << AST::tipoParaString(tipoArranjo) << " de tamanho ";
-    tamanhoArranjo->printTree();
-    std::cout << ": " << id << std::endl;
 }
 
 std::string AST::tipoParaString(Tipo tipo){
@@ -166,6 +159,8 @@ std::string AST::tipoParaString(Tipo tipo){
         default : return " indefinido ";
     }
 }
+
+
 
 
 
