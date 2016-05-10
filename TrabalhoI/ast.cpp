@@ -166,7 +166,9 @@ void Funcao::printTree(){
     if (right != NULL){
         right->printTree();
         std::cout << "Definição de função inteira: "<<id;
-    } 
+    } /*else {
+    	std::cout << "nulooo: ";
+    }*/
 }
 
 

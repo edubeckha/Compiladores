@@ -38,7 +38,8 @@ static AST::Tipo tipoVariavel = AST::indefinido;
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
-%type <node> expr line varlist
+%type <node> expr line varlist param declfunc
+/* decfuncbody*/
 %type <block> lines program
 %type <operacao> tipoOperacao 
 %type <boolean> bool
@@ -74,7 +75,9 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | T_ID T_ASSIGN T_SUB T_INT T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unario, new AST::Integer(-$4) ); }
         | T_ID T_ASSIGN T_SUB T_DOUBLE T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unario, new AST::Doubler(-$4) ); }
         | T_ID T_ASSIGN T_UNIBOOL bool T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unibool, new AST::Boolean(!$4)); }
-        | T_DECL T_FUN T_DINT T_DEF T_ID declfunc T_FINALEXP { AST::Node* node = symtab.newFunction($5,AST::inteiro,NULL); $$ = new AST::Funcao($5, AST::inteiro, node); }
+        | T_DECL T_FUN tipoVariavel T_DEF T_ID declfunc T_FINALEXP { AST::Node* node = symtab.newFunction($5,AST::inteiro,NULL); $$ = new AST::Funcao($5, AST::inteiro, node); }
+        | T_DEFI T_FUN tipoVariavel T_DEF T_ID declfunc T_NL T_RETO expr T_FINALEXP T_NL T_END T_DEFI { AST::Node* node = symtab.newFunction($5,AST::inteiro,$6); $$ = new AST::Funcao($5, AST::inteiro, node); }
+        | T_DEFI T_FUN tipoVariavel T_DEF T_ID declfunc T_RETO expr T_FINALEXP T_END T_DEFI { AST::Node* node = symtab.newFunction($5,AST::inteiro,$6); $$ = new AST::Funcao($5, AST::inteiro, node); }
         ;
 
 bool    : T_BOOLTRUE {$$ = new AST::Boolean(true);}
@@ -111,14 +114,11 @@ varlist : T_ID { $$ = symtab.newVariable($1, tipoVariavel, NULL); }
         | varlist T_COMMA T_ID { $$ = symtab.newVariable($3, tipoVariavel, $1); }
         ;
 
-declfunc : T_PARA param T_PARAF
-         | T_PARA T_PARAF
+declfunc : T_PARA param T_PARAF {$$ = $2;}
          ;
 
-param : | tipoVariavel T_DEF T_ID T_COMMA param 
-        | tipoVariavel T_DEF T_ID
-        ;
-        
+param : tipoVariavel T_DEF varlist T_COMMA param {$$ = new AST::UniOp($3, AST::declaracao); }
+      | tipoVariavel T_DEF varlist { $$ = new AST::UniOp($3, AST::declaracao); }
+      ; 
+
 %%
-
-
