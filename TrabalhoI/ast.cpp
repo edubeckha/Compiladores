@@ -138,9 +138,10 @@ void Block::printTree(){
 void Variable::printTree(){
     if (next != NULL){
         next->printTree();
-        std::cout << ", ";
-    } 
-    std::cout << id;
+        std::cout << ", " << id;
+    } else {
+        std::cout << "variavel do tipo" << AST::tipoParaString(tipo) << ": " << id;
+    }
 }
 
 void UniOp::printTree(){
