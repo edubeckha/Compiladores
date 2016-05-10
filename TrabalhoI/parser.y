@@ -36,10 +36,12 @@ static AST::Tipo tipoVariavel = AST::indefinido;
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
-%type <node> expr line varlist
+%type <node> expr line varlist tesIgual tesDif
 %type <block> lines program
-%type <operacao> tipoOperacao 
-%type <boolean> bool
+%type <operacao> tipoOperacao
+
+//Aparentemente este tipo é inutil, possibilidade de ser removido posteriormente
+//%type <boolean> bool
 
 
 /* Operator precedence for mathematical operators
@@ -68,34 +70,22 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | expr T_FINALEXP /*$$ = $1 when nothing is said*/
         | tipoVariavel T_DEF varlist T_FINALEXP { $$ = new AST::UniOp($3, AST::declaracao); }
         | T_ID T_ASSIGN expr T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node,AST::assign,$3);}
-        
-        | T_ID T_ASSIGN T_SUB T_INT T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unario, new AST::Integer(-$4) ); }
-        | T_ID T_ASSIGN T_SUB T_DOUBLE T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unario, new AST::Doubler(-$4) ); }
-        | T_ID T_ASSIGN T_UNIBOOL bool T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unibool, new AST::Boolean(!$4)); }
 
-        | T_ID T_ASSIGN T_SUB T_PARA T_INT T_PARAF T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unario, new AST::Integer(-$5) ); }
-        | T_ID T_ASSIGN T_SUB T_PARA T_DOUBLE T_PARAF T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unario, new AST::Doubler(-$5) ); }
-        | T_ID T_ASSIGN T_SUB T_PARA T_ID T_PARAF T_FINALEXP { AST::Node* node = symtab.assignVariable($1); AST::Node* node1 = symtab.assignVariable($5); $$ = new AST::BinOp(node, AST::unario, node1 ); }
-        | T_ID T_ASSIGN T_UNIBOOL T_PARA bool T_PARAF T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unibool, new AST::Boolean(!$5)); }
-
-        | T_ID T_ASSIGN T_SUB T_ID T_FINALEXP { AST::Node* node = symtab.assignVariable($1); AST::Node* node1 = symtab.assignVariable($4); $$ = new AST::BinOp(node, AST::unario, node1 ); }
-
-        | T_ID T_ASSIGN T_UNIBOOL T_PARA T_ID T_PARAF T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unibool, new AST::Boolean(!$5)); }
-        | T_ID T_ASSIGN T_UNIBOOL T_ID T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unibool, new AST::Boolean(!$4)); }
-
-        | T_ID T_ASSIGN T_INT T_IGUAL T_INT T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::Igual($1, new AST::Integer($3), AST::igual, new AST::Integer($5) ); }
-        | T_ID T_ASSIGN bool T_IGUAL bool T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::Igual($1, new AST::Boolean($3), AST::igual, new AST::Boolean($5) ); }
-        | T_ID T_ASSIGN T_DOUBLE T_IGUAL T_DOUBLE T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::Igual($1, new AST::Doubler($3), AST::igual, new AST::Doubler($5) ); }
-
-        | T_ID T_ASSIGN T_INT T_DIFERENTE T_INT T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::Igual($1, new AST::Integer($3), AST::diferente, new AST::Integer($5) ); }
-        | T_ID T_ASSIGN bool T_DIFERENTE bool T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::Igual($1, new AST::Boolean($3), AST::diferente, new AST::Boolean($5) ); }
-        | T_ID T_ASSIGN T_DOUBLE T_DIFERENTE T_DOUBLE T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::Igual($1, new AST::Doubler($3), AST::diferente, new AST::Doubler($5) ); }
+        | T_ID T_ASSIGN T_SUB expr T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unario,$4); }
+        | T_ID T_ASSIGN tesIgual { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::igual, $3 ); }
+        | T_ID T_ASSIGN tesDif { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::diferente, $3 ); }
+        | T_ID T_ASSIGN T_UNIBOOL expr T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unibool,$4); }
         ;
 
-bool    : T_BOOLTRUE {$$ = new AST::Boolean(true);}
-        | T_BOOLFALSE {$$ = new AST::Boolean(false);}
-        ;
+tesIgual : expr T_IGUAL expr T_FINALEXP
 
+tesDif : expr T_DIFERENTE expr T_FINALEXP
+/*
+//          Aparentemente esta produção é inutil, possibilidade de ser removido posteriormente
+//bool    : T_BOOLTRUE {$$ = new AST::Boolean(true);}
+ //       | T_BOOLFALSE {$$ = new AST::Boolean(false);}
+ //       ;
+*/
 expr    : T_PARA expr T_PARAF { $$ = $2; }
         | T_INT { $$ = new AST::Integer($1); } 
         | T_DOUBLE { $$ = new AST::Doubler($1); }

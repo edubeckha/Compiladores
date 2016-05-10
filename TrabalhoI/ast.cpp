@@ -31,98 +31,113 @@ void BinOp::printTree(){
     switch(op){
         //esse dynamic cast pode ser uma saida, mas provavelmente estou criando um overhead desnecessario fazendo essas conversoes enquanto ha um jeito mais facil de realizar esse print...
         case assign: 
-        std::cout << "Atribuicao de valor para variavel do tipo"<< 
-        dynamic_cast<Variable*>(left)->tipoParaString(dynamic_cast<Variable*>(left)->tipo); 
-        left->printTree(); 
-        std::cout << ": "; 
-        right->printTree(); 
+            std::cout << "Atribuicao de valor para variavel do tipo"<< 
+            dynamic_cast<Variable*>(left)->tipoParaString(dynamic_cast<Variable*>(left)->tipo); 
+            left->printTree(); 
+            std::cout << ": "; 
+            right->printTree(); 
         break;
 
         case plus: 
-        std::cout << "("; left->printTree(); std::cout << " (soma) "; 
-        right->printTree(); 
-        std::cout << ")"; 
+            std::cout << "("; left->printTree(); std::cout << " (soma) "; 
+            right->printTree(); 
+            std::cout << ")"; 
         break;
 
         case sub: 
-        std::cout << "("; left->printTree(); 
-        std::cout << " (subtracao) "; 
-        right->printTree(); 
-        std::cout << ")"; 
+            std::cout << "("; left->printTree(); 
+            std::cout << " (subtracao) "; 
+            right->printTree(); 
+            std::cout << ")"; 
         break;
 
         case times:
-        std::cout << "("; left->printTree(); 
-        std::cout << " (multiplicacao) "; 
-        right->printTree(); 
-        std::cout << ")"; 
+            std::cout << "("; left->printTree(); 
+            std::cout << " (multiplicacao) "; 
+            right->printTree(); 
+            std::cout << ")"; 
         break;
 
         case divi: 
-        std::cout << "("; 
-        left->printTree(); 
-        std::cout << " (divisao) "; 
-        right->printTree(); 
-        std::cout << ")"; 
+            std::cout << "("; 
+            left->printTree(); 
+            std::cout << " (divisao) "; 
+            right->printTree(); 
+            std::cout << ")"; 
         break;
         
         case maior: 
-        std::cout << "("; left->printTree(); 
-        std::cout << " (maior que) "; 
-        right->printTree(); 
-        std::cout << ")"; 
+            std::cout << "("; left->printTree(); 
+            std::cout << " (maior que) "; 
+            right->printTree(); 
+            std::cout << ")"; 
         break;
 
         case menor: 
-        std::cout << "("; left->printTree(); 
-        std::cout << " (menor que) "; 
-        right->printTree(); 
-        std::cout << ")"; 
+            std::cout << "("; left->printTree(); 
+            std::cout << " (menor que) "; 
+            right->printTree(); 
+            std::cout << ")"; 
         break;
 
 
         case maiorigual: 
-        std::cout << "("; left->printTree(); 
-        std::cout << " (maior ou igual que) "; 
-        right->printTree();
-        std::cout << ")"; 
+            std::cout << "("; left->printTree(); 
+            std::cout << " (maior ou igual que) "; 
+            right->printTree();
+            std::cout << ")"; 
         break;
 
         case menorigual: 
-        std::cout << "("; left->printTree(); 
-        std::cout << " (menor ou igual que) "; 
-        right->printTree(); 
-        std::cout << ")"; 
+            std::cout << "("; left->printTree(); 
+            std::cout << " (menor ou igual que) "; 
+            right->printTree(); 
+            std::cout << ")"; 
         break;
         
         case ande: 
-        std::cout << "("; left->printTree(); 
-        std::cout << " (AND) "; 
-        right->printTree(); 
-        std::cout << ")"; 
+            std::cout << "("; left->printTree(); 
+            std::cout << " (AND) "; 
+            right->printTree(); 
+            std::cout << ")"; 
         break;
 
         case ore: 
-        std::cout << "("; left->printTree(); 
-        std::cout << " (OR) "; 
-        right->printTree(); 
-        std::cout << ")"; 
+            std::cout << "("; left->printTree(); 
+            std::cout << " (OR) "; 
+            right->printTree(); 
+            std::cout << ")"; 
         break;
 
         case unibool:
-        std::cout << "Atribuicao de valor para variavel booleana: "; left->printTree(); 
-        std::cout << " (not unario binario) "; 
-        right->printTree(); 
+            std::cout << "Atribuicao de valor para variavel booleana: "; left->printTree(); 
+            std::cout << " (not unario binario) "; 
+            right->printTree(); 
+        break;
+
+        case igual:
+            std::cout<<"Atribuicao de valor para variavel booleana: ";
+            std::cout << ": ("; left->printTree(); 
+            std::cout << " (igual booleano) "; 
+            right->printTree();
+            std::cout << ")"; 
+        break;
+
+        case diferente:
+            std::cout<<"Atribuicao de valor para variavel booleana: ";
+            std::cout << ": ("; left->printTree(); 
+            std::cout << " (diferente booleano) "; 
+            right->printTree();
+            std::cout << ")"; 
         break;
 
         //ajeitar esses dynamics depois....
         case unario: 
-        std::cout << "Atribuicao de valor para variavel do tipo " << dynamic_cast<Variable*>(left)->tipoParaString(dynamic_cast<Variable*>(left)->tipo);
-        left->printTree(); std::cout << ": "; 
-        std::cout << " (menos unario " << dynamic_cast<Variable*>(left)->tipoParaString(dynamic_cast<Variable*>(left)->tipo) << ") "; 
-        right->printTree(); 
+            std::cout << "Atribuicao de valor para variavel do tipo " << dynamic_cast<Variable*>(left)->tipoParaString(dynamic_cast<Variable*>(left)->tipo);
+            left->printTree(); std::cout << ": "; 
+            std::cout << " (menos unario " << dynamic_cast<Variable*>(left)->tipoParaString(dynamic_cast<Variable*>(left)->tipo) << ") "; 
+            right->printTree(); 
         break;
-
 
         default: std::cout << "Operador nao tratado" << std::endl; break;
     }  
@@ -146,30 +161,9 @@ void Variable::printTree(){
 void UniOp::printTree(){
     switch(op){
         case declaracao:
-        std::cout << "Declaracao de variavel do tipo" << node->tipoParaString(node->tipo) << ": "; node->printTree();
+            std::cout << "Declaracao de variavel do tipo" << node->tipoParaString(node->tipo) << ": "; node->printTree();
         break;
         default: std::cout << "Operacao nao reconhecida!!! (Ou ainda nao tratada pelo compileiro)." << std::endl;
-    }
-}
-
-void Igual::printTree(){
-    switch(op){
-        case igual:
-            std::cout<<"Atribuicao de valor para variavel booleana "<<id;
-            std::cout << ": ("; left->printTree(); 
-            std::cout << " (igual booleano) "; 
-            right->printTree();
-            std::cout << ")"; 
-        break;
-        case diferente:
-            std::cout<<"Atribuicao de valor para variavel booleana "<<id;
-            std::cout << ": ("; left->printTree(); 
-            std::cout << " (diferente booleano) "; 
-            right->printTree();
-            std::cout << ")"; 
-        break;
-
-        default: std::cout << "Igualdade não respeitada." << std::endl;
     }
 }
 

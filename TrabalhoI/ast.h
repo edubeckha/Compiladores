@@ -79,17 +79,4 @@ namespace AST {
 	        void printTree();
 	};
 
-	class Igual : public Node {
-	    public:
-	    	std::string id;
-	        Operation op;
-	        Tipo tipoRetorno;
-	        Node *left;
-	        Node *right;
-	        Igual(std::string id, Node *left, Operation op, Node *right) :
-	            id(id), left(left), right(right), op(op) { }
-	        void printTree();
-	};
-
-
 }
