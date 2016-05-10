@@ -75,7 +75,7 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | T_ID T_ASSIGN T_UNIBOOL bool T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unibool, new AST::Boolean(!$4)); }
 
         //ARRANJOS A PARTIR DAQUI
-        | tipoVariavel T_ARRA indiceArranjo T_ARRAF T_DEF T_ID T_FINALEXP {$$ = symtab.newVariable($6, tipoVariavel, NULL); $$ = new AST::Arranjo(tipoVariavel, $3 ,$6);};
+        | tipoVariavel T_ARRA indiceArranjo T_ARRAF T_DEF T_ID T_FINALEXP {$$ = symtab.newVariable($6, tipoVariavel, NULL); AST::Node* node = new AST::Arranjo(tipoVariavel, $3 ,$6); $$ = new AST::UniOp(node, AST::declaracao);};
         ;
 
 indiceArranjo : T_INT operacaoArranjo indiceArranjo {$$ = new AST::BinOp(new AST::Integer($1), $2, $3);}

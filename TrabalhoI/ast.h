@@ -68,8 +68,8 @@ namespace AST {
 	class UniOp : public Node {
 	public:
 		Operation op;
-		AST::Variable *node;
-		UniOp(Node* node, Operation op) : node(dynamic_cast<Variable*>(node)), op(op) { }
+		Node *node;
+		UniOp(Node* node, Operation op) : node(node), op(op) { }
 		void printTree();
 	};
 

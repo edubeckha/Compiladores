@@ -22,7 +22,8 @@ void Boolean::printTree(){
 }
 
 void Arranjo::printTree(){
-    std::cout << "arranjo " << AST::tipoParaString(tipoArranjo) << ": ";
+    std::cout << "arranjo do tipo" << AST::tipoParaString(tipoArranjo) << ": " << id << " com indice ";
+    indice->printTree();
 }
 
 void BinOp::printTree(){
@@ -145,7 +146,8 @@ void Variable::printTree(){
 void UniOp::printTree(){
     switch(op){
         case declaracao:
-        std::cout << "Declaracao de variavel do tipo" << AST::tipoParaString(node->tipo) << ": "; node->printTree();
+            std::cout << "Declaracao de ";
+            node->printTree();
         break;
         default: std::cout << "Operacao nao reconhecida!!!" << std::endl;
     }
