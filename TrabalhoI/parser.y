@@ -82,12 +82,13 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | T_DECL T_FUN tipoVariavel T_DEF T_ID T_PARA T_PARAF T_FINALEXP { AST::Node* node = symtab.newFunction($5,AST::inteiro,NULL); $$ = new AST::Funcao($5, AST::inteiro, node); }
         
         //define a funcao
-        | T_DEFI T_FUN T_DINT T_DEF T_ID T_PARA param T_PARAF funcBody T_END T_DEFI {std::cout<<"define"<<std::endl; AST::Node* node = symtab.newFunction($5,AST::inteiro,$7); $$ = new AST::Funcao($5, AST::inteiro, node); }
-        | T_DEFI T_FUN T_DINT T_DEF T_ID T_PARA T_PARAF funcBody T_END T_DEFI {std::cout<<"define"<<std::endl; AST::Node* node = symtab.newFunction($5,AST::inteiro,NULL); $$ = new AST::Funcao($5, AST::inteiro, node); }
+        | T_DEFI T_FUN T_DINT T_DEF T_ID T_PARA param T_PARAF funcBody T_END T_DEFI {AST::Node* node = symtab.assignFunction($5,$9); $$ = new AST::DefineFuncao($5,  node);}
+        | T_DEFI T_FUN T_DINT T_DEF T_ID T_PARA T_PARAF funcBody T_END T_DEFI {AST::Node* node = symtab.assignFunction($5,$8);  $$ = new AST::DefineFuncao($5,  node);}
         ;
 
-funcBody : T_RETO expr T_FINALEXP { std::cout<<"body"<<std::endl;$$ = $2;}
-        // | T_NL expr funcBody { AST::Node* node = symtab.assignVariable($2); $$ = new AST::BinOp(node,AST::assign,$3);}
+funcBody : T_RETO expr T_FINALEXP { $$ = $2;}
+		 | line { $$ = $1; }
+        // | T_NL expr T_FINALEXP funcBody { AST::Node* node = symtab.assignVariable($2); $$ = new AST::BinOp(node,AST::assign,$4);}
          ;
 
 bool    : T_BOOLTRUE {$$ = new AST::Boolean(true);}

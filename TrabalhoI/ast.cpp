@@ -46,7 +46,7 @@ void BinOp::printTree(){
 
         case sub: 
         std::cout << "("; left->printTree(); 
-        std::cout << " (subtracao) "; 
+        std::cout << " (subtracao) ";
         right->printTree(); 
         std::cout << ")"; 
         break;
@@ -165,10 +165,17 @@ std::string Variable::tipoParaString(Tipo tipo){
 void Funcao::printTree(){
     if (right != NULL){
         right->printTree();
-        std::cout << "Definição de função inteira: "<<id;
+        std::cout << "Declaração de função inteira: "<<id;
     } /*else {
     	std::cout << "nulooo: ";
     }*/
 }
 
-
+void DefineFuncao::printTree(){
+    if (right != NULL){
+        right->printTree();
+        std::cout << "Definição de função inteira: "<<id;
+    } /*else {
+    	std::cout << "nulooo: ";
+    }*/
+}

@@ -42,3 +42,10 @@ AST::Node* SymbolTable::newFunction(std::string id, AST::Tipo tipoVariavel, AST:
     }
     return new AST::Funcao(id, tipoVariavel, next);
 }
+
+AST::Node* SymbolTable::assignFunction(std::string id, AST::Node* next){
+    std::cout<<"Inicializando função"<<std::endl;
+    if ( ! checkId(id) ) {yyerror("função ainda não definida! %s\n", id.c_str());}
+    entryList[id].initialized = true;
+    return new AST::Funcao(id, entryList[id].type, next); //Creates variable node anyway
+}

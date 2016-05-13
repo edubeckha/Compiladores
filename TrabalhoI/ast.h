@@ -90,4 +90,13 @@ namespace AST {
 	         std::string tipoParaString(Tipo tipo);
 	};
 
+	class DefineFuncao : public Node {
+	     public:
+	         std::string id;
+	         Node *right;
+	         DefineFuncao(std::string id, Node *right) : id(id), right(right) { }
+	         void printTree();
+	         // std::string tipoParaString(Tipo tipo);
+	};
+
 }
