@@ -11,7 +11,7 @@ AST::Node* SymbolTable::newVariable(std::string id, AST::Tipo tipoVariavel, AST:
       	Symbol entry(tipoVariavel, variable, 0, false);
     	addSymbol(id,entry);
     }
-    return new AST::Variable(id, tipoVariavel, next); //Creates variable node anyway
+        return new AST::Variable(id, tipoVariavel, next); //Creates variable node anyway
 }
 
 AST::Node* SymbolTable::assignVariable(std::string id){

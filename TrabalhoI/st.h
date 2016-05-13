@@ -9,7 +9,7 @@ extern void yyerror(const char* s, ...);
 namespace ST {
 
 class Symbol;
-enum Kind { variable, function };
+enum Kind { variable, arranjo,  function };
 
 
 typedef std::map<std::string,Symbol> SymbolList; //Set of Symbols

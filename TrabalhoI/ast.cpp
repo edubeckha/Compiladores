@@ -22,14 +22,16 @@ void Boolean::printTree(){
 }
 
 void Arranjo::printTree(){
-    std::cout << "arranjo do tipo" << AST::tipoParaString(tipoArranjo) << ": " << id << " com indice ";
+    std::cout << "arranjo do tipo "<< 
+    AST::tipoParaString(dynamic_cast<Variable*>(var)->tipo)
+    << " {+indice: ";
     indice->printTree();
+    std::cout << "}";
 }
 
 void BinOp::printTree(){
 
     switch(op){
-        //esse dynamic cast pode ser uma saida, mas provavelmente estou criando um overhead desnecessario fazendo essas conversoes enquanto ha um jeito mais facil de realizar esse print...
         case assign: 
         std::cout << "Atribuicao de valor para ";
         left->printTree(); 

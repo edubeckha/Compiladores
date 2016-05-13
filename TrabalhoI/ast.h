@@ -61,8 +61,7 @@ namespace AST {
 	         Tipo tipo;
 	         Node *next;
 	         Variable(std::string id, Tipo tipo, Node *next) : id(id), tipo(tipo), next(next) { }
-	         void printTree();
-	        
+	         void printTree();      
 	};
 
 	class UniOp : public Node {
@@ -83,10 +82,9 @@ namespace AST {
 	//comecando a tratar arranjos
 	class Arranjo : public Node {
 	public:
-		Tipo tipoArranjo;
 		Node* indice;
-		std::string id;
-		Arranjo(Tipo tipoArranjo,Node* indice, std::string id) : tipoArranjo(tipoArranjo), indice(indice), id(id) { }
+		Node* var;
+		Arranjo(Node* indice, Node* var) : indice(indice), var(var) { }
 	    void printTree();		
 	};
 
