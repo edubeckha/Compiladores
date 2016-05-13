@@ -31,8 +31,7 @@ void BinOp::printTree(){
     switch(op){
         //esse dynamic cast pode ser uma saida, mas provavelmente estou criando um overhead desnecessario fazendo essas conversoes enquanto ha um jeito mais facil de realizar esse print...
         case assign: 
-        std::cout << "Atribuicao de valor para variavel do tipo"<< 
-        AST::tipoParaString(dynamic_cast<Variable*>(left)->tipo); 
+        std::cout << "Atribuicao de valor para ";
         left->printTree(); 
         std::cout << ": "; 
         right->printTree(); 
