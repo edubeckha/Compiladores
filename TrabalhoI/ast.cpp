@@ -21,21 +21,22 @@ void Boolean::printTree(){
     return;
 }
 
+void Arranjo::printTree(){
+    std::cout << "arranjo do tipo "<< 
+    AST::tipoParaString(dynamic_cast<Variable*>(var)->tipo)
+    << " {+indice: ";
+    indice->printTree();
+    std::cout << "}";
+}
+
 void BinOp::printTree(){
-    /*std::cout << "somente um teste "<< std::endl;
-    left->printTree();
-    std::cout << " \n direita "<< std::endl;
-    right->printTree();
-    std::cout << "---------------------------- "<< std::endl;
-    return;*/
+
     switch(op){
-        //esse dynamic cast pode ser uma saida, mas provavelmente estou criando um overhead desnecessario fazendo essas conversoes enquanto ha um jeito mais facil de realizar esse print...
         case assign: 
-            std::cout << "Atribuicao de valor para variavel do tipo"<< 
-            dynamic_cast<Variable*>(left)->tipoParaString(dynamic_cast<Variable*>(left)->tipo); 
-            left->printTree(); 
-            std::cout << ": "; 
-            right->printTree(); 
+        std::cout << "Atribuicao de valor para ";
+        left->printTree(); 
+        std::cout << ": "; 
+        right->printTree(); 
         break;
 
         case plus: 
@@ -131,14 +132,14 @@ void BinOp::printTree(){
             std::cout << ")"; 
         break;
 
-        //ajeitar esses dynamics depois....
+       //ajeitar esses dynamics depois....
         case unario: 
-            std::cout << "Atribuicao de valor para variavel do tipo " << dynamic_cast<Variable*>(left)->tipoParaString(dynamic_cast<Variable*>(left)->tipo);
+            std::cout << "Atribuicao de valor para variavel do tipo " << AST::tipoParaString(dynamic_cast<Variable*>(left)->tipo);
             left->printTree(); std::cout << ": "; 
-            std::cout << " (menos unario " << dynamic_cast<Variable*>(left)->tipoParaString(dynamic_cast<Variable*>(left)->tipo) << ") "; 
+            std::cout << " (not unario " << AST::tipoParaString(dynamic_cast<Variable*>(left)->tipo) << ") "; 
             right->printTree(); 
         break;
-
+        
         default: std::cout << "Operador nao tratado" << std::endl; break;
     }  
 }
@@ -153,21 +154,23 @@ void Block::printTree(){
 void Variable::printTree(){
     if (next != NULL){
         next->printTree();
-        std::cout << ", ";
-    } 
-    std::cout << id;
+        std::cout << ", " << id;
+    } else {
+        std::cout << "variavel do tipo" << AST::tipoParaString(tipo) << ": " << id;
+    }
 }
 
 void UniOp::printTree(){
     switch(op){
         case declaracao:
-            std::cout << "Declaracao de variavel do tipo" << node->tipoParaString(node->tipo) << ": "; node->printTree();
+            std::cout << "Declaracao de ";
+            node->printTree();
         break;
-        default: std::cout << "Operacao nao reconhecida!!! (Ou ainda nao tratada pelo compileiro)." << std::endl;
+        default: std::cout << "Operacao nao reconhecida!!!" << std::endl;
     }
 }
 
-std::string Variable::tipoParaString(Tipo tipo){
+std::string AST::tipoParaString(Tipo tipo){
     switch(tipo){
         case inteiro : return " inteiro ";
         case real : return " real ";
@@ -175,6 +178,8 @@ std::string Variable::tipoParaString(Tipo tipo){
         default : return " indefinido ";
     }
 }
+
+
 
 
 

@@ -50,6 +50,8 @@ nome [a-z]+
 
 "("					{return T_PARA;}
 ")"					{return T_PARAF;}
+"["					{return T_ARRA;}
+"]"					{return T_ARRAF;}
 
 
 ";"					{return T_FINALEXP;}
