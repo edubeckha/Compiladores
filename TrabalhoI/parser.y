@@ -99,7 +99,8 @@ expr    : T_PARA expr T_PARAF { $$ = $2; }
         | T_BOOLTRUE { $$ = new AST::Boolean(true); }
         | T_BOOLFALSE { $$ = new AST::Boolean(false); }
         | T_ID { $$ = symtab.useVariable($1); }
-        | expr tipoOperacao expr {$$ = new AST::BinOp($1, $2, $3);}        
+        | expr tipoOperacao expr {$$ = new AST::BinOp($1, $2, $3);}  
+        | T_ID T_ARRA indiceArranjo T_ARRAF {$$ = new AST::Arranjo($3, symtab.useVariable($1));}      
         ;
 
 tipoVariavel : T_DINT { tipoVariavel = AST::inteiro; } 
