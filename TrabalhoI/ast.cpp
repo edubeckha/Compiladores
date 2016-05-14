@@ -170,6 +170,24 @@ void UniOp::printTree(){
     }
 }
 
+/*Imprime a condicao, quando a mesma aparecer na arvore.
+Deve-se atentar ao fato de que a mesma imprimira o corpo do else somente
+se ha algum nodo compondo este corpo*/
+void Condicao::printTree(){
+    std::cout << "Expressao condicional " << std::endl;
+    std::cout << "+se: " << std::endl;
+    condicao->printTree();
+    std::cout << "\n+entao: " << std::endl;
+    corpoIf->printTree();
+
+    if(corpoElse != NULL){
+    std::cout << "\n+senao: " << std::endl;
+    corpoElse->printTree();
+    }
+
+    std::cout << "\nFim expressao condicional" << std::endl;
+}
+
 std::string AST::tipoParaString(Tipo tipo){
     switch(tipo){
         case inteiro : return " inteiro ";
