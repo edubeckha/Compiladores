@@ -53,6 +53,10 @@ nome [a-z]+
 "["					{return T_ARRA;}
 "]"					{return T_ARRAF;}
 
+"if"				{return T_IF;}
+"then"				{return T_THEN;}
+"else"				{return T_ELSE;}
+"end"				{return T_END;}
 
 ";"					{return T_FINALEXP;}
 "\n"                {return T_NL;}
