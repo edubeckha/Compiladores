@@ -1,4 +1,4 @@
-/*Symbol Table definition*/
+/*Symbol Table definition - Ja previamente definido por Laércio Lima Pilla*/
 #pragma once
 
 #include <map>

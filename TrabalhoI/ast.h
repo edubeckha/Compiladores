@@ -8,8 +8,9 @@ extern void yyerror(const char *s, ...);
 
 namespace AST {
 
-	//Binary operations
+	/*Enum para declaracao de operacoes realizadas entre os nodos*/
 	enum Operation { plus, sub, times, divi, assign, maior, menor, maiorigual, menorigual, ande, ore, unibool, unario, declaracao, igual, diferente };
+	/*Enum para declaracao de tipos dos nodos*/
 	enum Tipo { inteiro, real, booleano, indefinido };
  	static std::string tipoParaString(Tipo tipo);
  	
@@ -55,6 +56,8 @@ namespace AST {
 	        void printTree();
 	};
 
+	/*Nodo que define variaveis do programa. A mesma possui um id, um tipo e um nodo next. Esse nodo eh de grande valia quando
+	tratamos de varias variaveis declaradas ao mesmo tempo (int a, b, c...)*/
 	class Variable : public Node {
 	     public:
 	         std::string id;
@@ -64,6 +67,7 @@ namespace AST {
 	         void printTree();      
 	};
 
+	/*Nodo que define operacoes unarias do programa. A unica disponivel ate o momento eh a declaracao*/
 	class UniOp : public Node {
 	public:
 		Operation op;
@@ -79,7 +83,8 @@ namespace AST {
 	        void printTree();
 	};
 
-	//comecando a tratar arranjos
+	/*Classe para tratamento de arranjos, que recebe uma variavel (para poder ser testada na tabela de simbolos) e um nodo indice, que 
+	da a liberdade de colocarmos uma expressao qualquer como indice do arranjo*/
 	class Arranjo : public Node {
 	public:
 		Node* indice;

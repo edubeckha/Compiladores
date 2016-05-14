@@ -1,3 +1,4 @@
+/*Ja previamente definido por Laércio Lima Pilla*/
 #include "st.h"
 
 using namespace ST;

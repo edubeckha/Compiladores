@@ -5,22 +5,27 @@ using namespace AST;
 
 extern ST::SymbolTable symtab;
 
-/* Print methods */
+/*Metodos de impressao*/
+
+/*Imprime o valor do nodo quando o mesmo for inteiro*/
 void Integer::printTree(){
     std::cout << "(valor inteiro " << value << ")";
     return;
 }
 
+/*Imprime o valor do nodo quando o mesmo for real*/
 void Doubler::printTree(){
     std::cout << "(valor real " << value << ")";
     return;
 }
 
+/*Imprime o valor do nodo quando o mesmo for booleano*/
 void Boolean::printTree(){
     std::cout << "(valor booleano " << tipoParaString() << ")";
     return;
 }
 
+/*Imprime o arranjo, seu tipo e seu indice quando o nodo for do tipo arranjo*/
 void Arranjo::printTree(){
     std::cout << "arranjo do tipo "<< 
     AST::tipoParaString(dynamic_cast<Variable*>(var)->tipo)
@@ -29,6 +34,7 @@ void Arranjo::printTree(){
     std::cout << "}";
 }
 
+/*Imprime o valor das operacoes binarias criadas na gramatica. Cada case influencia em uma operacao diferente*/
 void BinOp::printTree(){
 
     switch(op){
@@ -144,6 +150,7 @@ void BinOp::printTree(){
     }  
 }
 
+/*Imprime cada linha de insercao respectivamente*/
 void Block::printTree(){
     for (Node* line: lines) {
         line->printTree();
@@ -151,6 +158,7 @@ void Block::printTree(){
     }
 }
 
+/*Imprime as informacoes das variaveis criadas no programa, juntamente com seu tipo*/
 void Variable::printTree(){
     if (next != NULL){
         next->printTree();
@@ -160,6 +168,7 @@ void Variable::printTree(){
     }
 }
 
+/*Imprime uma operacao unaria. A unica por enquanto no programa eh a operacao de declaracao (tanto de arranjos como variaveis "comuns")*/
 void UniOp::printTree(){
     switch(op){
         case declaracao:
@@ -170,6 +179,7 @@ void UniOp::printTree(){
     }
 }
 
+/*Funcao que recebe um tipo e retorna uma string, ajudando na impressao das informacoes do nodo que contenha tipo*/
 std::string AST::tipoParaString(Tipo tipo){
     switch(tipo){
         case inteiro : return " inteiro ";
