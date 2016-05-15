@@ -88,9 +88,9 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         |T_ID T_ARRA indiceArranjo T_ARRAF T_ASSIGN expr T_FINALEXP {AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(new AST::Arranjo($3, node), AST::assign, $6);}
 
         /*tratamento de expressoes condicionais*/
-        |T_IF expr T_THEN line T_END T_IF T_FINALEXP { $$ = new AST::Condicao($2, $4, NULL);}
+        |T_IF expr T_THEN lines T_END T_IF T_FINALEXP { $$ = new AST::Condicao($2, $4, NULL);}
 
-        |T_IF expr T_THEN line T_ELSE line T_END T_IF T_FINALEXP { $$ = new AST::Condicao($2, $4, $6);}
+        |T_IF expr T_THEN lines T_ELSE lines T_END T_IF T_FINALEXP { $$ = new AST::Condicao($2, $4, $6);}
         ;
 
 indiceArranjo : T_INT operacaoArranjo indiceArranjo {$$ = new AST::BinOp(new AST::Integer($1), $2, $3);}
