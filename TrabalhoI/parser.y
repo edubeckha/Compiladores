@@ -31,7 +31,7 @@ static AST::Tipo tipoVariavel = AST::indefinido;
 %token <booleano> T_BOOLTRUE T_BOOLFALSE
 %token <name> T_ID
 
-%token T_DINT T_DREAL T_DBOOL T_PLUS T_SUB T_TIMES T_DIV T_DEF T_COMMA T_ASSIGN T_DIFERENTE T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_UNIBOOL T_ATRI T_PARA T_PARAF T_FINALEXP T_NL T_IGUAL T_ARRA T_ARRAF
+%token T_DINT T_DREAL T_DBOOL T_PLUS T_SUB T_TIMES T_DIV T_DEF T_COMMA T_ASSIGN T_DIFERENTE T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_UNIBOOL T_ATRI T_PARA T_PARAF T_FINALEXP T_NL T_IGUAL T_ARRA T_ARRAF T_WHILE T_DO T_END
 
 /* type defines the type of our nonterminal symbols.
  * Types should match the names used in the union.
@@ -90,7 +90,8 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         /*assign em arranjos*/
         |T_ID T_ARRA indiceArranjo T_ARRAF T_ASSIGN expr T_FINALEXP {AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(new AST::Arranjo($3, node), AST::assign, $6);}
 
-
+        /*tratamento de lacos*/
+        | T_WHILE expr T_DO lines T_END T_WHILE { $$ = new AST::Laco($2, $4);}
         ;
 
 /*trata indices de arranjo como inteiros, expressoes ou simplesmente variaveis ja atribuidas*/

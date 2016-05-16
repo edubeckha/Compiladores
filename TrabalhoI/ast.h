@@ -92,4 +92,13 @@ namespace AST {
 		Arranjo(Node* indice, Node* var) : indice(indice), var(var) { }
 	    void printTree();		
 	};
+
+	class Laco : public Node {
+	public:
+		Node* condicaoLaco;
+		Node* corpoLaco;
+
+		Laco(Node* condicaoLaco, Node* corpoLaco) : condicaoLaco(condicaoLaco), corpoLaco(corpoLaco) { }
+		void printTree();
+	};
 }

@@ -179,6 +179,16 @@ void UniOp::printTree(){
     }
 }
 
+/*Imprime o laco while declarado pelo usuario. O mesmo imprime tanto a condicao quanto o corpo da estrutura na ordem em que os mesmos aparecem*/
+void Laco::printTree(){
+    std::cout << "Laco" << std::endl;
+    std::cout << "+enquanto: ";
+    condicaoLaco->printTree(); std::cout << "\n";
+    std::cout << "+faca: " << std::endl;
+    corpoLaco->printTree(); std::cout << "\n";
+    std::cout << "Fim laco" << std::endl;
+}
+
 /*Funcao que recebe um tipo e retorna uma string, ajudando na impressao das informacoes do nodo que contenha tipo*/
 std::string AST::tipoParaString(Tipo tipo){
     switch(tipo){
