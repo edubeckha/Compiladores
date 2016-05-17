@@ -123,7 +123,6 @@ void BinOp::printTree(){
         break;
 
         case igual:
-            std::cout<<"Atribuicao de valor para variavel booleana: ";
             std::cout << ": ("; left->printTree(); 
             std::cout << " (igual booleano) "; 
             right->printTree();
@@ -136,14 +135,6 @@ void BinOp::printTree(){
             std::cout << " (diferente booleano) "; 
             right->printTree();
             std::cout << ")"; 
-        break;
-
-       //ajeitar esses dynamics depois....
-        case unario: 
-            std::cout << "Atribuicao de valor para variavel do tipo " << AST::tipoParaString(dynamic_cast<Variable*>(left)->tipo);
-            left->printTree(); std::cout << ": "; 
-            std::cout << " (not unario " << AST::tipoParaString(dynamic_cast<Variable*>(left)->tipo) << ") "; 
-            right->printTree(); 
         break;
         
         default: std::cout << "Operador nao tratado" << std::endl; break;
@@ -175,6 +166,18 @@ void UniOp::printTree(){
             std::cout << "Declaracao de ";
             node->printTree();
         break;
+
+        case unario: 
+            std::cout << "(menor unario inteiro)";
+            node->printTree();  
+        break;
+
+        case unibool: 
+            std::cout << "(menor unario booleano)";
+            node->printTree();  
+        break;
+
+
         default: std::cout << "Operacao nao reconhecida!!!" << std::endl;
     }
 }

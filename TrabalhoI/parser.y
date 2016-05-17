@@ -16,7 +16,6 @@ static AST::Tipo tipoVariavel = AST::indefinido;
 %union {
     int integer;
     double doubler;
-    bool boolean;
     const char* booleano;
     AST::Node *node;
     AST::Block *block;
@@ -38,11 +37,9 @@ static AST::Tipo tipoVariavel = AST::indefinido;
  * Example: %type<node> expr
  */
 
-%type <node> expr line varlist indiceArranjo tesIgual tesDif
+%type <node> expr line varlist indiceArranjo
 %type <block> lines program
 %type <operacao> tipoOperacao operacaoArranjo
-%type <boolean> bool //verificar a possivel remocao deste type
-
 
 /* Operator precedence for mathematical operators
  * The latest it is listed, the highest the precedence
@@ -69,28 +66,31 @@ lines   : line { $$ = new AST::Block(); if($1 != NULL) $$->lines.push_back($1); 
 
 line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | expr T_FINALEXP /*$$ = $1 when nothing is said*/
+        
         /*declaracao de variaveis*/
         | tipoVariavel T_DEF varlist T_FINALEXP { $$ = new AST::UniOp($3, AST::declaracao); }
 
         /*assign em variaveis*/
         | T_ID T_ASSIGN expr T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node,AST::assign,$3);}
 
-        /*expressoes unarias para inteiro e booleano*/
-        | T_ID T_ASSIGN T_SUB expr T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unario,$4); }
-        | T_ID T_ASSIGN tesIgual { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::igual, $3 ); }
-        | T_ID T_ASSIGN tesDif { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::diferente, $3 ); }
-        | T_ID T_ASSIGN T_UNIBOOL expr T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unibool,$4); }
-        | T_ID T_ASSIGN T_SUB T_INT T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unario, new AST::Integer(-$4) ); }
-        | T_ID T_ASSIGN T_SUB T_DOUBLE T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unario, new AST::Doubler(-$4) ); }
-        | T_ID T_ASSIGN T_UNIBOOL bool T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unibool, new AST::Boolean(!$4)); }
-
         /*declaracao de arranjos*/
         | tipoVariavel T_ARRA indiceArranjo T_ARRAF T_DEF T_ID T_FINALEXP {AST::Node* var = symtab.newVariable($6, tipoVariavel, NULL); $$ = new AST::UniOp( new AST::Arranjo($3 ,var), AST::declaracao);};
         
         /*assign em arranjos*/
         |T_ID T_ARRA indiceArranjo T_ARRAF T_ASSIGN expr T_FINALEXP {AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(new AST::Arranjo($3, node), AST::assign, $6);}
+        ;
 
-
+        /*tratamento de todas as expressoes utilizadas no programa*/
+expr    : T_PARA expr T_PARAF { $$ = $2; }
+        | T_INT { $$ = new AST::Integer($1); } 
+        | T_DOUBLE { $$ = new AST::Doubler($1); }
+        | T_BOOLTRUE { $$ = new AST::Boolean(true); }
+        | T_BOOLFALSE { $$ = new AST::Boolean(false); }
+        | T_ID { $$ = symtab.useVariable($1); }
+        | expr tipoOperacao expr {$$ = new AST::BinOp($1, $2, $3);}  
+        | T_ID T_ARRA indiceArranjo T_ARRAF {$$ = new AST::Arranjo($3, symtab.useVariable($1));} 
+        | T_SUB expr {$$ = new AST::UniOp($2, AST::unario);}
+        | T_UNIBOOL expr {$$ = new AST::UniOp($2, AST::unibool);}
         ;
 
 /*trata indices de arranjo como inteiros, expressoes ou simplesmente variaveis ja atribuidas*/
@@ -101,29 +101,10 @@ indiceArranjo : T_INT operacaoArranjo indiceArranjo {$$ = new AST::BinOp(new AST
               ;
 
 /*define operacoes permitidas no indice do arranjo*/
-operacaoArranjo : T_PLUS {$$ = AST::plus;}| T_SUB {$$ = AST::sub;}| T_TIMES {$$ = AST::times;}
-
-/*define booleanos*/
-bool    : T_BOOLTRUE {$$ = new AST::Boolean(true);}
-        | T_BOOLFALSE {$$ = new AST::Boolean(false);}
-        ;  
-/*define igualdade de expressoes*/
-tesIgual : expr T_IGUAL expr T_FINALEXP
-
-/*define diferenca em expressoes*/
-tesDif : expr T_DIFERENTE expr T_FINALEXP
-
-/*tratamento de todas as expressoes utilizadas no programa*/
-expr    : T_PARA expr T_PARAF { $$ = $2; }
-        | T_INT { $$ = new AST::Integer($1); } 
-        | T_DOUBLE { $$ = new AST::Doubler($1); }
-        | T_BOOLTRUE { $$ = new AST::Boolean(true); }
-        | T_BOOLFALSE { $$ = new AST::Boolean(false); }
-        | T_ID { $$ = symtab.useVariable($1); }
-        | expr tipoOperacao expr {$$ = new AST::BinOp($1, $2, $3);}  
-        | T_ID T_ARRA indiceArranjo T_ARRAF {$$ = new AST::Arranjo($3, symtab.useVariable($1));}      
-        ;
-
+operacaoArranjo : T_PLUS {$$ = AST::plus;}
+                | T_SUB {$$ = AST::sub;}
+                | T_TIMES {$$ = AST::times;}
+                ;
 
 /*define todos os tipos de variaveis que possamos ter no programa*/
 tipoVariavel : T_DINT { tipoVariavel = AST::inteiro; } 
@@ -141,6 +122,8 @@ tipoOperacao : T_PLUS {$$ = AST::plus;}
              | T_MENORIGUAL {$$ = AST::menorigual;}
              | T_AND {$$ = AST::ande;}
              | T_OR {$$ = AST::ore;}
+             | T_IGUAL {$$ = AST::igual;}
+             | T_DIFERENTE {$$ = AST::diferente;}
              ;
 /*define uma ou mais variaveis de acordo com a vontade do usuario*/
 varlist : T_ID { $$ = symtab.newVariable($1, tipoVariavel, NULL); }
