@@ -92,4 +92,17 @@ namespace AST {
 		Arranjo(Node* indice, Node* var) : indice(indice), var(var) { }
 	    void printTree();		
 	};
+
+	class Complexo : public Node {
+	public: 
+		std::string id;
+
+	};
+
+	class ComponenteComplexo : public Node {
+	public:
+		Variable* var;
+		ComponenteComplexo(Variable* var) : var(var) { }
+		void printTree();
+	};
 }

@@ -34,6 +34,13 @@ void Arranjo::printTree(){
     std::cout << "}";
 }
 
+void ComponenteComplexo::printTree(){
+    std::cout << "Componente " <<
+    AST::tipoParaString(var->tipo) 
+    << ": " << var->id 
+    << std::endl;
+}
+
 /*Imprime o valor das operacoes binarias criadas na gramatica. Cada case influencia em uma operacao diferente*/
 void BinOp::printTree(){
 

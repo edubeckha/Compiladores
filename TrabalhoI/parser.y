@@ -90,7 +90,7 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         /*assign em arranjos*/
         |T_ID T_ARRA indiceArranjo T_ARRAF T_ASSIGN expr T_FINALEXP {AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(new AST::Arranjo($3, node), AST::assign, $6);}
 
-
+        /*definicao de tipos complexos*/
         ;
 
 /*trata indices de arranjo como inteiros, expressoes ou simplesmente variaveis ja atribuidas*/
