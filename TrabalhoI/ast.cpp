@@ -115,28 +115,7 @@ void BinOp::printTree(){
             right->printTree(); 
             std::cout << ")"; 
         break;
-
-        case unibool:
-            std::cout << "Atribuicao de valor para variavel booleana: "; left->printTree(); 
-            std::cout << " (not unario binario) "; 
-            right->printTree(); 
-        break;
-
-        case igual:
-            std::cout << ": ("; left->printTree(); 
-            std::cout << " (igual booleano) "; 
-            right->printTree();
-            std::cout << ")"; 
-        break;
-
-        case diferente:
-            std::cout<<"Atribuicao de valor para variavel booleana: ";
-            std::cout << ": ("; left->printTree(); 
-            std::cout << " (diferente booleano) "; 
-            right->printTree();
-            std::cout << ")"; 
-        break;
-        
+       
         default: std::cout << "Operador nao tratado" << std::endl; break;
     }  
 }
