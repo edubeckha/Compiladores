@@ -33,7 +33,7 @@ void Arranjo::printTree(){
     indice->printTree();
     std::cout << "}";
 }
-
+/*Imprime um componente complexo juntamente com seu tipo*/
 void ComponenteComplexo::printTree(){
     std::cout << "Componente " <<
     AST::tipoParaString(var->tipo) 
@@ -182,8 +182,23 @@ void UniOp::printTree(){
             std::cout << "Declaracao de ";
             node->printTree();
         break;
+
+        /*Talvez esteja tomando uma linha de pensamento totalmente errada aqui....pensar um pouco mais*/
+        case defComplex:
+            std::cout << "Definicao tipo: complex\n+componentes: " << std::endl;
+            foreach(ComponenteComplexo c : vetorComponentes){
+                    c->printTree(); std::cout << "\n";
+            }
+            std::cout << "Fim definicao" << std::endl;
+        break;
+
         default: std::cout << "Operacao nao reconhecida!!!" << std::endl;
     }
+}
+
+/*Imprime */
+void Complexo::printTree(){
+    std::cout << "aaaaaa nova era!" << std::endl;
 }
 
 /*Funcao que recebe um tipo e retorna uma string, ajudando na impressao das informacoes do nodo que contenha tipo*/

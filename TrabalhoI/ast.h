@@ -9,7 +9,7 @@ extern void yyerror(const char *s, ...);
 namespace AST {
 
 	/*Enum para declaracao de operacoes realizadas entre os nodos*/
-	enum Operation { plus, sub, times, divi, assign, maior, menor, maiorigual, menorigual, ande, ore, unibool, unario, declaracao, igual, diferente };
+	enum Operation { plus, sub, times, divi, assign, maior, menor, maiorigual, menorigual, ande, ore, unibool, unario, declaracao, igual, diferente, defComplex };
 	/*Enum para declaracao de tipos dos nodos*/
 	enum Tipo { inteiro, real, booleano, indefinido };
  	static std::string tipoParaString(Tipo tipo);
@@ -96,7 +96,7 @@ namespace AST {
 	class Complexo : public Node {
 	public: 
 		std::string id;
-
+		std::vector<ComponenteComplexo*> vetorComponentes;
 	};
 
 	class ComponenteComplexo : public Node {
