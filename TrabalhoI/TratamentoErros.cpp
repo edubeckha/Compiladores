@@ -1,47 +1,79 @@
 #include "TratamentoErros.h"
 using namespace Tipos;
 
-AST::Tipo Tipos::opUnaria(AST::Tipo tipoRecebido, AST::Operation op){
-	AST::Tipo tipoRetorno;
+Tipo Tipos::opUnaria(Tipo tipoRecebido, Operation op){
+	Tipo tipoRetorno;
 	switch(op){
-		case AST::unario:
+		case unario:
 
 		break;
-		case AST::unibool:
+		case unibool:
 
 		break;
 	
 	default:
-		std::cout << "Operacao nao suportada em nodos binarios!" << std::endl;
+		std::cout << "Operacao nao suportada em operacoes unarias!" << std::endl;
 
 	}
 	return tipoRetorno;
 }
 
 
-AST::Tipo Tipos::opBinaria(AST::Tipo tipoNodoEsquerda, AST::Tipo tipoNodoDireita, AST::Operation op){
-	AST::Tipo tipoRetorno;
+Tipo Tipos::opBinaria(Tipo tipoNodoEsquerda, Tipo tipoNodoDireita, Operation op){
+	Tipo tipoRetorno;
 	switch(op){
+
+	case assign: break;
 		default:
-		if(op == AST::plus || op == AST::sub || op == AST::times || op == AST::divi){
-			tipoRetorno = AST::inteiro; //faz com que o tipo de retorno padrao seja inteiro
-			if(tipoNodoEsquerda == AST::real || tipoNodoDireita == AST::real){
-					tipoRetorno = AST::real;
+		if(op == plus || op == sub || op == times || op == divi){
+			tipoRetorno = inteiro; //faz com que o tipo de retorno padrao seja inteiro
+			if(tipoNodoEsquerda == real || tipoNodoDireita == real){
+					tipoRetorno = real;
 			}
 
-			if(tipoNodoEsquerda != AST::inteiro || tipoNodoEsquerda != AST::real){
-				Tipos::erroTipagem(op, AST::inteiro, AST::real, AST::booleano);
+			if(tipoNodoEsquerda != inteiro || tipoNodoEsquerda != real){
+				Tipos::erroTipagem(op, inteiro, real, booleano);
+				break;
 			}
 
-			if(tipoNodoDireita!= AST::inteiro || tipoNodoDireita != AST::real){
-				Tipos::erroTipagem(op, AST::inteiro, AST::real, AST::booleano);
+			if(tipoNodoDireita != inteiro || tipoNodoDireita != real){
+				Tipos::erroTipagem(op, inteiro, real, booleano);
+				break;
 			}
+		} else {
+				std::cout << "Operacao nao suportada em operacoes binarias!" << std::endl;
 		}
 	}
 
 
 	return tipoRetorno;
 }
-void Tipos::erroTipagem(AST::Operation operacao, AST::Tipo primeiroRecebido, AST::Tipo segundoRecebido, AST::Tipo esperado){
-	std::cout << "dando uns erro" << std::endl;
+void Tipos::erroTipagem(Operation operacao, Tipo primeiroTipo, Tipo segundoTipo, Tipo recebido){
+	std::cout<< "A operacao de " + opParaString(operacao) + " esperava " + tipoParaString(primeiroTipo);
+	if(segundoTipo != indefinido){
+		std::cout << " ou " + tipoParaString(segundoTipo);
+	}
+	std::cout << " como parâmetro, mas recebeu " << tipoParaString(recebido) << "." << "\n";
+}
+
+std::string Tipos::tipoParaString(Tipo tipo){
+	switch(tipo){
+		case inteiro: return "inteiro";
+
+		case real: return "real";
+
+		case booleano: return "booleano";
+
+		default: return "indefinido";
+	}
+
+
+}
+
+std::string Tipos::opParaString(Operation op){
+	switch(op){
+		case plus: return "soma";
+		case sub: return "subtracao";
+		default: return "indefinida";
+	}
 }

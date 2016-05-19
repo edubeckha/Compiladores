@@ -38,34 +38,34 @@ void Arranjo::printTree(){
 void BinOp::printTree(){
 
     switch(op){
-        case assign: 
+        case Tipos::assign: 
         std::cout << "Atribuicao de valor para ";
         left->printTree(); 
         std::cout << ": "; 
         right->printTree(); 
         break;
 
-        case plus: 
+        case Tipos::plus: 
             std::cout << "("; left->printTree(); std::cout << " (soma) "; 
             right->printTree(); 
             std::cout << ")"; 
         break;
 
-        case sub: 
+        case Tipos::sub: 
             std::cout << "("; left->printTree(); 
             std::cout << " (subtracao) "; 
             right->printTree(); 
             std::cout << ")"; 
         break;
 
-        case times:
+        case Tipos::times:
             std::cout << "("; left->printTree(); 
             std::cout << " (multiplicacao) "; 
             right->printTree(); 
             std::cout << ")"; 
         break;
 
-        case divi: 
+        case Tipos::divi: 
             std::cout << "("; 
             left->printTree(); 
             std::cout << " (divisao) "; 
@@ -73,14 +73,14 @@ void BinOp::printTree(){
             std::cout << ")"; 
         break;
         
-        case maior: 
+        case Tipos::maior: 
             std::cout << "("; left->printTree(); 
             std::cout << " (maior que) "; 
             right->printTree(); 
             std::cout << ")"; 
         break;
 
-        case menor: 
+        case Tipos::menor: 
             std::cout << "("; left->printTree(); 
             std::cout << " (menor que) "; 
             right->printTree(); 
@@ -88,28 +88,28 @@ void BinOp::printTree(){
         break;
 
 
-        case maiorigual: 
+        case Tipos::maiorigual: 
             std::cout << "("; left->printTree(); 
             std::cout << " (maior ou igual que) "; 
             right->printTree();
             std::cout << ")"; 
         break;
 
-        case menorigual: 
+        case Tipos::menorigual: 
             std::cout << "("; left->printTree(); 
             std::cout << " (menor ou igual que) "; 
             right->printTree(); 
             std::cout << ")"; 
         break;
         
-        case ande: 
+        case Tipos::ande: 
             std::cout << "("; left->printTree(); 
             std::cout << " (AND) "; 
             right->printTree(); 
             std::cout << ")"; 
         break;
 
-        case ore: 
+        case Tipos::ore: 
             std::cout << "("; left->printTree(); 
             std::cout << " (OR) "; 
             right->printTree(); 
@@ -141,17 +141,17 @@ void Variable::printTree(){
 /*Imprime uma operacao unaria. A unica por enquanto no programa eh a operacao de declaracao (tanto de arranjos como variaveis "comuns")*/
 void UniOp::printTree(){
     switch(op){
-        case declaracao:
+        case Tipos::declaracao:
             std::cout << "Declaracao de ";
             node->printTree();
         break;
 
-        case unario: 
+        case Tipos::unario: 
             std::cout << "(menor unario inteiro)";
             node->printTree();  
         break;
 
-        case unibool: 
+        case Tipos::unibool: 
             std::cout << "(menor unario booleano)";
             node->printTree();  
         break;
@@ -162,11 +162,11 @@ void UniOp::printTree(){
 }
 
 /*Funcao que recebe um tipo e retorna uma string, ajudando na impressao das informacoes do nodo que contenha tipo*/
-std::string AST::tipoParaString(Tipo tipo){
+std::string AST::tipoParaString(Tipos::Tipo tipo){
     switch(tipo){
-        case inteiro : return " inteiro ";
-        case real : return " real ";
-        case booleano : return " booleano ";
+        case Tipos::inteiro : return " inteiro ";
+        case Tipos::real : return " real ";
+        case Tipos::booleano : return " booleano ";
         default : return " indefinido ";
     }
 }

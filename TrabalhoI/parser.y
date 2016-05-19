@@ -5,7 +5,7 @@ ST::SymbolTable symtab;  /* main symbol table */
 AST::Block *programRoot; /* the root node of our program AST:: */
 extern int yylex();
 extern void yyerror(const char* s, ...);
-static AST::Tipo tipoVariavel = AST::indefinido;
+static Tipos::Tipo tipoVariavel = Tipos::indefinido;
 %}
 
 %define parse.trace
@@ -19,7 +19,7 @@ static AST::Tipo tipoVariavel = AST::indefinido;
     const char* booleano;
     AST::Node *node;
     AST::Block *block;
-    AST::Operation operacao;
+    Tipos::Operation operacao;
     const char *name;
 }
 
@@ -68,16 +68,16 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | expr T_FINALEXP /*$$ = $1 when nothing is said*/
         
         /*declaracao de variaveis*/
-        | tipoVariavel T_DEF varlist T_FINALEXP { $$ = new AST::UniOp($3, AST::declaracao); }
+        | tipoVariavel T_DEF varlist T_FINALEXP { $$ = new AST::UniOp($3, Tipos::declaracao); }
 
         /*assign em variaveis*/
-        | T_ID T_ASSIGN expr T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node,AST::assign,$3);}
+        | T_ID T_ASSIGN expr T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node,Tipos::assign,$3);}
 
         /*declaracao de arranjos*/
-        | tipoVariavel T_ARRA indiceArranjo T_ARRAF T_DEF T_ID T_FINALEXP {AST::Node* var = symtab.newVariable($6, tipoVariavel, NULL); $$ = new AST::UniOp( new AST::Arranjo($3 ,var), AST::declaracao);};
+        | tipoVariavel T_ARRA indiceArranjo T_ARRAF T_DEF T_ID T_FINALEXP {AST::Node* var = symtab.newVariable($6, tipoVariavel, NULL); $$ = new AST::UniOp( new AST::Arranjo($3 ,var), Tipos::declaracao);};
         
         /*assign em arranjos*/
-        |T_ID T_ARRA indiceArranjo T_ARRAF T_ASSIGN expr T_FINALEXP {AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(new AST::Arranjo($3, node), AST::assign, $6);}
+        |T_ID T_ARRA indiceArranjo T_ARRAF T_ASSIGN expr T_FINALEXP {AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(new AST::Arranjo($3, node), Tipos::assign, $6);}
         ;
 
         /*tratamento de todas as expressoes utilizadas no programa*/
@@ -89,8 +89,8 @@ expr    : T_PARA expr T_PARAF { $$ = $2; }
         | T_ID { $$ = symtab.useVariable($1); }
         | expr tipoOperacao expr {$$ = new AST::BinOp($1, $2, $3);}  
         | T_ID T_ARRA indiceArranjo T_ARRAF {$$ = new AST::Arranjo($3, symtab.useVariable($1));} 
-        | T_SUB expr {$$ = new AST::UniOp($2, AST::unario);}
-        | T_UNIBOOL expr {$$ = new AST::UniOp($2, AST::unibool);}
+        | T_SUB expr {$$ = new AST::UniOp($2, Tipos::unario);}
+        | T_UNIBOOL expr {$$ = new AST::UniOp($2, Tipos::unibool);}
         ;
 
 /*trata indices de arranjo como inteiros, expressoes ou simplesmente variaveis ja atribuidas*/
@@ -101,29 +101,29 @@ indiceArranjo : T_INT operacaoArranjo indiceArranjo {$$ = new AST::BinOp(new AST
               ;
 
 /*define operacoes permitidas no indice do arranjo*/
-operacaoArranjo : T_PLUS {$$ = AST::plus;}
-                | T_SUB {$$ = AST::sub;}
-                | T_TIMES {$$ = AST::times;}
+operacaoArranjo : T_PLUS {$$ = Tipos::plus;}
+                | T_SUB {$$ = Tipos::sub;}
+                | T_TIMES {$$ = Tipos::times;}
                 ;
 
 /*define todos os tipos de variaveis que possamos ter no programa*/
-tipoVariavel : T_DINT { tipoVariavel = AST::inteiro; } 
-             | T_DREAL { tipoVariavel = AST::real; }
-             | T_DBOOL { tipoVariavel = AST::booleano; }
+tipoVariavel : T_DINT { tipoVariavel = Tipos::inteiro; } 
+             | T_DREAL { tipoVariavel = Tipos::real; }
+             | T_DBOOL { tipoVariavel = Tipos::booleano; }
              ;
 /*define todos os tipos de operacoes que possamos ter no programa*/
-tipoOperacao : T_PLUS {$$ = AST::plus;}
-             | T_SUB {$$ = AST::sub;}
-             | T_TIMES {$$ = AST::times;}
-             | T_DIV {$$ = AST::divi;}
-             | T_MAIOR  {$$ = AST::maior;}
-             | T_MENOR {$$ = AST::menor;}
-             | T_MAIORIGUAL {$$ = AST::maiorigual;}
-             | T_MENORIGUAL {$$ = AST::menorigual;}
-             | T_AND {$$ = AST::ande;}
-             | T_OR {$$ = AST::ore;}
-             | T_IGUAL {$$ = AST::igual;}
-             | T_DIFERENTE {$$ = AST::diferente;}
+tipoOperacao : T_PLUS {$$ = Tipos::plus;}
+             | T_SUB {$$ = Tipos::sub;}
+             | T_TIMES {$$ = Tipos::times;}
+             | T_DIV {$$ = Tipos::divi;}
+             | T_MAIOR  {$$ = Tipos::maior;}
+             | T_MENOR {$$ = Tipos::menor;}
+             | T_MAIORIGUAL {$$ = Tipos::maiorigual;}
+             | T_MENORIGUAL {$$ = Tipos::menorigual;}
+             | T_AND {$$ = Tipos::ande;}
+             | T_OR {$$ = Tipos::ore;}
+             | T_IGUAL {$$ = Tipos::igual;}
+             | T_DIFERENTE {$$ = Tipos::diferente;}
              ;
 /*define uma ou mais variaveis de acordo com a vontade do usuario*/
 varlist : T_ID { $$ = symtab.newVariable($1, tipoVariavel, NULL); }

@@ -3,22 +3,20 @@
 
 #include <iostream>
 #include <vector>
+#include "TratamentoErros.h"
 
 extern void yyerror(const char *s, ...);
 
 namespace AST {
 
-	/*Enum para declaracao de operacoes realizadas entre os nodos*/
-	enum Operation { plus, sub, times, divi, assign, maior, menor, maiorigual, menorigual, ande, ore, unibool, unario, declaracao, igual, diferente };
-	/*Enum para declaracao de tipos dos nodos*/
-	enum Tipo { inteiro, real, booleano, indefinido };
- 	static std::string tipoParaString(Tipo tipo);
+ 	static std::string tipoParaString(Tipos::Tipo tipo);
  	
 	class Node;
 	typedef std::vector<Node*> NodeList; //List of ASTs
 
 	class Node {
 	    public:
+	    	Tipos::Tipo tipo = Tipos::indefinido;
 	        virtual ~Node() {}
 	        virtual void printTree(){}
 	};
@@ -26,7 +24,7 @@ namespace AST {
 	class Integer : public Node {
 	    public:
 	        int value;
-	        Integer(int value) : value(value) {  }
+	        Integer(int value) : value(value){  }
 	        void printTree();
 	};
 
@@ -47,12 +45,13 @@ namespace AST {
 
 	class BinOp : public Node {
 	    public:
-	        Operation op;
-	        Tipo tipoRetorno;
+	        Tipos::Operation op;
+	        Tipos::Tipo tipoRetorno;
 	        Node *left;
 	        Node *right;
-	        BinOp(Node *left, Operation op, Node *right) :
-	            left(left), right(right), op(op) { }
+	        BinOp(Node *left, Tipos::Operation op, Node *right) :
+	            left(left), right(right), op(op) {
+	                 tipoRetorno = Tipos::opBinaria(left->tipo, right->tipo, op); }
 	        void printTree();
 	};
 
@@ -61,18 +60,18 @@ namespace AST {
 	class Variable : public Node {
 	     public:
 	         std::string id;
-	         Tipo tipo;
+	         Tipos::Tipo tipo;
 	         Node *next;
-	         Variable(std::string id, Tipo tipo, Node *next) : id(id), tipo(tipo), next(next) { }
+	         Variable(std::string id, Tipos::Tipo tipo, Node *next) : id(id), tipo(tipo), next(next) { }
 	         void printTree();      
 	};
 
 	/*Nodo que define operacoes unarias do programa. A unica disponivel ate o momento eh a declaracao*/
 	class UniOp : public Node {
 	public:
-		Operation op;
+		Tipos::Operation op;
 		Node *node;
-		UniOp(Node* node, Operation op) : node(node), op(op) { }
+		UniOp(Node* node, Tipos::Operation op) : node(node), op(op) { }
 		void printTree();
 	};
 

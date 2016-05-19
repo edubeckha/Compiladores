@@ -5,7 +5,7 @@ using namespace ST;
 
 extern SymbolTable symtab;
 
-AST::Node* SymbolTable::newVariable(std::string id, AST::Tipo tipoVariavel, AST::Node* next){
+AST::Node* SymbolTable::newVariable(std::string id, Tipos::Tipo tipoVariavel, AST::Node* next){
     if ( checkId(id) ) yyerror("Erro semantico: redefinicao da variavel %s\n", id.c_str());
     else {
       	Symbol entry(tipoVariavel, variable, 0, false);
@@ -26,6 +26,6 @@ AST::Node* SymbolTable::useVariable(std::string id){
     return new AST::Variable(id, entryList[id].type, NULL); //Creates variable node anyway
 }
 
-AST::Tipo SymbolTable::returnType(std::string id){
+Tipos::Tipo SymbolTable::returnType(std::string id){
     return entryList[id].type;
 }

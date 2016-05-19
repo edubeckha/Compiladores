@@ -1,13 +1,18 @@
 #pragma once
 
-#include "ast.h"
+#include <iostream>
 
 namespace Tipos{
+	enum Tipo { inteiro, real, booleano, indefinido };
+	enum Operation { plus, sub, times, divi, assign, maior, menor, maiorigual, menorigual, ande, ore, unibool, unario, declaracao, igual, diferente };
+	
+	Tipo opUnaria(Tipo tipoRecebido, Operation op);
+	Tipo opBinaria(Tipo tipoNodoEsquerda, Tipo tipoNodoDireita, Operation op);
 
-	AST::Tipo opUnaria(AST::Tipo tipoRecebido, AST::Operation op);
-	AST::Tipo opBinaria(AST::Tipo tipoNodoEsquerda, AST::Tipo tipoNodoDireita, AST::Operation op);
 
+	void erroTipagem(Operation operacao, Tipo primeiroRecebido, Tipo segundoRecebido, Tipo esperado);
+	bool precisaCoersao(Tipo tipoNodoEsquerda, Tipo tipoNodoDireita);
 
-	void erroTipagem(AST::Operation operacao, AST::Tipo primeiroRecebido, AST::Tipo segundoRecebido, AST::Tipo esperado);
-	bool precisaCoersao(AST::Tipo tipoNodoEsquerda, AST::Tipo tipoNodoDireita);
+	std::string tipoParaString(Tipo tipo);
+	std::string opParaString(Operation tipo);
 }
