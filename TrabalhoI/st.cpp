@@ -32,15 +32,17 @@ AST::Tipo SymbolTable::returnType(std::string id){
     return entryList[id].type;
 }
 
-AST::Node* SymbolTable::newFunction(std::string id, AST::Tipo tipoVariavel, AST::Node* next){
+AST::Node* SymbolTable::newFunction(std::string id, AST::Tipo tipoVariavel, AST::Node* parametros){
     std::cout<<"Criando nova função"<<std::endl;
     if( checkId(id) )
         yyerror("Erro semantico: função %s já existe.\n", id.c_str());
     else {
+    	std::cout<<"criando simbolo"<<std::endl;
         Symbol entry(tipoVariavel, function, 0, false);
         addSymbol(id,entry);
     }
-    return new AST::Funcao(id, tipoVariavel, next);
+    return new AST::Funcao(id, tipoVariavel, parametros);
+    // return new AST::Funcao(next);
 }
 
 AST::Node* SymbolTable::assignFunction(std::string id, AST::Node* next){
@@ -48,4 +50,5 @@ AST::Node* SymbolTable::assignFunction(std::string id, AST::Node* next){
     if ( ! checkId(id) ) {yyerror("função ainda não definida! %s\n", id.c_str());}
     entryList[id].initialized = true;
     return new AST::Funcao(id, entryList[id].type, next); //Creates variable node anyway
+    // return new AST::Funcao(next); //Creates variable node anyway
 }
