@@ -1,12 +1,17 @@
 %{
 #include "ast.h"
 #include "st.h"
+
 ST::SymbolTable symtab;  /* main symbol table */
-std::vector<AST::Node*> parametros;
+std::vector<AST::Variable*> parametros;
+
 AST::Block *programRoot; /* the root node of our program AST:: */
+
 extern int yylex();
 extern void yyerror(const char* s, ...);
+
 static AST::Tipo tipoVariavel = AST::indefinido;
+
 %}
 
 %define parse.trace
@@ -76,13 +81,13 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         
         | T_ID T_ASSIGN T_UNIBOOL bool T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unibool, new AST::Boolean(!$4)); }
         
-        //declara funcao com e sem parametros
-        | T_DECL T_FUN tipoVariavel T_DEF T_ID T_PARA param T_PARAF T_FINALEXP { AST::Node* node = symtab.newFunction($5,AST::inteiro,$7); $$ = new AST::Funcao($5, AST::inteiro, $7); }
-        | T_DECL T_FUN tipoVariavel T_DEF T_ID T_PARA T_PARAF T_FINALEXP { AST::Node* node = symtab.newFunction($5,AST::inteiro,NULL); $$ = new AST::Funcao($5, AST::inteiro, NULL); }
+        //declara funcao com e sem parametros (inteiro somente)
+        | T_DECL T_FUN tipoVariavel T_DEF T_ID T_PARA param T_PARAF T_FINALEXP { AST::Node* node = symtab.newFunction($5,AST::inteiro,parametros); $$ = new AST::Funcao($5, AST::inteiro, parametros); }
+        | T_DECL T_FUN tipoVariavel T_DEF T_ID T_PARA T_PARAF T_FINALEXP { AST::Node* node = symtab.newFunction($5,AST::inteiro,parametros); $$ = new AST::Funcao($5, AST::inteiro, parametros); }
         
         //define a funcao
-        //| T_DEFI T_FUN T_DINT T_DEF T_ID T_PARA param T_PARAF retorna T_END T_DEFI {AST::Node* node = symtab.assignFunction($5,$9); $$ = new AST::DefineFuncao($5, node);}
-       // | T_DEFI T_FUN T_DINT T_DEF T_ID T_PARA T_PARAF retorna T_END T_DEFI {AST::Node* node = symtab.assignFunction($5,$8);  $$ = new AST::DefineFuncao($5,  node);}
+        | T_DEFI T_FUN T_DINT T_DEF T_ID T_PARA param T_PARAF retorna T_END T_DEFI {AST::Node* node = symtab.assignFunction($5,parametros); $$ = new AST::DefineFuncao($5, parametros);}
+      //  | T_DEFI T_FUN T_DINT T_DEF T_ID T_PARA T_PARAF retorna T_END T_DEFI {AST::Node* node = symtab.assignFunction($5,parametros);  $$ = new AST::DefineFuncao($5,  node);}
         ;
 
 retorna : T_RETO expr T_FINALEXP {$$ = $2;}
@@ -127,11 +132,8 @@ varlist : T_ID { $$ = symtab.newVariable($1, tipoVariavel, NULL); }
         | varlist T_COMMA T_ID { $$ = symtab.newVariable($3, tipoVariavel, $1); }
         ;
 
-param : tipoVariavel T_DEF T_ID T_COMMA param {std::cout<<"parametro2"<<std::endl;$$ = symtab.newVariable($3, tipoVariavel, $5); }
-      | tipoVariavel T_DEF T_ID {//std::cout<<"parametro"<<std::endl;AST::Node* node = symtab.newVariable($3, tipoVariavel, NULL);
-      $$ = symtab.newVariable($3, tipoVariavel, NULL);
-      //parametros.push_back(node); std::cout<<"fim par"<<std::endl;
-      }// $$ = new AST::UniOp($3, AST::declaracao); }
+param : tipoVariavel T_DEF T_ID T_COMMA param {AST::Variable* var = new AST::Variable($3,AST::inteiro,NULL); parametros.push_back(var);}
+      | tipoVariavel T_DEF T_ID { AST::Variable* var = new AST::Variable($3,AST::inteiro,NULL); parametros.push_back(var); }
       ; 
 
 %%

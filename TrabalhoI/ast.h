@@ -84,8 +84,8 @@ namespace AST {
 	     public:
 	         std::string id;
 	         Tipo tipo;
-	         Node* v;
-	         Funcao(std::string id, Tipo tipo, AST::Node* v) : id(id), tipo(tipo), v(v) { }
+	         std::vector<AST::Variable*> parametros;
+	         Funcao(std::string id, Tipo tipo, std::vector<AST::Variable*> parametros) : id(id), tipo(tipo), parametros(parametros) { }
 	         void printTree();
 	         std::string tipoParaString(Tipo tipo);
 	};
@@ -93,8 +93,10 @@ namespace AST {
 	class DefineFuncao : public Node {
 	     public:
 	         std::string id;
-	         Node *right;
-	         DefineFuncao(std::string id, Node *right) : id(id), right(right) { }
+	         // Node *right;
+	         std::vector<AST::Variable*> parametros;
+	         // DefineFuncao(std::string id, Node *right) : id(id), right(right) { }
+	         DefineFuncao(std::string id, std::vector<AST::Variable*> parametros) : id(id), parametros(parametros) { }
 	         void printTree();
 	         // std::string tipoParaString(Tipo tipo);
 	};

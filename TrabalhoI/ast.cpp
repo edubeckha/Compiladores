@@ -162,15 +162,21 @@ std::string Variable::tipoParaString(Tipo tipo){
 }
 
 void Funcao::printTree(){
-    std::cout << "Declaração de função inteira: "<<id<<"\nparametros: ";
-    if (v != NULL){
-        v->printTree();
+    std::cout << "Declaração de função inteira: "<<id<<std::endl;
+    for (int i = 0; i < parametros.size(); i++)
+    {
+        std::cout<<"parametro: ";
+        parametros.at(i)->printTree();
+        std::cout<<" "<<std::endl;
     }
 }
 
 void DefineFuncao::printTree(){
-    std::cout << "Definição de função inteira: "<<id;
-    if (right != NULL){
-        right->printTree();
+    std::cout << "Definição de função inteira: "<<id<<std::endl;
+    for (int i = 0; i < parametros.size(); i++)
+    {
+        std::cout<<"parametro: ";
+        parametros.at(i)->printTree();
+        std::cout<<" "<<std::endl;
     }
 }
