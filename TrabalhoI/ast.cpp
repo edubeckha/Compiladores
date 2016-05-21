@@ -161,28 +161,16 @@ std::string Variable::tipoParaString(Tipo tipo){
     }
 }
 
-// ////////////////////////////////
-// fazer metodo para imprimir os parametros.
-// ///////////////////////////////
-
-void Parametros::printTree(){
-	std::cout<<"parametros";
-}
 void Funcao::printTree(){
+    std::cout << "Declaração de função inteira: "<<id<<"\nparametros: ";
     if (v != NULL){
         v->printTree();
-       // std::cout << "Declaração de função inteira: "<<id;
-    } /*else {
-    	std::cout << "nulooo: ";
-    }*/
-    	std::cout << "Declaração de função inteira: "<<id;
+    }
 }
 
-// void DefineFuncao::printTree(){
-//     if (right != NULL){
-//         right->printTree();
-//         std::cout << "Definição de função inteira: "<<id;
-//     } /*else {
-//     	std::cout << "nulooo: ";
-//     }*/
-// }
+void DefineFuncao::printTree(){
+    std::cout << "Definição de função inteira: "<<id;
+    if (right != NULL){
+        right->printTree();
+    }
+}

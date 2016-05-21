@@ -11,7 +11,6 @@ namespace ST {
 class Symbol;
 enum Kind { variable, function };
 
-
 typedef std::map<std::string,Symbol> SymbolList; //Set of Symbols
 
 class Symbol {

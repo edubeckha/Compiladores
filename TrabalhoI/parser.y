@@ -23,7 +23,6 @@ static AST::Tipo tipoVariavel = AST::indefinido;
     AST::Block *block;
     AST::Operation operacao;
     const char *name;
-    const char *defin;
 }
 
 /* token defines our terminal symbols (tokens).
@@ -32,8 +31,7 @@ static AST::Tipo tipoVariavel = AST::indefinido;
 %token <doubler> T_DOUBLE
 %token <booleano> T_BOOLTRUE T_BOOLFALSE
 %token <name> T_ID
-%token <defin> T_FUN
-%token T_DINT T_DREAL T_DBOOL T_PLUS T_SUB T_TIMES T_DIV T_DEF T_COMMA T_ASSIGN T_DIFERENTE T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_UNIBOOL T_ATRI T_PARA T_PARAF T_FINALEXP T_NL T_END T_DEFI T_RETO T_DECL
+%token T_DINT T_DREAL T_DBOOL T_PLUS T_SUB T_TIMES T_DIV T_DEF T_COMMA T_ASSIGN T_DIFERENTE T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_UNIBOOL T_ATRI T_PARA T_PARAF T_FINALEXP T_NL T_END T_DEFI T_RETO T_DECL T_FUN
 
 /* type defines the type of our nonterminal symbols.
  * Types should match the names used in the union.
@@ -80,10 +78,10 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         
         //declara funcao com e sem parametros
         | T_DECL T_FUN tipoVariavel T_DEF T_ID T_PARA param T_PARAF T_FINALEXP { AST::Node* node = symtab.newFunction($5,AST::inteiro,$7); $$ = new AST::Funcao($5, AST::inteiro, $7); }
-       // | T_DECL T_FUN tipoVariavel T_DEF T_ID T_PARA T_PARAF T_FINALEXP { AST::Node* node = symtab.newFunction($5,AST::inteiro,NULL); $$ = new AST::Funcao($5, AST::inteiro, node); }
+        | T_DECL T_FUN tipoVariavel T_DEF T_ID T_PARA T_PARAF T_FINALEXP { AST::Node* node = symtab.newFunction($5,AST::inteiro,NULL); $$ = new AST::Funcao($5, AST::inteiro, NULL); }
         
         //define a funcao
-       // | T_DEFI T_FUN T_DINT T_DEF T_ID T_PARA param T_PARAF retorna T_END T_DEFI {AST::Node* node = symtab.assignFunction($5,$9); $$ = new AST::DefineFuncao($5,  node);}
+        //| T_DEFI T_FUN T_DINT T_DEF T_ID T_PARA param T_PARAF retorna T_END T_DEFI {AST::Node* node = symtab.assignFunction($5,$9); $$ = new AST::DefineFuncao($5, node);}
        // | T_DEFI T_FUN T_DINT T_DEF T_ID T_PARA T_PARAF retorna T_END T_DEFI {AST::Node* node = symtab.assignFunction($5,$8);  $$ = new AST::DefineFuncao($5,  node);}
         ;
 
@@ -129,9 +127,11 @@ varlist : T_ID { $$ = symtab.newVariable($1, tipoVariavel, NULL); }
         | varlist T_COMMA T_ID { $$ = symtab.newVariable($3, tipoVariavel, $1); }
         ;
 
-param :// tipoVariavel T_DEF T_ID T_COMMA param {$$ = new AST::UniOp($3, AST::declaracao); }
-      //| 
-      tipoVariavel T_DEF T_ID {std::cout<<"parametro"<<std::endl; AST::Node* node = symtab.newVariable($3, tipoVariavel, NULL); parametros.push_back(node);std::cout<<"fim par"<<std::endl;}// $$ = new AST::UniOp($3, AST::declaracao); }
+param : tipoVariavel T_DEF T_ID T_COMMA param {std::cout<<"parametro2"<<std::endl;$$ = symtab.newVariable($3, tipoVariavel, $5); }
+      | tipoVariavel T_DEF T_ID {//std::cout<<"parametro"<<std::endl;AST::Node* node = symtab.newVariable($3, tipoVariavel, NULL);
+      $$ = symtab.newVariable($3, tipoVariavel, NULL);
+      //parametros.push_back(node); std::cout<<"fim par"<<std::endl;
+      }// $$ = new AST::UniOp($3, AST::declaracao); }
       ; 
 
 %%
