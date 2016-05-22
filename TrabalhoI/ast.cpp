@@ -6,7 +6,6 @@ using namespace AST;
 extern ST::SymbolTable symtab;
 
 /*Metodos de impressao*/
-
 /*Imprime o valor do nodo quando o mesmo for inteiro*/
 void Integer::printTree(){
     std::cout << "(valor inteiro " << value << ")";
@@ -39,14 +38,16 @@ void BinOp::printTree(){
 
     switch(op){
         case Tipos::assign: 
-        std::cout << "Atribuicao de valor para ";
-        left->printTree(); 
-        std::cout << ": "; 
-        right->printTree(); 
+            std::cout << "Atribuicao de valor para ";
+            left->printTree(); 
+            std::cout << ": "; 
+            right->printTree(); 
         break;
 
         case Tipos::plus: 
-            std::cout << "("; left->printTree(); std::cout << " (soma) "; 
+            std::cout << "("; 
+            left->printTree(); 
+            std::cout << " (soma) "; 
             right->printTree(); 
             std::cout << ")"; 
         break;
@@ -156,6 +157,11 @@ void UniOp::printTree(){
             node->printTree();  
         break;
 
+        case Tipos::coercao:
+            std::cout << "(coercao de valor de ";
+            node->printTree();
+            std::cout << " para real)";
+        break;
 
         default: std::cout << "Operacao nao reconhecida!!!" << std::endl;
     }
@@ -169,6 +175,16 @@ std::string AST::tipoParaString(Tipos::Tipo tipo){
         case Tipos::booleano : return " booleano ";
         default : return " indefinido ";
     }
+}
+
+AST::Node* AST::realizaCoercao(std::string id, AST::Node* left, AST::Node* right){
+    if(Tipos::necessitaCoersao(left->tipo, right->tipo)){
+        symtab.realizaCoercao(id);
+        left->tipo = Tipos::real;
+        return new AST::UniOp(left, Tipos::coercao);
+    }
+
+   return left;
 }
 
 

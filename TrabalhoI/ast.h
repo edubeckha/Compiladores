@@ -9,8 +9,7 @@ extern void yyerror(const char *s, ...);
 
 namespace AST {
 
- 	static std::string tipoParaString(Tipos::Tipo tipo);
- 	
+
 	class Node;
 	typedef std::vector<Node*> NodeList; //List of ASTs
 
@@ -21,17 +20,24 @@ namespace AST {
 	        virtual void printTree(){}
 	};
 
+
+	static std::string tipoParaString(Tipos::Tipo tipo);
+ 	AST::Node* realizaCoercao(std::string id, AST::Node* left, AST::Node* right);
+
+
 	class Integer : public Node {
 	    public:
 	        int value;
-	        Integer(int value) : value(value){  }
+	        Integer(int value) : value(value) {
+	        tipo = Tipos::inteiro;  }
 	        void printTree();
 	};
 
 	class Doubler : public Node {
 	public:
 	        double value;
-	        Doubler(double value) : value(value) { }
+	        Doubler(double value) : value(value) { 
+	        	tipo = Tipos::real; }
 	        void printTree();
 	};
 
@@ -40,7 +46,10 @@ namespace AST {
 	        bool value;
 	        Boolean(bool value) : value(value) { }
 	        void printTree();
-	        std::string tipoParaString(){if(value) return "TRUE"; return "FALSE";}
+	        std::string tipoParaString(){
+	        	if(value) return "TRUE"; return "FALSE";
+	        	tipo = Tipos::inteiro;
+	        }
 	};
 
 	class BinOp : public Node {
@@ -49,9 +58,9 @@ namespace AST {
 	        Tipos::Tipo tipoRetorno;
 	        Node *left;
 	        Node *right;
-	        BinOp(Node *left, Tipos::Operation op, Node *right) :
-	            left(left), right(right), op(op) {
-	                 tipoRetorno = Tipos::opBinaria(left->tipo, right->tipo, op); }
+	        BinOp(Node *l, Tipos::Operation op, Node *r) :
+	            left(l), right(r), op(op) {
+	        	tipoRetorno = Tipos::opBinaria(left->tipo, right->tipo, op); }
 	        void printTree();
 	};
 
@@ -60,9 +69,10 @@ namespace AST {
 	class Variable : public Node {
 	     public:
 	         std::string id;
-	         Tipos::Tipo tipo;
 	         Node *next;
-	         Variable(std::string id, Tipos::Tipo tipo, Node *next) : id(id), tipo(tipo), next(next) { }
+	         Variable(std::string id, Tipos::Tipo t, Node *next) : id(id), next(next) {
+	         		tipo = t; 
+	     		}
 	         void printTree();      
 	};
 
@@ -91,4 +101,5 @@ namespace AST {
 		Arranjo(Node* indice, Node* var) : indice(indice), var(var) { }
 	    void printTree();		
 	};
+
 }

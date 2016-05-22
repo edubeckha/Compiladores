@@ -29,3 +29,7 @@ AST::Node* SymbolTable::useVariable(std::string id){
 Tipos::Tipo SymbolTable::returnType(std::string id){
     return entryList[id].type;
 }
+
+void SymbolTable::realizaCoercao(std::string id){
+    entryList[id].type = Tipos::real;
+}

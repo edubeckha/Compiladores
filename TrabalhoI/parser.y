@@ -71,7 +71,7 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | tipoVariavel T_DEF varlist T_FINALEXP { $$ = new AST::UniOp($3, Tipos::declaracao); }
 
         /*assign em variaveis*/
-        | T_ID T_ASSIGN expr T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node,Tipos::assign,$3);}
+        | T_ID T_ASSIGN expr T_FINALEXP { AST::Node* node = symtab.assignVariable($1); node = AST::realizaCoercao($1, node, $3); $$ = new AST::BinOp(node,Tipos::assign,$3);}
 
         /*declaracao de arranjos*/
         | tipoVariavel T_ARRA indiceArranjo T_ARRAF T_DEF T_ID T_FINALEXP {AST::Node* var = symtab.newVariable($6, tipoVariavel, NULL); $$ = new AST::UniOp( new AST::Arranjo($3 ,var), Tipos::declaracao);};
