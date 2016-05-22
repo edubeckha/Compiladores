@@ -161,6 +161,7 @@ void UniOp::printTree(){
             std::cout << "(coercao de valor de ";
             node->printTree();
             std::cout << " para real)";
+            node->tipo = Tipos::real;
         break;
 
         default: std::cout << "Operacao nao reconhecida!!!" << std::endl;
@@ -180,10 +181,8 @@ std::string AST::tipoParaString(Tipos::Tipo tipo){
 AST::Node* AST::realizaCoercao(std::string id, AST::Node* left, AST::Node* right){
     if(Tipos::necessitaCoersao(left->tipo, right->tipo)){
         symtab.realizaCoercao(id);
-        left->tipo = Tipos::real;
         return new AST::UniOp(left, Tipos::coercao);
     }
-
    return left;
 }
 
