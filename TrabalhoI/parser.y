@@ -86,8 +86,8 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | T_DECL T_FUN tipoVariavel T_DEF T_ID T_PARA T_PARAF T_FINALEXP { AST::Node* node = symtab.newFunction($5,AST::inteiro,parametros); $$ = new AST::Funcao($5, AST::inteiro, parametros); }
         
         //define a funcao
-        | T_DEFI T_FUN T_DINT T_DEF T_ID T_PARA param T_PARAF retorna T_END T_DEFI {AST::Node* node = symtab.assignFunction($5,parametros); $$ = new AST::DefineFuncao($5, parametros);}
-      //  | T_DEFI T_FUN T_DINT T_DEF T_ID T_PARA T_PARAF retorna T_END T_DEFI {AST::Node* node = symtab.assignFunction($5,parametros);  $$ = new AST::DefineFuncao($5,  node);}
+        | T_DEFI T_FUN T_DINT T_DEF T_ID T_PARA param T_PARAF retorna T_END T_DEFI {AST::Node* node = symtab.assignFunction($5,parametros,$9); $$ = new AST::DefineFuncao($5,parametros, $9);}
+        | T_DEFI T_FUN T_DINT T_DEF T_ID T_PARA T_PARAF retorna T_END T_DEFI {AST::Node* node = symtab.assignFunction($5,parametros,$8);  $$ = new AST::DefineFuncao($5,parametros,$8);}
         ;
 
 retorna : T_RETO expr T_FINALEXP {$$ = $2;}
@@ -95,7 +95,7 @@ retorna : T_RETO expr T_FINALEXP {$$ = $2;}
 
 //retorna : T_RETO expr T_FINALEXP { $$ = $2;}
 //		 | line { $$ = $1; }
-        // | T_NL expr T_FINALEXP retorna { AST::Node* node = symtab.assignVariable($2); $$ = new AST::BinOp(node,AST::assign,$4);}
+//         | T_NL expr T_FINALEXP retorna { AST::Node* node = symtab.assignVariable($2); $$ = new AST::BinOp(node,AST::assign,$4);}
 //         ;
 
 bool    : T_BOOLTRUE {$$ = new AST::Boolean(true);}

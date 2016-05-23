@@ -163,7 +163,7 @@ std::string Variable::tipoParaString(Tipo tipo){
 
 void Funcao::printTree(){
     std::cout << "Declaração de função inteira: "<<id<<std::endl;
-    for (int i = 0; i < parametros.size(); i++)
+    for (int i = parametros.size() -1; 0 <= i; i--)
     {
         std::cout<<"parametro: ";
         parametros.at(i)->printTree();
@@ -173,10 +173,14 @@ void Funcao::printTree(){
 
 void DefineFuncao::printTree(){
     std::cout << "Definição de função inteira: "<<id<<std::endl;
-    for (int i = 0; i < parametros.size(); i++)
+    for (int i = parametros.size() -1; 0 <= i; i--)
     {
         std::cout<<"parametro: ";
         parametros.at(i)->printTree();
         std::cout<<" "<<std::endl;
+    }
+    std::cout<<"Corpo da função:"<<std::endl;
+     if (body != NULL){
+        body->printTree();
     }
 }
