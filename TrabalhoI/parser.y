@@ -42,8 +42,7 @@ static AST::Tipo tipoVariavel = AST::indefinido;
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
-%type <node> expr line varlist param retorna
-/* decfuncbody*/
+%type <node> expr line varlist param funct teste //retorna
 %type <block> lines program
 %type <operacao> tipoOperacao 
 %type <boolean> bool
@@ -71,7 +70,19 @@ lines   : line { $$ = new AST::Block(); if($1 != NULL) $$->lines.push_back($1); 
         | lines error T_NL { yyerrok; }
         ;
 
-line    : T_NL { $$ = NULL; } /*nothing here to be used */
+line    : teste
+		| funct
+		;
+
+        /*declara funcao com e sem parametros (inteiro somente)*/
+funct   : T_DECL T_FUN tipoVariavel T_DEF T_ID T_PARA param T_PARAF T_FINALEXP { AST::Node* node = symtab.newFunction($5,AST::inteiro,parametros); $$ = new AST::Funcao($5, AST::inteiro, parametros); parametros.clear();}
+        | T_DECL T_FUN tipoVariavel T_DEF T_ID T_PARA T_PARAF T_FINALEXP { AST::Node* node = symtab.newFunction($5,AST::inteiro,parametros); $$ = new AST::Funcao($5, AST::inteiro, parametros); }
+        /*define a funcao*/
+        | T_DEFI T_FUN T_DINT T_DEF T_ID T_PARA param T_PARAF teste T_END T_DEFI {AST::Node* node = symtab.assignFunction($5,parametros,$9); $$ = new AST::DefineFuncao($5,parametros, $9);}
+        | T_DEFI T_FUN T_DINT T_DEF T_ID T_PARA T_PARAF teste T_END T_DEFI {AST::Node* node = symtab.assignFunction($5,parametros,$8);  $$ = new AST::DefineFuncao($5,parametros,$8);}
+        ;
+
+teste	: T_NL { $$ = NULL; } /*nothing here to be used */
         | expr T_FINALEXP /*$$ = $1 when nothing is said*/
         | tipoVariavel T_DEF varlist T_FINALEXP { $$ = new AST::UniOp($3, AST::declaracao); }
         | T_ID T_ASSIGN expr T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node,AST::assign,$3);}
@@ -80,28 +91,22 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | T_ID T_ASSIGN T_SUB T_DOUBLE T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unario, new AST::Doubler(-$4) ); }
         
         | T_ID T_ASSIGN T_UNIBOOL bool T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unibool, new AST::Boolean(!$4)); }
-        
-        //declara funcao com e sem parametros (inteiro somente)
-        | T_DECL T_FUN tipoVariavel T_DEF T_ID T_PARA param T_PARAF T_FINALEXP { AST::Node* node = symtab.newFunction($5,AST::inteiro,parametros); $$ = new AST::Funcao($5, AST::inteiro, parametros); parametros.clear();}
-        | T_DECL T_FUN tipoVariavel T_DEF T_ID T_PARA T_PARAF T_FINALEXP { AST::Node* node = symtab.newFunction($5,AST::inteiro,parametros); $$ = new AST::Funcao($5, AST::inteiro, parametros); }
-        
-        //define a funcao
-        | T_DEFI T_FUN T_DINT T_DEF T_ID T_PARA param T_PARAF retorna T_END T_DEFI {AST::Node* node = symtab.assignFunction($5,parametros,$9); $$ = new AST::DefineFuncao($5,parametros, $9);}
-        | T_DEFI T_FUN T_DINT T_DEF T_ID T_PARA T_PARAF retorna T_END T_DEFI {AST::Node* node = symtab.assignFunction($5,parametros,$8);  $$ = new AST::DefineFuncao($5,parametros,$8);}
         ;
 
-retorna : T_RETO expr T_FINALEXP {$$ = $2;}
-		;     
+//retorna : T_RETO expr T_FINALEXP {$$ = $2;}
+//		;     
 
 //retorna : T_RETO expr T_FINALEXP { $$ = $2;}
 //		 | line { $$ = $1; }
 //         | T_NL expr T_FINALEXP retorna { AST::Node* node = symtab.assignVariable($2); $$ = new AST::BinOp(node,AST::assign,$4);}
 //         ;
 
+/*define booleanos*/
 bool    : T_BOOLTRUE {$$ = new AST::Boolean(true);}
         | T_BOOLFALSE {$$ = new AST::Boolean(false);}
         ;
 
+/*tratamento de todas as expressoes utilizadas no programa*/
 expr    : T_PARA expr T_PARAF { $$ = $2; }
         | T_INT { $$ = new AST::Integer($1); } 
         | T_DOUBLE { $$ = new AST::Doubler($1); }
@@ -111,11 +116,13 @@ expr    : T_PARA expr T_PARAF { $$ = $2; }
         | expr tipoOperacao expr {$$ = new AST::BinOp($1, $2, $3);}        
         ;
 
+/*define todos os tipos de variaveis que possamos ter no programa*/
 tipoVariavel : T_DINT { tipoVariavel = AST::inteiro; } 
              | T_DREAL { tipoVariavel = AST::real; }
              | T_DBOOL { tipoVariavel = AST::booleano; }
              ;
 
+/*define todos os tipos de operacoes que possamos ter no programa*/
 tipoOperacao : T_PLUS {$$ = AST::plus;}
              | T_SUB {$$ = AST::sub;}
              | T_TIMES {$$ = AST::times;}
@@ -128,12 +135,14 @@ tipoOperacao : T_PLUS {$$ = AST::plus;}
              | T_OR {$$ = AST::ore;}
              ;
 
+/*define uma ou mais variaveis de acordo com a vontade do usuario*/
 varlist : T_ID { $$ = symtab.newVariable($1, tipoVariavel, NULL); }
         | varlist T_COMMA T_ID { $$ = symtab.newVariable($3, tipoVariavel, $1); }
         ;
 
+/*define um ou mais parametros de acordo com a vontade do usuario*/
 param : tipoVariavel T_DEF T_ID T_COMMA param {AST::Variable* var = new AST::Variable($3,AST::inteiro,NULL); parametros.push_back(var);}
-      | tipoVariavel T_DEF T_ID { AST::Variable* var = new AST::Variable($3,AST::inteiro,NULL); parametros.push_back(var); }
+      | tipoVariavel T_DEF T_ID {AST::Variable* var = new AST::Variable($3,AST::inteiro,NULL); parametros.push_back(var); }
       ; 
 
 %%
