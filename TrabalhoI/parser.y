@@ -74,32 +74,31 @@ line    : teste
 		| funct
 		;
 
-        /*declara funcao com e sem parametros (inteiro somente)*/
+        /*declara função com e sem parametros (inteiro somente)*/
 funct   : T_DECL T_FUN tipoVariavel T_DEF T_ID T_PARA param T_PARAF T_FINALEXP { AST::Node* node = symtab.newFunction($5,AST::inteiro,parametros); $$ = new AST::Funcao($5, AST::inteiro, parametros); parametros.clear();}
         | T_DECL T_FUN tipoVariavel T_DEF T_ID T_PARA T_PARAF T_FINALEXP { AST::Node* node = symtab.newFunction($5,AST::inteiro,parametros); $$ = new AST::Funcao($5, AST::inteiro, parametros); }
+
         /*define a funcao*/
-        | T_DEFI T_FUN T_DINT T_DEF T_ID T_PARA param T_PARAF teste T_END T_DEFI {AST::Node* node = symtab.assignFunction($5,parametros,$9); $$ = new AST::DefineFuncao($5,parametros, $9);}
-        | T_DEFI T_FUN T_DINT T_DEF T_ID T_PARA T_PARAF teste T_END T_DEFI {AST::Node* node = symtab.assignFunction($5,parametros,$8);  $$ = new AST::DefineFuncao($5,parametros,$8);}
+        | T_DEFI T_FUN T_DINT T_DEF T_ID T_PARA param T_PARAF teste T_END T_DEFI { AST::Node* node = symtab.assignFunction($5,parametros,$9); $$ = new AST::DefineFuncao($5,parametros, $9);}
+        | T_DEFI T_FUN T_DINT T_DEF T_ID T_PARA T_PARAF teste T_END T_DEFI { AST::Node* node = symtab.assignFunction($5,parametros,$8);  $$ = new AST::DefineFuncao($5,parametros,$8);}
         ;
 
-teste	: T_NL { $$ = NULL; } /*nothing here to be used */
-        | expr T_FINALEXP /*$$ = $1 when nothing is said*/
-        | tipoVariavel T_DEF varlist T_FINALEXP { $$ = new AST::UniOp($3, AST::declaracao); }
+teste	: T_NL {$$ = NULL; } /*nothing here to be used */
+
+        | expr T_FINALEXP {$$ = $1; } /*$$ = $1 when nothing is said*/
+
+        | tipoVariavel T_DEF varlist T_FINALEXP {$$ = new AST::UniOp($3, AST::declaracao); }
+
         | T_ID T_ASSIGN expr T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node,AST::assign,$3);}
-        
-        | T_ID T_ASSIGN T_SUB T_INT T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unario, new AST::Integer(-$4) ); }
-        | T_ID T_ASSIGN T_SUB T_DOUBLE T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unario, new AST::Doubler(-$4) ); }
-        
+
+        | T_ID T_ASSIGN T_SUB T_INT T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unario, new AST::Integer(-$4)); }
+        | T_ID T_ASSIGN T_SUB T_DOUBLE T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unario, new AST::Doubler(-$4)); }
+
         | T_ID T_ASSIGN T_UNIBOOL bool T_FINALEXP { AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(node, AST::unibool, new AST::Boolean(!$4)); }
         ;
 
 //retorna : T_RETO expr T_FINALEXP {$$ = $2;}
-//		;     
-
-//retorna : T_RETO expr T_FINALEXP { $$ = $2;}
-//		 | line { $$ = $1; }
-//         | T_NL expr T_FINALEXP retorna { AST::Node* node = symtab.assignVariable($2); $$ = new AST::BinOp(node,AST::assign,$4);}
-//         ;
+//		;
 
 /*define booleanos*/
 bool    : T_BOOLTRUE {$$ = new AST::Boolean(true);}
