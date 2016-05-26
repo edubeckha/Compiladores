@@ -56,6 +56,7 @@ Tipo Tipos::opBinaria(Tipo tipoNodoEsquerda, Tipo tipoNodoDireita, Operation op)
 						erroCondicao(op, tipoNodoEsquerda, tipoNodoDireita, inteiro, booleano);
 					}
 				}
+				return booleano;
 
 		} else {
 				std::cout << "Operacao nao suportada em operacoes binarias!" << std::endl;
