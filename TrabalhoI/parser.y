@@ -30,7 +30,7 @@ static Tipos::Tipo tipoVariavel = Tipos::indefinido;
 %token <booleano> T_BOOLTRUE T_BOOLFALSE
 %token <name> T_ID
 
-%token T_DINT T_DREAL T_DBOOL T_PLUS T_SUB T_TIMES T_DIV T_DEF T_COMMA T_ASSIGN T_DIFERENTE T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_UNIBOOL T_ATRI T_PARA T_PARAF T_FINALEXP T_NL T_IGUAL T_ARRA T_ARRAF
+%token T_DINT T_DREAL T_DBOOL T_PLUS T_SUB T_TIMES T_DIV T_DEF T_COMMA T_ASSIGN T_DIFERENTE T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_UNIBOOL T_ATRI T_PARA T_PARAF T_FINALEXP T_NL T_IGUAL T_ARRA T_ARRAF T_IF T_THEN T_ELSE T_END T_WHILE T_DO
 
 /* type defines the type of our nonterminal symbols.
  * Types should match the names used in the union.
@@ -80,14 +80,18 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         
         /*assign em arranjos*/
         |T_ID T_ARRA expr T_ARRAF T_ASSIGN expr T_FINALEXP {AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(new AST::Arranjo($3, node), Tipos::assign, $6);}
+
+        /*tratamento de expressoes condicionais*/
+        |T_IF expr T_THEN lines T_END T_IF { $$ = new AST::Condicao($2, $4, NULL);}
+        |T_IF expr T_THEN lines T_ELSE lines T_END T_IF { $$ = new AST::Condicao($2, $4, $6);} 
         ;
 
         /*tratamento de todas as expressoes utilizadas no programa*/
 expr    : T_PARA expr T_PARAF { $$ = $2; }
-        | T_INT { $$ = new AST::Integer($1); } 
-        | T_DOUBLE { $$ = new AST::Doubler($1); }
-        | T_BOOLTRUE { $$ = new AST::Boolean(true); }
-        | T_BOOLFALSE { $$ = new AST::Boolean(false); }
+        | T_INT { tipoVariavel = Tipos::inteiro; $$ = new AST::Integer($1); } 
+        | T_DOUBLE { tipoVariavel = Tipos::real; $$ = new AST::Doubler($1); }
+        | T_BOOLTRUE { tipoVariavel = Tipos::booleano; $$ = new AST::Boolean(true); }
+        | T_BOOLFALSE { tipoVariavel = Tipos::booleano; $$ = new AST::Boolean(false); }
         | T_ID { $$ = symtab.useVariable($1); }
         | expr tipoOperacao expr {$$ = new AST::BinOp($1, $2, $3);}  
         | T_ID T_ARRA expr T_ARRAF {$$ = new AST::Arranjo($3, symtab.useVariable($1));} 

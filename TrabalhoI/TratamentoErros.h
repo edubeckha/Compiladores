@@ -4,7 +4,7 @@
 
 namespace Tipos{
 	enum Tipo { inteiro, real, booleano, indefinido };
-	enum Operation { plus, sub, times, divi, assign, maior, menor, maiorigual, menorigual, ande, ore, unibool, unario, declaracao, igual, diferente, coercao, defineIndiceArranjo};
+	enum Operation { plus, sub, times, divi, assign, maior, menor, maiorigual, menorigual, ande, ore, unibool, unario, declaracao, igual, diferente, coercao, defineIndiceArranjo, defineCondicaoLaco};
 	
 	Tipo opUnaria(Tipo tipoRecebido, Operation op);
 	Tipo opBinaria(Tipo tipoNodoEsquerda, Tipo tipoNodoDireita, Operation op);
@@ -14,6 +14,7 @@ namespace Tipos{
 	void tiposIncompativeis(Tipo primeiroTipo, Tipo segundoTipo);
 	bool precisaCoersao(Tipo tipoNodoEsquerda, Tipo tipoNodoDireita);
 	void erroIndiceArranjo(Tipo primeiroTipo, Tipo segundoTipo);
+	void erroCondicaoLaco(Tipo esperado, Tipo recebido);
 	
 	std::string tipoParaString(Tipo tipo);
 	std::string opParaString(Operation tipo);

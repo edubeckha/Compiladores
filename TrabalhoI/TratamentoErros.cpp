@@ -19,6 +19,11 @@ Tipo Tipos::opUnaria(Tipo tipoRecebido, Operation op){
 				Tipos::erroIndiceArranjo(inteiro, tipoRecebido);
 			}
 		break;
+		case defineCondicaoLaco:
+			if(tipoRecebido != booleano){
+				Tipos::erroCondicaoLaco(booleano, tipoRecebido);
+			}
+		break;
 		case unario:
 		break;
 		case unibool:
@@ -32,6 +37,7 @@ Tipo Tipos::opUnaria(Tipo tipoRecebido, Operation op){
 
 Tipo Tipos::opBinaria(Tipo tipoNodoEsquerda, Tipo tipoNodoDireita, Operation op){
 	switch(op){
+		std::cout << "chegou aq no opbinaria";
 	case assign:
 			if(tipoNodoEsquerda != tipoNodoDireita){
 				Tipos::tiposIncompativeis(tipoNodoEsquerda, tipoNodoDireita);
@@ -93,8 +99,13 @@ void Tipos::tiposIncompativeis(Tipo primeiroTipo, Tipo segundoTipo){
 }
 
 void Tipos::erroIndiceArranjo(Tipo primeiroTipo, Tipo segundoTipo){
-	std::cout << "Erro semantico: indice do arranjo esperava  " <<
+	std::cout << "Erro semantico: lado da condicao esperava  " <<
 	tipoParaString(primeiroTipo) << " mas recebeu " << tipoParaString(segundoTipo) << std::endl;
+}
+
+void Tipos::erroCondicaoLaco(Tipo esperado, Tipo recebido){
+	std::cout << "Erro semantico: indice do arranjo esperava " <<
+	tipoParaString(esperado) << " mas recebeu " << tipoParaString(recebido) << std::endl;
 }
 
 std::string Tipos::tipoParaString(Tipo tipo){

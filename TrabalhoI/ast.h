@@ -106,4 +106,21 @@ namespace AST {
 	    void printTree();		
 	};
 
+
+	/*Node que representa a estrutura condicional. A mesma possui tres
+	partes distintas: condicao, corpo do laco if e corpo do lado else*/
+	class Condicao : public Node {
+		public:
+		Node* condicao;
+		Node* corpoIf;
+		Node* corpoElse;
+		//extern ST::SymbolTable* tabelaCondicao; /*Tabela de simbolos do escopo*/
+		/*Talvez ter mais uma tabela para o escopo do else??? verificar!*/
+
+		Condicao(Node* condicao, Node* corpoIf, Node* corpoElse) : condicao(condicao), corpoIf(corpoIf), corpoElse(corpoElse) {
+			Tipos::opUnaria(condicao->tipo, Tipos::defineCondicaoLaco);
+		}
+		void printTree();
+	};
+
 }

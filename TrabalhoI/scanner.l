@@ -53,6 +53,13 @@ nome [a-z]+
 "["					{return T_ARRA;}
 "]"					{return T_ARRAF;}
 
+"while"				{return T_WHILE;}
+"do"				{return T_DO;}
+"if"				{return T_IF;}
+"then"				{return T_THEN;}
+"else"				{return T_ELSE;}
+"end"				{return T_END;}
+
 ";"					{return T_FINALEXP;}
 "\n"                {return T_NL;}
 {nome}              {yylval.name = strdup(yytext); return T_ID;}
