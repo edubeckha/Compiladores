@@ -99,7 +99,10 @@ namespace AST {
 	public:
 		Node* indice;
 		Node* var;
-		Arranjo(Node* indice, Node* var) : indice(indice), var(var) { }
+		Arranjo(Node* indice, Node* var) : indice(indice), var(var) { 
+			Tipos::opUnaria(indice->tipo, Tipos::defineIndiceArranjo);
+			tipo = var->tipo;
+		}
 	    void printTree();		
 	};
 

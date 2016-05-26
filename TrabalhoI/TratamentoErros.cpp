@@ -14,6 +14,11 @@ bool Tipos::necessitaCoersao(Tipo tipoNodoEsquerda, Tipo tipoNodoDireita){
 Tipo Tipos::opUnaria(Tipo tipoRecebido, Operation op){
 	Tipo tipoRetorno;
 	switch(op){
+		case defineIndiceArranjo:
+			if(tipoRecebido != inteiro){
+				Tipos::erroIndiceArranjo(inteiro, tipoRecebido);
+			}
+		break;
 		case unario:
 		break;
 		case unibool:
@@ -27,11 +32,11 @@ Tipo Tipos::opUnaria(Tipo tipoRecebido, Operation op){
 
 Tipo Tipos::opBinaria(Tipo tipoNodoEsquerda, Tipo tipoNodoDireita, Operation op){
 	switch(op){
-
 	case assign:
 			if(tipoNodoEsquerda != tipoNodoDireita){
 				Tipos::tiposIncompativeis(tipoNodoEsquerda, tipoNodoDireita);
-			}		
+			}
+		return tipoNodoEsquerda;		
 	 break;
 		default:
 		if(op == plus || op == sub || op == times || op == divi){
@@ -85,6 +90,11 @@ void Tipos::erroTipagem(Operation operacao, Tipo primeiroTipo, Tipo segundoTipo,
 void Tipos::tiposIncompativeis(Tipo primeiroTipo, Tipo segundoTipo){
 	std::cout << "Erro semantico: operacao de assign esperava dois tipos compativeis, mas recebeu " <<
 	tipoParaString(primeiroTipo) << " e " << tipoParaString(segundoTipo) << std::endl;
+}
+
+void Tipos::erroIndiceArranjo(Tipo primeiroTipo, Tipo segundoTipo){
+	std::cout << "Erro semantico: indice do arranjo esperava  " <<
+	tipoParaString(primeiroTipo) << " mas recebeu " << tipoParaString(segundoTipo) << std::endl;
 }
 
 std::string Tipos::tipoParaString(Tipo tipo){

@@ -37,9 +37,9 @@ static Tipos::Tipo tipoVariavel = Tipos::indefinido;
  * Example: %type<node> expr
  */
 
-%type <node> expr line varlist indiceArranjo
+%type <node> expr line varlist
 %type <block> lines program
-%type <operacao> tipoOperacao operacaoArranjo
+%type <operacao> tipoOperacao
 
 /* Operator precedence for mathematical operators
  * The latest it is listed, the highest the precedence
@@ -76,10 +76,10 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         $$ = new AST::BinOp(node,Tipos::assign,$3);}
 
         /*declaracao de arranjos*/
-        | tipoVariavel T_ARRA indiceArranjo T_ARRAF T_DEF T_ID T_FINALEXP {AST::Node* var = symtab.newVariable($6, tipoVariavel, NULL); $$ = new AST::UniOp( new AST::Arranjo($3 ,var), Tipos::declaracao, tipoVariavel);};
+        | tipoVariavel T_ARRA expr T_ARRAF T_DEF T_ID T_FINALEXP {AST::Node* var = symtab.newVariable($6, tipoVariavel, NULL); $$ = new AST::UniOp(new AST::Arranjo($3 ,var), Tipos::declaracao, tipoVariavel);};
         
         /*assign em arranjos*/
-        |T_ID T_ARRA indiceArranjo T_ARRAF T_ASSIGN expr T_FINALEXP {AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(new AST::Arranjo($3, node), Tipos::assign, $6);}
+        |T_ID T_ARRA expr T_ARRAF T_ASSIGN expr T_FINALEXP {AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(new AST::Arranjo($3, node), Tipos::assign, $6);}
         ;
 
         /*tratamento de todas as expressoes utilizadas no programa*/
@@ -90,23 +90,10 @@ expr    : T_PARA expr T_PARAF { $$ = $2; }
         | T_BOOLFALSE { $$ = new AST::Boolean(false); }
         | T_ID { $$ = symtab.useVariable($1); }
         | expr tipoOperacao expr {$$ = new AST::BinOp($1, $2, $3);}  
-        | T_ID T_ARRA indiceArranjo T_ARRAF {$$ = new AST::Arranjo($3, symtab.useVariable($1));} 
+        | T_ID T_ARRA expr T_ARRAF {$$ = new AST::Arranjo($3, symtab.useVariable($1));} 
         | T_SUB expr {$$ = new AST::UniOp($2, Tipos::unario, tipoVariavel);}
         | T_UNIBOOL expr {$$ = new AST::UniOp($2, Tipos::unibool, tipoVariavel);}
         ;
-
-/*trata indices de arranjo como inteiros, expressoes ou simplesmente variaveis ja atribuidas*/
-indiceArranjo : T_INT operacaoArranjo indiceArranjo {$$ = new AST::BinOp(new AST::Integer($1), $2, $3);}
-              | T_ID operacaoArranjo indiceArranjo { AST::Node* node = symtab.useVariable($1);  $$ = new AST::BinOp(node, $2, $3);}
-              | T_ID {$$ = symtab.useVariable($1);}
-              | T_INT {$$ = new AST::Integer($1);}
-              ;
-
-/*define operacoes permitidas no indice do arranjo*/
-operacaoArranjo : T_PLUS {$$ = Tipos::plus;}
-                | T_SUB {$$ = Tipos::sub;}
-                | T_TIMES {$$ = Tipos::times;}
-                ;
 
 /*define todos os tipos de variaveis que possamos ter no programa*/
 tipoVariavel : T_DINT { tipoVariavel = Tipos::inteiro; } 

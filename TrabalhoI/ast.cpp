@@ -26,9 +26,9 @@ void Boolean::printTree(){
 
 /*Imprime o arranjo, seu tipo e seu indice quando o nodo for do tipo arranjo*/
 void Arranjo::printTree(){
-    std::cout << "arranjo do tipo "<< 
+    std::cout << "arranjo"<< 
     AST::tipoParaString(dynamic_cast<Variable*>(var)->tipo)
-    << " {+indice: ";
+    << std::endl << "{+indice: ";
     indice->printTree();
     std::cout << "}";
 }
