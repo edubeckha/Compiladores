@@ -11,6 +11,7 @@ namespace Tipos{
 
 	void erroCondicao(Operation operacao, Tipo primeiroRecebido, Tipo segundoRecebido, Tipo primeiroEsperado, Tipo segundoEsperado);
 	void erroTipagem(Operation operacao, Tipo primeiroRecebido, Tipo segundoRecebido, Tipo esperado);
+	void tiposIncompativeis(Tipo primeiroTipo, Tipo segundoTipo);
 	bool precisaCoersao(Tipo tipoNodoEsquerda, Tipo tipoNodoDireita);
 
 	std::string tipoParaString(Tipo tipo);

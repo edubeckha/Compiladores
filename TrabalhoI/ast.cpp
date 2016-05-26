@@ -135,7 +135,7 @@ void Variable::printTree(){
         next->printTree();
         std::cout << ", " << id;
     } else {
-        std::cout << "variavel do tipo" << AST::tipoParaString(tipo) << ": " << id;
+        std::cout << "variavel do tipo" << AST::tipoParaString(tipo) << id;
     }
 }
 
@@ -181,7 +181,7 @@ std::string AST::tipoParaString(Tipos::Tipo tipo){
 AST::Node* AST::realizaCoercao(std::string id, AST::Node* left, AST::Node* right){
     if(Tipos::necessitaCoersao(left->tipo, right->tipo)){
         symtab.realizaCoercao(id);
-        return new AST::UniOp(left, Tipos::coercao);
+        return new AST::UniOp(left, Tipos::coercao, Tipos::real);
     }
    return left;
 }

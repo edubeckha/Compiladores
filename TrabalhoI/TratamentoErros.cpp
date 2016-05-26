@@ -26,15 +26,17 @@ Tipo Tipos::opUnaria(Tipo tipoRecebido, Operation op){
 
 
 Tipo Tipos::opBinaria(Tipo tipoNodoEsquerda, Tipo tipoNodoDireita, Operation op){
-	Tipo tipoRetorno;
 	switch(op){
 
-	case assign: break;
+	case assign:
+			if(tipoNodoEsquerda != tipoNodoDireita){
+				Tipos::tiposIncompativeis(tipoNodoEsquerda, tipoNodoDireita);
+			}		
+	 break;
 		default:
 		if(op == plus || op == sub || op == times || op == divi){
-			tipoRetorno = inteiro; //faz com que o tipo de retorno padrao seja inteiro
 			if(tipoNodoEsquerda == real || tipoNodoDireita == real){
-					tipoRetorno = real;
+					return real;
 			}
 
 			if(tipoNodoEsquerda != inteiro && tipoNodoEsquerda != real){
@@ -60,8 +62,7 @@ Tipo Tipos::opBinaria(Tipo tipoNodoEsquerda, Tipo tipoNodoDireita, Operation op)
 		}
 	}
 
-
-	return tipoRetorno;
+	return inteiro;
 }
 
 void Tipos::erroCondicao(Operation operacao, Tipo primeiroRecebido, Tipo segundoRecebido, Tipo primeiroEsperado, Tipo segundoEsperado){
@@ -77,7 +78,12 @@ void Tipos::erroTipagem(Operation operacao, Tipo primeiroTipo, Tipo segundoTipo,
 	if(segundoTipo != indefinido){
 		std::cout << " ou " + tipoParaString(segundoTipo);
 	}
-	std::cout << " como parâmetro, mas recebeu " << tipoParaString(recebido) << "." << "\n";
+	std::cout << " como parâmetro, mas recebeu " << tipoParaString(recebido) << "." << std::endl;
+}
+
+void Tipos::tiposIncompativeis(Tipo primeiroTipo, Tipo segundoTipo){
+	std::cout << "Erro semantico: operacao de assign esperava dois tipos compativeis, mas recebeu " <<
+	tipoParaString(primeiroTipo) << " e " << tipoParaString(segundoTipo) << std::endl;
 }
 
 std::string Tipos::tipoParaString(Tipo tipo){

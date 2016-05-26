@@ -21,7 +21,7 @@ namespace AST {
 	};
 
 
-	static std::string tipoParaString(Tipos::Tipo tipo);
+	std::string tipoParaString(Tipos::Tipo tipo);
  	AST::Node* realizaCoercao(std::string id, AST::Node* left, AST::Node* right);
 
 
@@ -44,23 +44,22 @@ namespace AST {
 	class Boolean : public Node {
 	public:
 	        bool value;
-	        Boolean(bool value) : value(value) { }
+	        Boolean(bool value) : value(value) {
+	        	tipo = Tipos::booleano; }
 	        void printTree();
 	        std::string tipoParaString(){
-	        	if(value) return "TRUE"; return "FALSE";
-	        	tipo = Tipos::inteiro;
+	        	if(value) return "TRUE"; return "FALSE";	
 	        }
 	};
 
 	class BinOp : public Node {
 	    public:
 	        Tipos::Operation op;
-	        Tipos::Tipo tipoRetorno;
 	        Node *left;
 	        Node *right;
 	        BinOp(Node *l, Tipos::Operation op, Node *r) :
 	            left(l), right(r), op(op) {
-	        	tipoRetorno = Tipos::opBinaria(left->tipo, right->tipo, op); }
+	        	tipo = Tipos::opBinaria(left->tipo, right->tipo, op); }
 	        void printTree();
 	};
 
@@ -81,7 +80,9 @@ namespace AST {
 	public:
 		Tipos::Operation op;
 		Node *node;
-		UniOp(Node* node, Tipos::Operation op) : node(node), op(op) { }
+		UniOp(Node* node, Tipos::Operation op, Tipos::Tipo tipoRetorno) : node(node), op(op) {
+			tipo = tipoRetorno;
+		}
 		void printTree();
 	};
 
