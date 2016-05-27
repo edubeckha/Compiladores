@@ -12,7 +12,6 @@ bool Tipos::necessitaCoersao(Tipo tipoNodoEsquerda, Tipo tipoNodoDireita){
 }
 
 Tipo Tipos::opUnaria(Tipo tipoRecebido, Operation op){
-	Tipo tipoRetorno;
 	switch(op){
 		case defineIndiceArranjo:
 			if(tipoRecebido != inteiro){
@@ -25,13 +24,19 @@ Tipo Tipos::opUnaria(Tipo tipoRecebido, Operation op){
 			}
 		break;
 		case unario:
+		if(tipoRecebido != real || tipoRecebido != inteiro){
+			Tipos::erroTipagem(unario, inteiro, real, tipoRecebido);
+		}
 		break;
 		case unibool:
+		if(tipoRecebido != booleano){
+			Tipos::erroTipagem(unibool, booleano, indefinido, tipoRecebido);
+		}
 		break;
 	default:
 		std::cout << "Operacao nao suportada em operacoes unarias!" << std::endl;
 	}
-	return tipoRetorno;
+	return tipoRecebido;
 }
 
 

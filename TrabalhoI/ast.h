@@ -4,12 +4,13 @@
 #include <iostream>
 #include <vector>
 #include "TratamentoErros.h"
+#include "st.h"
 
 extern void yyerror(const char *s, ...);
 
 namespace AST {
 
-
+	class ST::SymbolTable;
 	class Node;
 	typedef std::vector<Node*> NodeList; //List of ASTs
 
@@ -75,6 +76,13 @@ namespace AST {
 	         void printTree();      
 	};
 
+	class Block : public Node {
+	    public:
+	        NodeList lines;
+	        Block() { }
+	        void printTree();
+	};
+
 	/*Nodo que define operacoes unarias do programa. A unica disponivel ate o momento eh a declaracao*/
 	class UniOp : public Node {
 	public:
@@ -84,13 +92,6 @@ namespace AST {
 			tipo = tipoRetorno;
 		}
 		void printTree();
-	};
-
-	class Block : public Node {
-	    public:
-	        NodeList lines;
-	        Block() { }
-	        void printTree();
 	};
 
 	/*Classe para tratamento de arranjos, que recebe uma variavel (para poder ser testada na tabela de simbolos) e um nodo indice, que 
@@ -121,6 +122,17 @@ namespace AST {
 			Tipos::opUnaria(condicao->tipo, Tipos::defineCondicaoLaco);
 		}
 		void printTree();
+	};
+
+	/*Nodo que tem a responsabilidade de manter um escopo em uma determinada estrutura, como uma funcao, uma condicao, etc...
+	Para isto, o mesmo guarda uma estrutura do tipo Node e uma tabela de simbolos que aponta para a tabela de origem a fim de verificar 
+	questoes de escopo*/
+	class Escopo : public Node {
+		Node* escopo;
+
+		Escopo(Node* escopo, extern ST::SymbolTable* tabelaOrigem) : escopo(escopo){
+
+		}
 	};
 
 }

@@ -29,7 +29,7 @@ class SymbolTable {
     public:
         SymbolList entryList;
         SymbolTable() {}
-
+       // ST::SymbolTable tabelaOrigem;
         /*checkId returns true if the variable has been defined and false if it does not exist*/
         bool checkId(std::string id) {return entryList.find(id) != entryList.end();}
         void addSymbol(std::string id, Symbol newsymbol) {entryList[id] = newsymbol;}
