@@ -7,10 +7,10 @@
 #include "st.h"
 
 extern void yyerror(const char *s, ...);
-
+namespace ST {class SymbolTable;};
+extern ST::SymbolTable* symbolTable;
 namespace AST {
 
-	class ST::SymbolTable;
 	class Node;
 	typedef std::vector<Node*> NodeList; //List of ASTs
 
@@ -130,7 +130,7 @@ namespace AST {
 	class Escopo : public Node {
 		Node* escopo;
 
-		Escopo(Node* escopo, extern ST::SymbolTable* tabelaOrigem) : escopo(escopo){
+		Escopo(Node* escopo, ST::SymbolTable* tabelaOrigem) : escopo(escopo){
 
 		}
 	};

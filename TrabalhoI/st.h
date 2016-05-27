@@ -5,7 +5,7 @@
 #include "ast.h"
 
 extern void yyerror(const char* s, ...);
-
+namespace AST {class Node;}
 namespace ST {
 
 class Symbol;
