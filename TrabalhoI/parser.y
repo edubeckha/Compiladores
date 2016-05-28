@@ -97,7 +97,9 @@ elseIf : {$$ = NULL;}
 		;
 
 unexpr : expr {$$ = $1;}
+        | T_PARA expr T_PARAF {$$ = $2;}
 		| unexpr tipoOperacao expr {$$ = new AST::BinOp($1, $2, $3);} 
+        | T_PARA unexpr tipoOperacao expr T_PARAF {std::cout << "pega aq"; $$ = new AST::BinOp($2, $3, $4);} 
 		;
 
 /*tratamento de todas as expressoes utilizadas no programa*/
@@ -136,8 +138,12 @@ varlist : T_ID { $$ = symtab->newVariable($1, tv, NULL); }
         | varlist T_COMMA T_ID { $$ = symtab->newVariable($3, tv, $1); }
         ;
 
+/*define um novo escopo para as mais diferentes estruturas, como lacos condicionais, funcoes, etc. Para isso, a mesma cria uma nova
+tabela de escopo e seta a tabela de origem da mesma como a tabela atual do sistema. Depois disso, torna a tabela criada como a padrao
+para ser utilizada no momento*/
 novoEscopo : {ST::SymbolTable* tabelaEscopo = new ST::SymbolTable; tabelaEscopo->defineTabelaOrigem(symtab); symtab = tabelaEscopo;}
 
+/*Encerra o escopo de uma tabela de simbolos, dando a autoridade para a tabela que deu origem a tabela encerrada*/
 mataEscopo : {symtab = symtab->tabelaOrigem;}
 
 %%

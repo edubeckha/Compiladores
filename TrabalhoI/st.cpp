@@ -42,10 +42,12 @@ AST::Node* SymbolTable::useVariable(std::string id){
     return new AST::Variable(id, entryList[id].type, NULL); //Creates variable node anyway
 }
 
+/*Retorna o tipo de simbolo, passando um id como parametro*/
 Tipos::Tipo SymbolTable::returnType(std::string id){
     return entryList[id].type;
 }
 
+/*Realiza a coersao de um tipo na tabela de simbolos*/
 void SymbolTable::realizaCoercao(std::string id){
     entryList[id].type = Tipos::real;
 }

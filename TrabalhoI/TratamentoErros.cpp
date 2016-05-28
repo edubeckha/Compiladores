@@ -2,6 +2,7 @@
 using namespace Tipos;
 
 
+/*Verifica se dois nodos precisam realizar coersao de real para inteiro a partir do tipo dos mesmos*/
 bool Tipos::necessitaCoersao(Tipo tipoNodoEsquerda, Tipo tipoNodoDireita){
 	if(tipoNodoEsquerda == real || tipoNodoDireita == real){
 		if(tipoNodoEsquerda == inteiro || tipoNodoDireita == inteiro){
@@ -11,6 +12,7 @@ bool Tipos::necessitaCoersao(Tipo tipoNodoEsquerda, Tipo tipoNodoDireita){
 	return false;
 }
 
+/*Verifica erros semanticos em operacoes unitarias, como operador unario, unario para booleano e definicoes de indices de arranjo e de condicoes de lacos do tipo if e while*/
 Tipo Tipos::opUnaria(Tipo tipoRecebido, Operation op){
 	switch(op){
 		case defineIndiceArranjo:
@@ -39,10 +41,9 @@ Tipo Tipos::opUnaria(Tipo tipoRecebido, Operation op){
 	return tipoRecebido;
 }
 
-
+/*Verifica erros semanticos em operacoes binarias*/
 Tipo Tipos::opBinaria(Tipo tipoNodoEsquerda, Tipo tipoNodoDireita, Operation op){
 	switch(op){
-		std::cout << "chegou aq no opbinaria";
 	case assign:
 			if(tipoNodoEsquerda != tipoNodoDireita){
 				Tipos::tiposIncompativeis(tipoNodoEsquerda, tipoNodoDireita);
@@ -82,6 +83,7 @@ Tipo Tipos::opBinaria(Tipo tipoNodoEsquerda, Tipo tipoNodoDireita, Operation op)
 	return inteiro;
 }
 
+/*Mostra na tela erros de condicoes em lacos*/
 void Tipos::erroCondicao(Operation operacao, Tipo primeiroRecebido, Tipo segundoRecebido, Tipo primeiroEsperado, Tipo segundoEsperado){
 	std::cout << "A condicao do laco obteve uma operacao de " << opParaString(operacao) << " esperava " << tipoParaString(primeiroEsperado);
 	if(segundoEsperado != indefinido){
@@ -90,6 +92,7 @@ void Tipos::erroCondicao(Operation operacao, Tipo primeiroRecebido, Tipo segundo
 	std::cout << " mas recebeu " << tipoParaString(primeiroRecebido) << " e " << tipoParaString(segundoRecebido) << "\n";
 }
 
+/*Mostra na tela erros de condicoes de tipagem*/
 void Tipos::erroTipagem(Operation operacao, Tipo primeiroTipo, Tipo segundoTipo, Tipo recebido){
 	std::cout<< "A operacao de " + opParaString(operacao) + " esperava " + tipoParaString(primeiroTipo);
 	if(segundoTipo != indefinido){
@@ -98,21 +101,25 @@ void Tipos::erroTipagem(Operation operacao, Tipo primeiroTipo, Tipo segundoTipo,
 	std::cout << " como parâmetro, mas recebeu " << tipoParaString(recebido) << "." << std::endl;
 }
 
+/*Mostra na tela erros de tipos incompativeis entre variavei*/
 void Tipos::tiposIncompativeis(Tipo primeiroTipo, Tipo segundoTipo){
 	std::cout << "Erro semantico: operacao de assign esperava dois tipos compativeis, mas recebeu " <<
 	tipoParaString(primeiroTipo) << " e " << tipoParaString(segundoTipo) << std::endl;
 }
 
+/*Mostra na tela erros de indice dos arranjos*/
 void Tipos::erroIndiceArranjo(Tipo primeiroTipo, Tipo segundoTipo){
 	std::cout << "Erro semantico: indice do arranjo esperava  " <<
 	tipoParaString(primeiroTipo) << " mas recebeu " << tipoParaString(segundoTipo) << std::endl;
 }
 
+/*Mostra na tela erros de condicao dos lacos*/
 void Tipos::erroCondicaoLaco(Tipo esperado, Tipo recebido){
 	std::cout << "Erro semantico: laco da condicao esperava " <<
 	tipoParaString(esperado) << " mas recebeu " << tipoParaString(recebido) << std::endl;
 }
 
+/*Converte um tipo passado como parametro para string a fim de ser impresso*/
 std::string Tipos::tipoParaString(Tipo tipo){
 	switch(tipo){
 		case inteiro: return "inteiro";
@@ -124,6 +131,7 @@ std::string Tipos::tipoParaString(Tipo tipo){
 
 }
 
+/*Converte uma operacao passada como parametro para string a fim de ser impressa*/
 std::string Tipos::opParaString(Operation op){
 	switch(op){
 		case plus: return "soma";

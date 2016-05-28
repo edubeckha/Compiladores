@@ -25,7 +25,7 @@ namespace AST {
 	std::string tipoParaString(Tipos::Tipo tipo);
  	AST::Node* realizaCoercao(std::string id, AST::Node* left, AST::Node* right);
 
-
+ 	/*Nodo que define um inteiro, com seu tipo e valor do tipo inteiro*/
 	class Integer : public Node {
 	    public:
 	        int value;
@@ -34,6 +34,7 @@ namespace AST {
 	        void printTree();
 	};
 
+	/*Nodo que define um real, com seu tipo e valor do tipo real*/
 	class Doubler : public Node {
 	public:
 	        double value;
@@ -42,6 +43,7 @@ namespace AST {
 	        void printTree();
 	};
 
+	/*Nodo que define um booleano, com seu tipo e valor do tipo booleano*/
 	class Boolean : public Node {
 	public:
 	        bool value;
@@ -53,6 +55,7 @@ namespace AST {
 	        }
 	};
 
+	/*Define um nodo do tipo operacao binaria, que recebe um tipo de operacao (o tipo de operacao feita entre os nodos) e dois nodos que realizam essa operacao*/
 	class BinOp : public Node {
 	    public:
 	        Tipos::Operation op;
@@ -76,6 +79,7 @@ namespace AST {
 	         void printTree();      
 	};
 
+	/*Nodo responsavel por um bloco de linhas do sistema*/
 	class Block : public Node {
 	    public:
 	        NodeList lines;
