@@ -129,8 +129,8 @@ namespace AST {
 	questoes de escopo*/
 	class Escopo : public Node {
 		Node* escopo;
-
-		Escopo(Node* escopo, ST::SymbolTable* tabelaOrigem) : escopo(escopo){
+		ST::SymbolTable* tabelaOrigem;
+		Escopo(Node* escopo, ST::SymbolTable* tabelaOrigem) : escopo(escopo), tabelaOrigem(tabelaOrigem) {
 
 		}
 	};
