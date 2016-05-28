@@ -104,12 +104,12 @@ void Tipos::tiposIncompativeis(Tipo primeiroTipo, Tipo segundoTipo){
 }
 
 void Tipos::erroIndiceArranjo(Tipo primeiroTipo, Tipo segundoTipo){
-	std::cout << "Erro semantico: lado da condicao esperava  " <<
+	std::cout << "Erro semantico: indice do arranjo esperava  " <<
 	tipoParaString(primeiroTipo) << " mas recebeu " << tipoParaString(segundoTipo) << std::endl;
 }
 
 void Tipos::erroCondicaoLaco(Tipo esperado, Tipo recebido){
-	std::cout << "Erro semantico: indice do arranjo esperava " <<
+	std::cout << "Erro semantico: laco da condicao esperava " <<
 	tipoParaString(esperado) << " mas recebeu " << tipoParaString(recebido) << std::endl;
 }
 

@@ -203,6 +203,16 @@ AST::Node* AST::realizaCoercao(std::string id, AST::Node* left, AST::Node* right
    return left;
 }
 
+/*Imprime o laco while declarado pelo usuario. O mesmo imprime tanto a condicao quanto o corpo da estrutura na ordem em que os mesmos aparecem*/
+void Laco::printTree(){
+    std::cout << "Laco" << std::endl;
+    std::cout << "+enquanto: ";
+    condicaoLaco->printTree(); std::cout << "\n";
+    std::cout << "+faca: " << std::endl;
+    corpoLaco->printTree(); std::cout << "\n";
+    std::cout << "Fim laco" << std::endl;
+}
+
 
 
 

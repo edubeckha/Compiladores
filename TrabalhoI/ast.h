@@ -124,6 +124,18 @@ namespace AST {
 		void printTree();
 	};
 
+	/*Classe para tratamento de lacos do tipo while*/
+	class Laco : public Node {
+	public:
+		Node* condicaoLaco;
+		Node* corpoLaco;
+
+		Laco(Node* condicaoLaco, Node* corpoLaco) : condicaoLaco(condicaoLaco), corpoLaco(corpoLaco) {
+			Tipos::opUnaria(condicaoLaco->tipo, Tipos::defineCondicaoLaco);
+		}
+		void printTree();
+	};
+
 	/*Nodo que tem a responsabilidade de manter um escopo em uma determinada estrutura, como uma funcao, uma condicao, etc...
 	Para isto, o mesmo guarda uma estrutura do tipo Node e uma tabela de simbolos que aponta para a tabela de origem a fim de verificar 
 	questoes de escopo*/

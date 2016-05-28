@@ -5,7 +5,7 @@ ST::SymbolTable symtab;  /* main symbol table */
 AST::Block *programRoot; /* the root node of our program AST:: */
 extern int yylex();
 extern void yyerror(const char* s, ...);
-static Tipos::Tipo tipoVariavel = Tipos::indefinido;
+static Tipos::Tipo tv = Tipos::indefinido;
 %}
 
 %define parse.trace
@@ -68,7 +68,7 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         | expr T_FINALEXP /*$$ = $1 when nothing is said*/
         
         /*declaracao de variaveis*/
-        | tipoVariavel T_DEF varlist T_FINALEXP { $$ = new AST::UniOp($3, Tipos::declaracao, tipoVariavel); }
+        | tipoVariavel T_DEF varlist T_FINALEXP { $$ = new AST::UniOp($3, Tipos::declaracao, tv); }
 
         /*assign em variaveis*/
         | T_ID T_ASSIGN expr T_FINALEXP { AST::Node* node = symtab.assignVariable($1); 
@@ -76,7 +76,7 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         $$ = new AST::BinOp(node,Tipos::assign,$3);}
 
         /*declaracao de arranjos*/
-        | tipoVariavel T_ARRA expr T_ARRAF T_DEF T_ID T_FINALEXP {AST::Node* var = symtab.newVariable($6, tipoVariavel, NULL); $$ = new AST::UniOp(new AST::Arranjo($3 ,var), Tipos::declaracao, tipoVariavel);};
+        |tipoVariavel T_ARRA expr T_ARRAF T_DEF T_ID T_FINALEXP {AST::Node* var = symtab.newVariable($6, tv, NULL); $$ = new AST::UniOp(new AST::Arranjo($3 ,var), Tipos::declaracao, tv);};
         
         /*assign em arranjos*/
         |T_ID T_ARRA expr T_ARRAF T_ASSIGN expr T_FINALEXP {AST::Node* node = symtab.assignVariable($1); $$ = new AST::BinOp(new AST::Arranjo($3, node), Tipos::assign, $6);}
@@ -84,25 +84,28 @@ line    : T_NL { $$ = NULL; } /*nothing here to be used */
         /*tratamento de expressoes condicionais*/
         |T_IF expr T_THEN lines T_END T_IF { $$ = new AST::Condicao($2, $4, NULL);}
         |T_IF expr T_THEN lines T_ELSE lines T_END T_IF { $$ = new AST::Condicao($2, $4, $6);} 
+
+        /*tratamento de lacos*/
+        | T_WHILE expr T_DO lines T_END T_WHILE { $$ = new AST::Laco($2, $4);}
         ;
 
         /*tratamento de todas as expressoes utilizadas no programa*/
 expr    : T_PARA expr T_PARAF { $$ = $2; }
-        | T_INT { tipoVariavel = Tipos::inteiro; $$ = new AST::Integer($1); } 
-        | T_DOUBLE { tipoVariavel = Tipos::real; $$ = new AST::Doubler($1); }
-        | T_BOOLTRUE { tipoVariavel = Tipos::booleano; $$ = new AST::Boolean(true); }
-        | T_BOOLFALSE { tipoVariavel = Tipos::booleano; $$ = new AST::Boolean(false); }
+        | T_INT { $$ = new AST::Integer($1); } 
+        | T_DOUBLE { $$ = new AST::Doubler($1); }
+        | T_BOOLTRUE { $$ = new AST::Boolean(true); }
+        | T_BOOLFALSE { $$ = new AST::Boolean(false); }
         | T_ID { $$ = symtab.useVariable($1); }
         | expr tipoOperacao expr {$$ = new AST::BinOp($1, $2, $3);}  
         | T_ID T_ARRA expr T_ARRAF {$$ = new AST::Arranjo($3, symtab.useVariable($1));} 
-        | T_SUB expr {$$ = new AST::UniOp($2, Tipos::unario, tipoVariavel);}
-        | T_UNIBOOL expr {$$ = new AST::UniOp($2, Tipos::unibool, tipoVariavel);}
+        | T_SUB expr {$$ = new AST::UniOp($2, Tipos::unario, tv);}
+        | T_UNIBOOL expr {$$ = new AST::UniOp($2, Tipos::unibool, tv);}
         ;
 
 /*define todos os tipos de variaveis que possamos ter no programa*/
-tipoVariavel : T_DINT { tipoVariavel = Tipos::inteiro; } 
-             | T_DREAL { tipoVariavel = Tipos::real; }
-             | T_DBOOL { tipoVariavel = Tipos::booleano; }
+tipoVariavel : T_DINT { tv = Tipos::inteiro; } 
+             | T_DREAL { tv = Tipos::real; }
+             | T_DBOOL { tv = Tipos::booleano; }
              ;
 /*define todos os tipos de operacoes que possamos ter no programa*/
 tipoOperacao : T_PLUS {$$ = Tipos::plus;}
@@ -119,8 +122,8 @@ tipoOperacao : T_PLUS {$$ = Tipos::plus;}
              | T_DIFERENTE {$$ = Tipos::diferente;}
              ;
 /*define uma ou mais variaveis de acordo com a vontade do usuario*/
-varlist : T_ID { $$ = symtab.newVariable($1, tipoVariavel, NULL); }
-        | varlist T_COMMA T_ID { $$ = symtab.newVariable($3, tipoVariavel, $1); }
+varlist : T_ID { $$ = symtab.newVariable($1, tv, NULL); }
+        | varlist T_COMMA T_ID { $$ = symtab.newVariable($3, tv, $1); }
         ;
 
 %%
