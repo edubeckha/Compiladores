@@ -33,3 +33,5 @@ Tipos::Tipo SymbolTable::returnType(std::string id){
 void SymbolTable::realizaCoercao(std::string id){
     entryList[id].type = Tipos::real;
 }
+
+//int:i; real[10]:ar; i:=1; while i <= 10 do ar[1]:= 0.0; i := i + 1; end while -> v1.4

@@ -38,6 +38,8 @@ class SymbolTable {
         AST::Node* useVariable(std::string id);
         Tipos::Tipo returnType(std::string id);
         void realizaCoercao(std::string id);
+        void defineTabelaOrigem(ST::SymbolTable* to) {tabelaOrigem = to;};
+        ST::SymbolTable* tabelaOrigem;
 };
 
 }
