@@ -92,19 +92,19 @@ condicionais:
         | T_WHILE unexpr T_DO novoEscopo lines mataEscopo T_END T_WHILE { $$ = new AST::Laco($2, $5);}
 		;
 
+/*Trata da parte do else no laco if*/
 elseIf : {$$ = NULL;}
 		| T_ELSE novoEscopo lines mataEscopo {$$ = $3;}
 		;
 
-unexpr : expr {$$ = $1;}
-        | T_PARA expr T_PARAF {$$ = $2;}
-		| unexpr tipoOperacao expr {$$ = new AST::BinOp($1, $2, $3);} 
-        | T_PARA unexpr tipoOperacao expr T_PARAF {std::cout << "pega aq"; $$ = new AST::BinOp($2, $3, $4);} 
+/*Trata da parte de expressoes*/
+unexpr : unexpr tipoOperacao expr {$$ = new AST::BinOp($1, $2, $3);}
+        | expr {$$ = $1;}
 		;
 
 /*tratamento de todas as expressoes utilizadas no programa*/
-expr    :
-         T_INT { $$ = new AST::Integer($1); } 
+expr    : T_PARA unexpr T_PARAF {$$ = $2;}
+        | T_INT { $$ = new AST::Integer($1); } 
         | T_DOUBLE { $$ = new AST::Doubler($1); }
         | T_BOOLTRUE { $$ = new AST::Boolean(true); }
         | T_BOOLFALSE { $$ = new AST::Boolean(false); }
