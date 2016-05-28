@@ -139,4 +139,16 @@ namespace AST {
 		}
 		void printTree();
 	};
+
+	/*Classe para tratamento de tipos compostos*/
+	class Complexo : public Node {
+	public:
+		ST::SymbolTable* tabSim;
+		Node* var;
+		Node* escopo;
+
+		Complexo(Node* var) : var(var) { }
+
+		void printTree();
+	};
 }

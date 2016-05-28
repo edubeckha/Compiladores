@@ -185,6 +185,12 @@ void Condicao::printTree(){
     std::cout << "\nFim expressao condicional" << std::endl;
 }
 
+/*Imprime a estrutura do numero complexo, com seu id e componentes*/
+void Complexo::printTree(){
+    std::cout << "Definicao tipo: " << dynamic_cast<Variable*>(var)->id;
+}
+
+
 /*Funcao que recebe um tipo e retorna uma string, ajudando na impressao das informacoes do nodo que contenha tipo*/
 std::string AST::tipoParaString(Tipos::Tipo tipo){
     switch(tipo){
@@ -195,6 +201,7 @@ std::string AST::tipoParaString(Tipos::Tipo tipo){
     }
 }
 
+/*Realiza coercao dos nodos necessarios*/
 AST::Node* AST::realizaCoercao(std::string id, AST::Node* left, AST::Node* right){
     if(Tipos::necessitaCoersao(left->tipo, right->tipo)){
         symtab.realizaCoercao(id);
@@ -212,6 +219,8 @@ void Laco::printTree(){
     corpoLaco->printTree(); std::cout << "\n";
     std::cout << "Fim laco" << std::endl;
 }
+
+
 
 
 

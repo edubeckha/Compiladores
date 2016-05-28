@@ -61,6 +61,9 @@ nome [a-z]+
 "do"				{return T_DO;}
 "end"				{return T_END;}
 
+"def"				{return T_DEFI;}
+"type"				{return T_TYPE;}
+
 ";"					{return T_FINALEXP;}
 "\n"                {return T_NL;}
 {nome}              {yylval.name = strdup(yytext); return T_ID;}

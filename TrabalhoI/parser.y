@@ -21,6 +21,7 @@ static Tipos::Tipo tv = Tipos::indefinido;
     AST::Block *block;
     Tipos::Operation operacao;
     const char *name;
+    ST::SymbolTable* tabelaSimbolos;
 }
 
 /* token defines our terminal symbols (tokens).
@@ -29,16 +30,18 @@ static Tipos::Tipo tv = Tipos::indefinido;
 %token <doubler> T_DOUBLE
 %token <booleano> T_BOOLTRUE T_BOOLFALSE
 %token <name> T_ID
-%token T_NL T_ASSIGN T_FINALEXP T_IGUAL T_DINT T_DREAL T_DBOOL T_DEF T_COMMA T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_DIFERENTE T_UNIBOOL T_PARA T_PARAF T_ARRA T_ARRAF T_IF T_THEN T_ELSE T_END T_WHILE T_DO
+%token T_NL T_ASSIGN T_FINALEXP T_IGUAL T_DINT T_DREAL T_DBOOL T_DEF T_COMMA T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_DIFERENTE T_UNIBOOL T_PARA T_PARAF T_ARRA T_ARRAF T_IF T_THEN T_ELSE T_END T_WHILE T_DO T_DEFI
+T_TYPE
 
 /* type defines the type of our nonterminal symbols.
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
 
-%type <node> expr line varlist unexpr declaracoes assignments condicionais elseIf
+%type <node> expr line varlist unexpr declaracoes assignments condicionais elseIf definicoes
 %type <block> lines program
 %type <operacao> tipoOperacao
+%type<tabelaSimbolos> novoEscopo mataEscopo
 
 /* Operator precedence for mathematical operators
  * The latest it is listed, the highest the precedence
@@ -67,6 +70,7 @@ line    : T_NL { $$ = NULL; }
 		| declaracoes {$$ = $1;}
 		| assignments {$$ = $1;}
 		| condicionais {$$ = $1;}
+        | definicoes {$$ = $1;}
         ;
 
 declaracoes : 
@@ -91,6 +95,10 @@ condicionais:
 		/*tratamento de lacos*/
         | T_WHILE unexpr T_DO novoEscopo lines mataEscopo T_END T_WHILE { $$ = new AST::Laco($2, $5);}
 		;
+definicoes:
+        /*Definicao de tipos complexos*/
+        T_DEFI T_TYPE T_DEF T_ID {AST::Node* var = symtab->newVariable($4, Tipos::complexo, NULL); $$ = new AST::Complexo(var);}
+        ;
 
 /*Trata da parte do else no laco if*/
 elseIf : {$$ = NULL;}
