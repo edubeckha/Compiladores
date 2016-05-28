@@ -39,7 +39,7 @@ class SymbolTable {
         Tipos::Tipo returnType(std::string id);
         void realizaCoercao(std::string id);
         void defineTabelaOrigem(ST::SymbolTable* to) {tabelaOrigem = to;};
-        ST::SymbolTable* tabelaOrigem;
+        ST::SymbolTable* tabelaOrigem = NULL;
 };
 
 }

@@ -89,11 +89,11 @@ condicionais:
         T_IF unexpr T_THEN novoEscopo lines mataEscopo elseIf T_END T_IF{ $$ = new AST::Condicao($2, $5, $7);}
 		
 		/*tratamento de lacos*/
-        | T_WHILE unexpr T_DO lines T_END T_WHILE { $$ = new AST::Laco($2, $4);}
+        | T_WHILE unexpr T_DO novoEscopo lines mataEscopo T_END T_WHILE { $$ = new AST::Laco($2, $5);}
 		;
 
 elseIf : {$$ = NULL;}
-		| T_ELSE lines {$$ = $2;}
+		| T_ELSE novoEscopo lines mataEscopo {$$ = $3;}
 		;
 
 unexpr : expr {$$ = $1;}

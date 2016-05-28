@@ -135,16 +135,4 @@ namespace AST {
 		}
 		void printTree();
 	};
-
-	/*Nodo que tem a responsabilidade de manter um escopo em uma determinada estrutura, como uma funcao, uma condicao, etc...
-	Para isto, o mesmo guarda uma estrutura do tipo Node e uma tabela de simbolos que aponta para a tabela de origem a fim de verificar 
-	questoes de escopo*/
-	class Escopo : public Node {
-		Node* escopo;
-		ST::SymbolTable* tabelaOrigem;
-		Escopo(Node* escopo, ST::SymbolTable* tabelaOrigem) : escopo(escopo), tabelaOrigem(tabelaOrigem) {
-
-		}
-	};
-
 }
