@@ -1,10 +1,12 @@
+/*Ja previamente definido por Laércio Lima Pilla*/
+
 #include "st.h"
 
 using namespace ST;
 
 extern SymbolTable symtab;
 
-AST::Node* SymbolTable::newVariable(std::string id, AST::Tipo tipoVariavel, AST::Node* next){
+AST::Node* SymbolTable::newVariable(std::string id, Tipos::Tipo tipoVariavel, AST::Node* next){
     if ( checkId(id) ) yyerror("Erro semantico: redefinicao da variavel %s\n", id.c_str());
     else {
       	Symbol entry(tipoVariavel, variable, 0, false);
@@ -25,11 +27,15 @@ AST::Node* SymbolTable::useVariable(std::string id){
     return new AST::Variable(id, entryList[id].type, NULL); //Creates variable node anyway
 }
 
-AST::Tipo SymbolTable::returnType(std::string id){
+Tipos::Tipo SymbolTable::returnType(std::string id){
     return entryList[id].type;
 }
 
-AST::Node* SymbolTable::newFunction(std::string id, AST::Tipo tipoVariavel, std::vector<AST::Variable*> parametros){
+void SymbolTable::realizaCoercao(std::string id){
+    entryList[id].type = Tipos::real;
+}
+
+AST::Node* SymbolTable::newFunction(std::string id, Tipos::Tipo tipoVariavel, std::vector<ST::Symbol*> parametros){
     // std::cout<<"Criando nova função"<<std::endl;
     if( checkId(id) )
         yyerror("Erro semantico: função %s já existe.\n", id.c_str());
@@ -38,27 +44,29 @@ AST::Node* SymbolTable::newFunction(std::string id, AST::Tipo tipoVariavel, std:
         Symbol entry(tipoVariavel, function, parametros, false);
         addSymbol(id,entry);
     }
-    return new AST::Funcao(id, tipoVariavel, parametros);
+    return NULL;
+    // return new AST::Funcao(id, tipoVariavel, parametros);
 }
 
 ST::Symbol SymbolTable::getFunction(std::string id){
 	return entryList[id];
 }
 
-AST::Node* SymbolTable::assignFunction(std::string id, std::vector<AST::Variable*> next, AST::Node* body){
+AST::Node* SymbolTable::assignFunction(std::string id, std::vector<ST::Symbol*> next, AST::Node* body){
     // std::cout<<"Inicializando função"<<std::endl;
     if ( ! checkId(id) ) {
         yyerror("função ainda não definida! %s\n", id.c_str());
     }
     ST::Symbol tmp = this->getFunction(id);
-    for (int i = 0; i < next.size(); i++)
-    {
-    	if (tmp.parametros.at(i)->tipo != next.at(i)->tipo)
-    	{
-    		std::cout<<"Atenção: tipo incompativel."<<std::endl;
-    	}
-    }
+    // for (int i = 0; i < next.size(); i++)
+    // {
+    // 	if (tmp.parametros.at(i).tipo != next.at(i).tipo)
+    // 	{
+    // 		std::cout<<"Atenção: tipo incompativel."<<std::endl;
+    // 	}
+    // }
     entryList[id].initialized = true;
-    return new AST::DefineFuncao(id, next, body); //Creates variable node anyway
+    return NULL;
+    // return new AST::DefineFuncao(id, next, body); //Creates variable node anyway
     // return new AST::Funcao(next); //Creates variable node anyway
 }
