@@ -7,7 +7,7 @@
 #include "st.h"
 
 extern void yyerror(const char *s, ...);
-namespace ST {class SymbolTable;};
+namespace ST {class SymbolTable; class Symbol;};
 extern ST::SymbolTable* symbolTable;
 namespace AST {
 
@@ -23,7 +23,7 @@ namespace AST {
 
 
 	std::string tipoParaString(Tipos::Tipo tipo);
- 	AST::Node* realizaCoercao(std::string id, AST::Node* left, AST::Node* right);
+ 	AST::Node* realizaCoercao(std::string id, AST::Node* left, AST::Node* right, ST::SymbolTable* symtab);
 
 
 	class Integer : public Node {
@@ -144,21 +144,34 @@ namespace AST {
 	         std::string id;
 	         Tipos::Tipo tipo;
 	        // Node* parametros;
-	         Node* parametros;
-	         Funcao(std::string id, Tipos::Tipo tipo, AST::Node* parametros) : id(id), tipo(tipo), parametros(parametros) { }
+	         std::vector<AST::Variable*> parametros;
+	         // std::vector<ST::Symbol*> parametros;
+	         // Funcao(std::string id, Tipos::Tipo tipo, std::vector<ST::Symbol*> parametros) : id(id), tipo(tipo), parametros(parametros) { }
+	         Funcao(std::string id, Tipos::Tipo tipo, std::vector<AST::Variable*> parametros) : id(id), tipo(tipo), parametros(parametros) { }
 	         // Funcao(std::string id, Tipos::Tipo tipo, AST::Node* parametros) : id(id), tipo(tipo), parametros(parametros) { }
 	         void printTree();
-	         std::string tipoParaString(Tipos::Tipo tipo);
+	         // std::string tipoParaString(Tipos::Tipo tipo);
 	};
 
 	class DefineFuncao : public Node {
 	     public:
 	         std::string id;
-	         Node* parametros;
+	         // Tipos::Tipo tipo;
+	         // Node* parametros;
+	         std::vector<AST::Variable*> parametros;
 	         Node* body;
 	         // DefineFuncao(std::string id, Node *right) : id(id), right(right) { }
-	         DefineFuncao(std::string id, Node* parametros, Node* body) : id(id), parametros(parametros), body(body) { }
+	         // DefineFuncao(std::string id, AST::Node* parametros, Node* body) : id(id), parametros(parametros), body(body) { }
+	         DefineFuncao(std::string id, std::vector<AST::Variable*> parametros, Node* body) : id(id), parametros(parametros), body(body) { }
 	         void printTree();
 	         // std::string tipoParaString(Tipo tipo);
 	};
+
+	class Retorno : public Node{
+	public:
+		Node* ret;
+		Retorno(AST::Node* ret) : ret(ret){}
+		void printTree();
+	};
 }
+

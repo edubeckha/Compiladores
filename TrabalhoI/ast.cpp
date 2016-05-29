@@ -198,9 +198,10 @@ std::string AST::tipoParaString(Tipos::Tipo tipo){
     }
 }
 
-AST::Node* AST::realizaCoercao(std::string id, AST::Node* left, AST::Node* right){
+/*Realiza coercao dos nodos necessarios*/
+AST::Node* AST::realizaCoercao(std::string id, AST::Node* left, AST::Node* right, ST::SymbolTable* symtab){
     if(Tipos::necessitaCoersao(left->tipo, right->tipo)){
-        symtab.realizaCoercao(id);
+        symtab->realizaCoercao(id);
         return new AST::UniOp(left, Tipos::coercao, Tipos::real);
     }
    return left;
@@ -219,24 +220,41 @@ void Laco::printTree(){
 
 /*Imprime quando ocorre a declaração de um função.*/
 void Funcao::printTree(){
-    std::cout << "função inteira: "<<id<<std::endl;
-    std::cout<<"parametros da função:"<<std::endl;
-     if (parametros != NULL){
-        parametros->printTree();
-    }
+    std::cout << "Declaração da função "<<AST::tipoParaString(tipo)<<": "<<id<<std::endl;
+    std::cout<<"+parametros:"<<std::endl;
+
+    if(parametros.size() == 0) {
+        std::cout<<"sem parametros"<<std::endl;
+    }else if (parametros.at(parametros.size() - 1) != NULL && parametros.size() > 0){
+        parametros.at(parametros.size() - 1)->printTree();
+        std::cout<<" "<<std::endl;
+    } 
+    std::cout<<"Fim declaração."<<std::endl;
 }
 
 /*Imprime quando ocorre uma definição de uma função.*/
 void DefineFuncao::printTree(){
-    std::cout << "Definição de função inteira: "<<id<<std::endl;
+    std::cout << "Definição de função "<<AST::tipoParaString(tipo)<<": "<<id<<std::endl;
 
-    std::cout<<"parametros da função:"<<std::endl;
-     if (parametros != NULL){
-        parametros->printTree();
-    }
+    std::cout<<"+parametros:"<<std::endl;
+    if(parametros.size() == 0) {
+        std::cout<<"sem parametros"<<std::endl;
+    } else 
+    if(parametros.at(parametros.size() - 1) != NULL && parametros.size() > 0){
+        parametros.at(parametros.size() - 1)->printTree();
+        std::cout<<" "<<std::endl;
+    } 
     std::cout<<" "<<std::endl;
-    std::cout<<"Corpo da função:"<<std::endl;
+    std::cout<<"+corpo:"<<std::endl;
      if (body != NULL){
         body->printTree();
+    }
+    std::cout<<"Fim definição."<<std::endl;
+}
+
+void Retorno::printTree(){
+    std::cout<<"Retorno de função: "<<std::endl;
+     if (ret != NULL){
+        ret->printTree();
     }
 }

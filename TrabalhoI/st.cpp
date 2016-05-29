@@ -31,25 +31,26 @@ Tipos::Tipo SymbolTable::returnType(std::string id){
     return entryList[id].type;
 }
 
+/*Realiza a coersao de um tipo na tabela de simbolos*/
 void SymbolTable::realizaCoercao(std::string id){
+    if(!checkId(id)){
+        return;
+    }
     entryList[id].type = Tipos::real;
 }
 
 AST::Node* SymbolTable::newFunction(std::string id, Tipos::Tipo tipoVariavel, std::vector<ST::Symbol*> parametros){
-    // std::cout<<"Criando nova função"<<std::endl;
+// AST::Node* SymbolTable::newFunction(std::string id, Tipos::Tipo tipoVariavel, AST::Node* parametros){
+    std::cout<<"Criando nova função"<<std::endl;
     if( checkId(id) )
         yyerror("Erro semantico: função %s já existe.\n", id.c_str());
     else {
-    	// std::cout<<"criando simbolo"<<std::endl;
+    	std::cout<<"criando simbolo"<<std::endl;
         Symbol entry(tipoVariavel, function, parametros, false);
         addSymbol(id,entry);
     }
     return NULL;
     // return new AST::Funcao(id, tipoVariavel, parametros);
-}
-
-ST::Symbol SymbolTable::getFunction(std::string id){
-	return entryList[id];
 }
 
 AST::Node* SymbolTable::assignFunction(std::string id, std::vector<ST::Symbol*> next, AST::Node* body){
@@ -58,15 +59,15 @@ AST::Node* SymbolTable::assignFunction(std::string id, std::vector<ST::Symbol*> 
         yyerror("função ainda não definida! %s\n", id.c_str());
     }
     ST::Symbol tmp = this->getFunction(id);
-    // for (int i = 0; i < next.size(); i++)
-    // {
-    // 	if (tmp.parametros.at(i).tipo != next.at(i).tipo)
-    // 	{
-    // 		std::cout<<"Atenção: tipo incompativel."<<std::endl;
-    // 	}
-    // }
+    for (int i = 0; i < next.size(); i++)
+    {
+    	if (tmp.parametros.at(i)->type != next.at(i)->type)
+    	{
+    		std::cout<<"Atenção: tipo incompativel."<<std::endl;
+    	}
+    }
     entryList[id].initialized = true;
-    return NULL;
+     return NULL;
     // return new AST::DefineFuncao(id, next, body); //Creates variable node anyway
     // return new AST::Funcao(next); //Creates variable node anyway
 }

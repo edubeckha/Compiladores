@@ -3,6 +3,7 @@
 #include "st.h"
 ST::SymbolTable* symtab = new ST::SymbolTable();  /* main symbol table */
 std::vector<ST::Symbol*> parametros;
+std::vector<AST::Variable*> teste;
 AST::Block *programRoot; /* the root node of our program AST:: */
 extern int yylex();
 extern void yyerror(const char* s, ...);
@@ -22,6 +23,7 @@ static Tipos::Tipo tv = Tipos::indefinido;
     AST::Block *block;
     Tipos::Operation operacao;
     const char *name;
+    ST::SymbolTable* tabelaSimbolos;
 }
 
 /* token defines our terminal symbols (tokens).
@@ -30,16 +32,17 @@ static Tipos::Tipo tv = Tipos::indefinido;
 %token <doubler> T_DOUBLE
 %token <booleano> T_BOOLTRUE T_BOOLFALSE
 %token <name> T_ID
-%token T_NL T_ASSIGN T_FINALEXP T_IGUAL T_DINT T_DREAL T_DBOOL T_DEF T_COMMA T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_DIFERENTE T_UNIBOOL T_PARA T_PARAF T_ARRA T_ARRAF T_IF T_THEN T_ELSE T_END T_WHILE T_DO T_DECL T_FUN T_DEFI T_RETO
+%token T_NL T_ASSIGN T_FINALEXP T_IGUAL T_DINT T_DREAL T_DBOOL T_DEF T_COMMA T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_DIFERENTE T_UNIBOOL T_PARA T_PARAF T_ARRA T_ARRAF T_IF T_THEN T_ELSE T_END T_WHILE T_DO T_DECL T_FUN T_DEFI T_RETO T_TYPE
 
 /* type defines the type of our nonterminal symbols.
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
 
-%type <node> expr line varlist unexpr declaracoes assignments condicionais elseIf param //funct
+%type <node> expr line varlist unexpr declaracoes assignments condicionais elseIf definicoes param //retorno
 %type <block> lines program
 %type <operacao> tipoOperacao
+%type <tabelaSimbolos> novoEscopo mataEscopo
 
 /* Operator precedence for mathematical operators
  * The latest it is listed, the highest the precedence
@@ -68,6 +71,7 @@ line    : T_NL { $$ = NULL; }
 		| declaracoes {$$ = $1;}
 		| assignments {$$ = $1;}
 		| condicionais {$$ = $1;}
+        | definicoes {$$ = $1;}
         ;
 
 declaracoes : 
@@ -75,22 +79,36 @@ declaracoes :
 		tipoVariavel T_DEF varlist T_FINALEXP { $$ = new AST::UniOp($3, Tipos::declaracao, tv);}
 
 		/*declaracao de arranjos*/
-        |tipoVariavel T_ARRA unexpr T_ARRAF T_DEF T_ID T_FINALEXP {AST::Node* var = symtab->newVariable($6, tv, NULL); $$ = new AST::UniOp(new AST::Arranjo($3 ,var), Tipos::declaracao, tv);};
-
+        |tipoVariavel T_ARRA unexpr T_ARRAF T_DEF T_ID T_FINALEXP {
+	        AST::Node* var = symtab->newVariable($6, tv, NULL);
+	        $$ = new AST::UniOp(new AST::Arranjo($3 ,var), Tipos::declaracao, tv);
+        }
 ////////////////////////////////////////////////////
         | T_DECL T_FUN tipoVariavel T_DEF T_ID novoEscopo T_PARA param T_PARAF mataEscopo T_FINALEXP {
-        	AST::Node* node = symtab->newFunction($5, Tipos::inteiro, parametros);
-        	$$ = new AST::UniOp(new AST::Funcao($5, Tipos::inteiro, node), Tipos::declaracao, tv);
+        	//AST::Node* node = symtab->newFunction($5, tv, parametros);
+        	$$ = new AST::Funcao($5, tv, teste);
+        	parametros.clear();
+        	teste.clear();
         	}
 ////////////////////////////////////////////////////
 		;
 
 assignments : 
 		/*assign em variaveis*/
-		T_ID T_ASSIGN unexpr T_FINALEXP { AST::Node* node = symtab->assignVariable($1); node = AST::realizaCoercao($1, node, $3); $$ = new AST::BinOp(node,Tipos::assign,$3);}
+		T_ID T_ASSIGN unexpr T_FINALEXP {
+		AST::Node* node = symtab->assignVariable($1);
+		node = AST::realizaCoercao($1, node, $3, symtab);
+		$$ = new AST::BinOp(node,Tipos::assign,$3);}
 
 		/*assign em arranjos*/
 		|T_ID T_ARRA unexpr T_ARRAF T_ASSIGN unexpr T_FINALEXP {AST::Node* node = symtab->assignVariable($1); $$ = new AST::BinOp(new AST::Arranjo($3, node), Tipos::assign, $6);}
+
+		| T_RETO expr T_FINALEXP {
+			//std::cout<<"retorno"<<std::endl;
+			$$ = new AST::Retorno($2);
+			//std::cout<<"end return"<<std::endl;
+		}
+		;
 
 condicionais: 
 		/*tratamento de expressoes condicionais do tipo if*/
@@ -98,11 +116,19 @@ condicionais:
 		
 		/*tratamento de lacos*/
         | T_WHILE unexpr T_DO novoEscopo lines mataEscopo T_END T_WHILE { $$ = new AST::Laco($2, $5);}
-////////////////////////////////////////////////////
-        | T_DEFI T_FUN T_DINT T_DEF T_ID novoEscopo T_PARA param T_PARAF lines mataEscopo T_END T_DEFI { $$ = new AST::DefineFuncao($5, $8, $10);
-        	}
-///////////////////////////////////////////////////
 		;
+
+definicoes:
+        /*Definicao de tipos complexos*/
+    //    T_DEFI T_TYPE T_DEF T_ID {AST::Node* var = symtab->newVariable($4, Tipos::complexo, NULL); $$ = new AST::Complexo(var);}
+
+////////////////////////////////////////////////////
+         T_DEFI T_FUN tipoVariavel T_DEF T_ID novoEscopo T_PARA param T_PARAF lines mataEscopo T_END T_DEFI {
+        	AST::Node* var = symtab->newVariable($5, tv, $10);
+        		$$ = new AST::DefineFuncao($5, teste, $10);
+        	}
+        ;
+//////////////////////////////////////////////////////////////////    
 
 elseIf : {$$ = NULL;}
 		| T_ELSE novoEscopo lines mataEscopo {$$ = $3;}
@@ -152,32 +178,37 @@ varlist : T_ID {
         }
         ;
 
-novoEscopo : {	ST::SymbolTable* tabelaEscopo = new ST::SymbolTable;
+novoEscopo : {	//std::cout<<"novoEscopo"<<std::endl;
+				ST::SymbolTable* tabelaEscopo = new ST::SymbolTable;
 				tabelaEscopo->defineTabelaOrigem(symtab);
 				symtab = tabelaEscopo;
 				}
 
-mataEscopo : {symtab = symtab->tabelaOrigem;}
+mataEscopo : {	//std::cout<<"mataEscopo"<<std::endl;
+				symtab = symtab->tabelaOrigem;}
 
 ////////////////////////////////////////////////////////////////////////////////
 /*define um ou mais parametros de acordo com a vontade do usuario*/
 param : tipoVariavel T_DEF T_ID T_COMMA param {
 			ST::Symbol* smb = new ST::Symbol(tv, ST::variable, 0, false);
 			symtab->addSymbol($3, *smb);
+			parametros.push_back(smb);
 			AST::Variable* vari = new AST::Variable($3, Tipos::inteiro, $5);
+			teste.push_back(vari);
+			//std::cout<<"more param"<<std::endl;
 			$$ = vari;
 		}
       | 
       tipoVariavel T_DEF T_ID {
       		ST::Symbol* smb = new ST::Symbol(tv, ST::variable, 0, false);
 			symtab->addSymbol($3, *smb);
+			parametros.push_back(smb);
 			AST::Variable* vari = new AST::Variable($3, Tipos::inteiro, NULL);
+			teste.push_back(vari);
+			//std::cout<<"one param"<<std::endl;
 			$$ = vari;
       	}
       	| {$$ = NULL;}
       ;
 ////////////////////////////////////////////////////////////////////////////////
 %%
-
-//decl fun int:sa(int:ab, real:bned, bool:er);
-//def fun int:sa(int:wr, real:wrww, bool:etee) int:reww, refr, tew; real:worhwor, hworhwo, whohgro; end def

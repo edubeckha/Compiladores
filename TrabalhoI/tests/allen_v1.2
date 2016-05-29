@@ -1,8 +1,42 @@
+
 exemplo que funciona
+
 decl fun int:ab();
 def fun int:ab() real: ash; ash:=10.0; end def
 
+decl fun int:at();
+def fun int:at() return 0; end def
 
-exemplo que não funciona
+decl fun int:aw(int:b);
+def fun int:aw(int:c)
+c:=1;
+return c;
+end def
+
+decl fun int:a();
+def fun int:a()
+int:b;
+b:=10;
+real:t;
+t:=10.232;
+return t;
+end def
+
 decl fun int:ab();
-def fun int:ab() real: ash; ash:=10; end def
+def fun int:ab()
+real: ash;
+ash:=10;
+end def
+
+///////////////////////////////
+exemplo que não funciona
+
+def fun bool: true() return TRUE; end def
+int: xyz;
+decl fun int: soma(int: a, int: b);
+def fun int: soma(int: a, int: b)
+return a + b;
+end def
+xyz:= soma(1,1);
+
+
