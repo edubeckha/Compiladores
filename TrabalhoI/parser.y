@@ -116,8 +116,8 @@ expr    : T_PARA unexpr T_PARAF {$$ = $2;}
         | T_BOOLTRUE { $$ = new AST::Boolean(true); }
         | T_BOOLFALSE { $$ = new AST::Boolean(false); }
         | T_ID { $$ = symtab->useVariable($1); }
-        | T_SUB expr {$$ = new AST::UniOp($2, Tipos::unario, tv);}
-        | T_UNIBOOL expr {$$ = new AST::UniOp($2, Tipos::unibool, tv);}
+        | T_SUB expr {$$ = new AST::UniOp($2, Tipos::unario, $2->tipo);}
+        | T_UNIBOOL expr {$$ = new AST::UniOp($2, Tipos::unibool, Tipos::booleano);}
         | T_ID T_ARRA expr T_ARRAF {$$ = new AST::Arranjo($3, symtab->useVariable($1));} 
         ;
 

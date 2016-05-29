@@ -203,6 +203,7 @@ std::string AST::tipoParaString(Tipos::Tipo tipo){
 AST::Node* AST::realizaCoercao(std::string id, AST::Node* left, AST::Node* right, ST::SymbolTable* symtab){
     if(Tipos::necessitaCoersao(left->tipo, right->tipo)){
         symtab->realizaCoercao(id);
+        std::cout << "Erro semantico: operacao de assign esperava dois tipos compativeis, mas recebeu " << Tipos::tipoParaString(right->tipo) << " e " << Tipos::tipoParaString(left->tipo);
         return new AST::UniOp(left, Tipos::coercao, Tipos::real);
     }
    return left;
