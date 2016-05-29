@@ -143,28 +143,19 @@ namespace AST {
 	     public:
 	         std::string id;
 	         Tipos::Tipo tipo;
-	        // Node* parametros;
 	         std::vector<AST::Variable*> parametros;
-	         // std::vector<ST::Symbol*> parametros;
-	         // Funcao(std::string id, Tipos::Tipo tipo, std::vector<ST::Symbol*> parametros) : id(id), tipo(tipo), parametros(parametros) { }
 	         Funcao(std::string id, Tipos::Tipo tipo, std::vector<AST::Variable*> parametros) : id(id), tipo(tipo), parametros(parametros) { }
-	         // Funcao(std::string id, Tipos::Tipo tipo, AST::Node* parametros) : id(id), tipo(tipo), parametros(parametros) { }
 	         void printTree();
-	         // std::string tipoParaString(Tipos::Tipo tipo);
 	};
 
 	class DefineFuncao : public Node {
 	     public:
 	         std::string id;
-	         // Tipos::Tipo tipo;
-	         // Node* parametros;
 	         std::vector<AST::Variable*> parametros;
+	         Tipos::Tipo tipo;
 	         Node* body;
-	         // DefineFuncao(std::string id, Node *right) : id(id), right(right) { }
-	         // DefineFuncao(std::string id, AST::Node* parametros, Node* body) : id(id), parametros(parametros), body(body) { }
-	         DefineFuncao(std::string id, std::vector<AST::Variable*> parametros, Node* body) : id(id), parametros(parametros), body(body) { }
+	         DefineFuncao(std::string id, Tipos::Tipo tipo, std::vector<AST::Variable*> parametros, Node* body) : id(id), tipo(tipo), parametros(parametros), body(body) { }
 	         void printTree();
-	         // std::string tipoParaString(Tipo tipo);
 	};
 
 	class Retorno : public Node{

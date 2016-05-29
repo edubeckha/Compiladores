@@ -40,21 +40,16 @@ void SymbolTable::realizaCoercao(std::string id){
 }
 
 AST::Node* SymbolTable::newFunction(std::string id, Tipos::Tipo tipoVariavel, std::vector<ST::Symbol*> parametros){
-// AST::Node* SymbolTable::newFunction(std::string id, Tipos::Tipo tipoVariavel, AST::Node* parametros){
-    std::cout<<"Criando nova função"<<std::endl;
     if( checkId(id) )
         yyerror("Erro semantico: função %s já existe.\n", id.c_str());
     else {
-    	std::cout<<"criando simbolo"<<std::endl;
         Symbol entry(tipoVariavel, function, parametros, false);
         addSymbol(id,entry);
     }
     return NULL;
-    // return new AST::Funcao(id, tipoVariavel, parametros);
 }
 
 AST::Node* SymbolTable::assignFunction(std::string id, std::vector<ST::Symbol*> next, AST::Node* body){
-    // std::cout<<"Inicializando função"<<std::endl;
     if ( ! checkId(id) ) {
         yyerror("função ainda não definida! %s\n", id.c_str());
     }
@@ -63,11 +58,9 @@ AST::Node* SymbolTable::assignFunction(std::string id, std::vector<ST::Symbol*> 
     {
     	if (tmp.parametros.at(i)->type != next.at(i)->type)
     	{
-    		std::cout<<"Atenção: tipo incompativel."<<std::endl;
+    		std::cout<<"Atenção: tipo de parametro incompativel."<<std::endl;
     	}
     }
     entryList[id].initialized = true;
-     return NULL;
-    // return new AST::DefineFuncao(id, next, body); //Creates variable node anyway
-    // return new AST::Funcao(next); //Creates variable node anyway
+    return NULL;
 }

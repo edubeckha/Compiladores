@@ -1,5 +1,5 @@
 
-exemplo que funciona
+exemplos que não geram problemas
 
 decl fun int:ab();
 def fun int:ab() real: ash; ash:=10.0; end def
@@ -7,8 +7,8 @@ def fun int:ab() real: ash; ash:=10.0; end def
 decl fun int:at();
 def fun int:at() return 0; end def
 
-decl fun int:aw(int:b);
-def fun int:aw(int:c)
+decl fun int:aw(int:b, real:d);
+def fun int:aw(int:c, real:re)
 c:=1;
 return c;
 end def
@@ -28,8 +28,30 @@ real: ash;
 ash:=10;
 end def
 
+decl fun int:soma();
+decl fun real:som();
+decl fun bool:so();
+def fun bool:so() return FALSE; end def
+def fun int:soma()
+return 0;
+end def
+def fun real:som() return 10.0;
+end def
+
+int: xyz;
+decl fun int: soma(int: a, int: b);
+def fun int: soma(int: a, int: b)
+a:=10;
+b:=a;
+return a + b;
+end def
+
 ///////////////////////////////
-exemplo que não funciona
+exemplos que não geram problemas
+
+funcao true ainda não declarada
+variaveis a e b não inicializadas
+assign da função não funciona
 
 def fun bool: true() return TRUE; end def
 int: xyz;
@@ -39,4 +61,27 @@ return a + b;
 end def
 xyz:= soma(1,1);
 
+////////
+definição sem declaração da função true
+assign de função não funciona
+//
+
+def fun bool: true() return TRUE; end def
+int: xyz;
+decl fun int: soma(int: a, int: b);
+def fun int: soma(int: a, int: b)
+a:=10;
+b:=a;
+return a + b;
+end def
+xyz:= soma(1,1);
+
+//////////
+syntax error no retorno
+//
+
+decl fun int:abe();
+def fun int:abe()
+return (1 + 2);
+end def
 

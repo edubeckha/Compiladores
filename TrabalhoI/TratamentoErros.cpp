@@ -1,7 +1,6 @@
 #include "TratamentoErros.h"
 using namespace Tipos;
 
-
 bool Tipos::necessitaCoersao(Tipo tipoNodoEsquerda, Tipo tipoNodoDireita){
   if(tipoNodoEsquerda == real || tipoNodoDireita == real){
     if(tipoNodoEsquerda == inteiro || tipoNodoDireita == inteiro){
@@ -54,18 +53,15 @@ Tipo Tipos::opBinaria(Tipo tipoNodoEsquerda, Tipo tipoNodoDireita, Operation op)
       if(tipoNodoEsquerda == real || tipoNodoDireita == real){
           return real;
       }
-
       if(tipoNodoEsquerda != inteiro && tipoNodoEsquerda != real){
         Tipos::erroTipagem(op, inteiro, real, booleano);
         break;
       }
-
       if(tipoNodoDireita != inteiro && tipoNodoDireita != real){
         Tipos::erroTipagem(op, inteiro, real, booleano);
         break;
       }
     } 
-
     else if(op == maior || op == menor || op == maiorigual || op == menorigual){
         if(tipoNodoEsquerda == inteiro || tipoNodoEsquerda == real){
           if(tipoNodoDireita == booleano){
@@ -73,12 +69,10 @@ Tipo Tipos::opBinaria(Tipo tipoNodoEsquerda, Tipo tipoNodoDireita, Operation op)
           }
         }
         return booleano;
-
     } else {
         std::cout << "Operacao nao suportada em operacoes binarias!" << std::endl;
     }
   }
-
   return inteiro;
 }
 
@@ -120,8 +114,6 @@ std::string Tipos::tipoParaString(Tipo tipo){
     case booleano: return "booleano";
     default: return "indefinido";
   }
-
-
 }
 
 std::string Tipos::opParaString(Operation op){

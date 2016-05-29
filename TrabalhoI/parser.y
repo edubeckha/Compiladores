@@ -23,7 +23,6 @@ static Tipos::Tipo tv = Tipos::indefinido;
     AST::Block *block;
     Tipos::Operation operacao;
     const char *name;
-    ST::SymbolTable* tabelaSimbolos;
 }
 
 /* token defines our terminal symbols (tokens).
@@ -85,7 +84,7 @@ declaracoes :
         }
 ////////////////////////////////////////////////////
         | T_DECL T_FUN tipoVariavel T_DEF T_ID novoEscopo T_PARA param T_PARAF mataEscopo T_FINALEXP {
-        	//AST::Node* node = symtab->newFunction($5, tv, parametros);
+        	AST::Node* node = symtab->newFunction($5, tv, parametros);
         	$$ = new AST::Funcao($5, tv, teste);
         	parametros.clear();
         	teste.clear();
@@ -103,11 +102,12 @@ assignments :
 		/*assign em arranjos*/
 		|T_ID T_ARRA unexpr T_ARRAF T_ASSIGN unexpr T_FINALEXP {AST::Node* node = symtab->assignVariable($1); $$ = new AST::BinOp(new AST::Arranjo($3, node), Tipos::assign, $6);}
 
-		| T_RETO expr T_FINALEXP {
-			//std::cout<<"retorno"<<std::endl;
+////////////////////////////////////////////////////
+		/*Reconhece uma ou mais declarações de retorno de uma função.*/
+		| T_RETO unexpr T_FINALEXP {
 			$$ = new AST::Retorno($2);
-			//std::cout<<"end return"<<std::endl;
 		}
+////////////////////////////////////////////////////
 		;
 
 condicionais: 
@@ -123,12 +123,13 @@ definicoes:
     //    T_DEFI T_TYPE T_DEF T_ID {AST::Node* var = symtab->newVariable($4, Tipos::complexo, NULL); $$ = new AST::Complexo(var);}
 
 ////////////////////////////////////////////////////
+		/*definição da função previamente delcarada.*/
          T_DEFI T_FUN tipoVariavel T_DEF T_ID novoEscopo T_PARA param T_PARAF lines mataEscopo T_END T_DEFI {
-        	AST::Node* var = symtab->newVariable($5, tv, $10);
-        		$$ = new AST::DefineFuncao($5, teste, $10);
+        	AST::Node* var = symtab->assignFunction($5, parametros, $10);
+        		$$ = new AST::DefineFuncao($5, tv, teste, $10);
         	}
         ;
-//////////////////////////////////////////////////////////////////    
+////////////////////////////////////////////////////
 
 elseIf : {$$ = NULL;}
 		| T_ELSE novoEscopo lines mataEscopo {$$ = $3;}
@@ -187,15 +188,14 @@ novoEscopo : {	//std::cout<<"novoEscopo"<<std::endl;
 mataEscopo : {	//std::cout<<"mataEscopo"<<std::endl;
 				symtab = symtab->tabelaOrigem;}
 
-////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////
 /*define um ou mais parametros de acordo com a vontade do usuario*/
 param : tipoVariavel T_DEF T_ID T_COMMA param {
 			ST::Symbol* smb = new ST::Symbol(tv, ST::variable, 0, false);
 			symtab->addSymbol($3, *smb);
 			parametros.push_back(smb);
-			AST::Variable* vari = new AST::Variable($3, Tipos::inteiro, $5);
+			AST::Variable* vari = new AST::Variable($3, tv, $5);
 			teste.push_back(vari);
-			//std::cout<<"more param"<<std::endl;
 			$$ = vari;
 		}
       | 
@@ -203,12 +203,11 @@ param : tipoVariavel T_DEF T_ID T_COMMA param {
       		ST::Symbol* smb = new ST::Symbol(tv, ST::variable, 0, false);
 			symtab->addSymbol($3, *smb);
 			parametros.push_back(smb);
-			AST::Variable* vari = new AST::Variable($3, Tipos::inteiro, NULL);
+			AST::Variable* vari = new AST::Variable($3, tv, NULL);
 			teste.push_back(vari);
-			//std::cout<<"one param"<<std::endl;
 			$$ = vari;
       	}
       	| {$$ = NULL;}
       ;
-////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////
 %%

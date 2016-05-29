@@ -27,7 +27,7 @@ class Symbol {
             type(type), kind(kind), value(value), initialized(initialized) {  }
 
         Symbol(Tipos::Tipo type, Kind kind, std::vector<ST::Symbol*> parametros, bool initialized) :
-            type(type), kind(kind), parametros(parametros), initialized(initialized) {  }
+            type(type), kind(kind), parametros(parametros), initialized(initialized) { }
 
         Symbol() {type = Tipos::indefinido; kind = variable; value = 0; initialized = false;}
 };
