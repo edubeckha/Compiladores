@@ -22,7 +22,6 @@ AST::Node* SymbolTable::assignVariable(std::string id){
             yyerror("Variável ainda não definida! %s\n", id.c_str());
         }
     }
-
     entryList[id].initialized = true;
     return new AST::Variable(id, entryList[id].type, NULL); //Creates variable node anyway
 }
@@ -49,5 +48,8 @@ Tipos::Tipo SymbolTable::returnType(std::string id){
 
 /*Realiza a coersao de um tipo na tabela de simbolos*/
 void SymbolTable::realizaCoercao(std::string id){
+    if(!checkId(id)){
+        return;
+    }
     entryList[id].type = Tipos::real;
 }

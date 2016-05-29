@@ -23,7 +23,7 @@ namespace AST {
 
 
 	std::string tipoParaString(Tipos::Tipo tipo);
- 	AST::Node* realizaCoercao(std::string id, AST::Node* left, AST::Node* right);
+ 	AST::Node* realizaCoercao(std::string id, AST::Node* left, AST::Node* right, ST::SymbolTable* symtab);
 
  	/*Nodo que define um inteiro, com seu tipo e valor do tipo inteiro*/
 	class Integer : public Node {

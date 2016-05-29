@@ -2,8 +2,6 @@
 
 using namespace AST;
 
-extern ST::SymbolTable symtab;
-
 /*Metodos de impressao*/
 /*Imprime o valor do nodo quando o mesmo for inteiro*/
 void Integer::printTree(){
@@ -202,9 +200,9 @@ std::string AST::tipoParaString(Tipos::Tipo tipo){
 }
 
 /*Realiza coercao dos nodos necessarios*/
-AST::Node* AST::realizaCoercao(std::string id, AST::Node* left, AST::Node* right){
+AST::Node* AST::realizaCoercao(std::string id, AST::Node* left, AST::Node* right, ST::SymbolTable* symtab){
     if(Tipos::necessitaCoersao(left->tipo, right->tipo)){
-        symtab.realizaCoercao(id);
+        symtab->realizaCoercao(id);
         return new AST::UniOp(left, Tipos::coercao, Tipos::real);
     }
    return left;

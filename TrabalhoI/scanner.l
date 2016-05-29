@@ -32,37 +32,33 @@ nome [a-z]+
 "-"                 {return T_SUB;}
 "*"                 {return T_TIMES;}
 "/"                 {return T_DIV;}
+
+":"                 {return T_DEF;}
+","                 {return T_COMMA;}
+":="                {return T_ASSIGN;}
+"~="				{return T_DIFERENTE;}
 ">"					{return T_MAIOR;}
 "<"					{return T_MENOR;}
+"="					{return T_IGUAL;}
 ">="				{return T_MAIORIGUAL;}
 "<="				{return T_MENORIGUAL;}
-"="					{return T_IGUAL;}
-"~="				{return T_DIFERENTE;}
 
 "AND"				{return T_AND;}
 "OR"				{return T_OR;}
 
 "~"					{return T_UNIBOOL;}
 
-":"                 {return T_DEF;}
-","                 {return T_COMMA;}
-":="                {return T_ASSIGN;}
-
-
 "("					{return T_PARA;}
 ")"					{return T_PARAF;}
 "["					{return T_ARRA;}
 "]"					{return T_ARRAF;}
 
+"while"				{return T_WHILE;}
+"do"				{return T_DO;}
 "if"				{return T_IF;}
 "then"				{return T_THEN;}
 "else"				{return T_ELSE;}
-"while"				{return T_WHILE;}
-"do"				{return T_DO;}
 "end"				{return T_END;}
-
-"def"				{return T_DEFI;}
-"type"				{return T_TYPE;}
 
 ";"					{return T_FINALEXP;}
 "\n"                {return T_NL;}

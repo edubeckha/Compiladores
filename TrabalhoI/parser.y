@@ -21,7 +21,6 @@ static Tipos::Tipo tv = Tipos::indefinido;
     AST::Block *block;
     Tipos::Operation operacao;
     const char *name;
-    ST::SymbolTable* tabelaSimbolos;
 }
 
 /* token defines our terminal symbols (tokens).
@@ -41,7 +40,7 @@ T_TYPE
 %type <node> expr line varlist unexpr declaracoes assignments condicionais elseIf definicoes
 %type <block> lines program
 %type <operacao> tipoOperacao
-%type<tabelaSimbolos> novoEscopo mataEscopo
+
 
 /* Operator precedence for mathematical operators
  * The latest it is listed, the highest the precedence
@@ -83,7 +82,7 @@ declaracoes :
 
 assignments : 
 		/*assign em variaveis*/
-		T_ID T_ASSIGN unexpr T_FINALEXP { AST::Node* node = symtab->assignVariable($1); node = AST::realizaCoercao($1, node, $3); $$ = new AST::BinOp(node,Tipos::assign,$3);}
+		T_ID T_ASSIGN unexpr T_FINALEXP { AST::Node* node = symtab->assignVariable($1); node = AST::realizaCoercao($1, node, $3, symtab); $$ = new AST::BinOp(node,Tipos::assign,$3);}
 
 		/*assign em arranjos*/
 		|T_ID T_ARRA unexpr T_ARRAF T_ASSIGN unexpr T_FINALEXP {AST::Node* node = symtab->assignVariable($1); $$ = new AST::BinOp(new AST::Arranjo($3, node), Tipos::assign, $6);}
