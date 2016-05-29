@@ -80,7 +80,10 @@ declaracoes :
 
 		/*declaracao de arranjos*/
         |tipoVariavel T_ARRA unexpr T_ARRAF T_DEF T_ID T_FINALEXP {AST::Node* var = symtab->newVariable($6, tv, NULL); $$ = new AST::UniOp(new AST::Arranjo($3 ,var), Tipos::declaracao, tv);};
-		;
+		
+        /*declaracao de arranjos do tipo complexo*/
+        |T_ID T_ARRA unexpr T_ARRAF T_DEF T_ID T_FINALEXP {AST::Node* complexo = symtab->useVariable($1);};
+        ;
 
 assignments : 
 		/*assign em variaveis*/
@@ -102,7 +105,6 @@ definicoes:
         ;
 
 /*Trata do que pode ser aceito no corpo de uma estrutura complexa. Tratado como um bloco a parte do programa*/
-
 corpoComplexo  : declaracoes {$$ = new AST::Block(); if($1 != NULL) $$->lines.push_back($1); }
         | corpoComplexo declaracoes { if($2 != NULL) $1->lines.push_back($2); }
         ;

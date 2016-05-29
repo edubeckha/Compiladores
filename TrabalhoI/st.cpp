@@ -36,7 +36,7 @@ AST::Node* SymbolTable::useVariable(std::string id){
         }
         return new AST::Variable(id, entryList[id].type, NULL); //forca a criacao de um nodo
     }
-    if (  !entryList[id].initialized ) {yyerror("Erro semantico: variavel %s ainda nao inicializada.\n", id.c_str());}
+    if (  !entryList[id].initialized && !(entryList[id].type == Tipos::complexo)) {yyerror("Erro semantico: variavel %s ainda nao inicializada.\n", id.c_str());}
 
     return new AST::Variable(id, entryList[id].type, NULL); //Creates variable node anyway
 }
