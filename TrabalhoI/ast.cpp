@@ -185,7 +185,13 @@ void Condicao::printTree(){
 
 /*Imprime a estrutura do numero complexo, com seu id e componentes*/
 void Complexo::printTree(){
-    std::cout << "Definicao tipo: " << dynamic_cast<Variable*>(var)->id;
+    std::cout << "Definicao tipo: " << dynamic_cast<Variable*>(var)->id << std::endl;
+    std::cout << "+componentes:" << std::endl;
+    for (Node* line: escopoComplexo->lines) {
+        line->printTree();
+        std::cout << std::endl;
+    }
+    std::cout << "Fim definicao" << std::endl;
 }
 
 

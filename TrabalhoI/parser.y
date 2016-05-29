@@ -21,6 +21,7 @@ static Tipos::Tipo tv = Tipos::indefinido;
     AST::Block *block;
     Tipos::Operation operacao;
     const char *name;
+    ST::SymbolTable* tabelaEscopo;
 }
 
 /* token defines our terminal symbols (tokens).
@@ -38,8 +39,9 @@ T_TYPE
  */
 
 %type <node> expr line varlist unexpr declaracoes assignments condicionais elseIf definicoes
-%type <block> lines program
+%type <block> lines program corpoComplexo
 %type <operacao> tipoOperacao
+%type<tabelaEscopo> novoEscopo
 
 
 /* Operator precedence for mathematical operators
@@ -96,7 +98,13 @@ condicionais:
 		;
 definicoes:
         /*Definicao de tipos complexos*/
-        T_DEFI T_TYPE T_DEF T_ID {AST::Node* var = symtab->newVariable($4, Tipos::complexo, NULL); $$ = new AST::Complexo(var);}
+        T_DEFI T_TYPE T_DEF T_ID novoEscopo corpoComplexo mataEscopo T_END T_DEFI {AST::Node* var = symtab->newVariable($4, Tipos::complexo, NULL); $$ = new AST::Complexo(var, $6, $5);}
+        ;
+
+/*Trata do que pode ser aceito no corpo de uma estrutura complexa. Tratado como um bloco a parte do programa*/
+
+corpoComplexo  : declaracoes {$$ = new AST::Block(); if($1 != NULL) $$->lines.push_back($1); }
+        | corpoComplexo declaracoes { if($2 != NULL) $1->lines.push_back($2); }
         ;
 
 /*Trata da parte do else no laco if*/
@@ -148,7 +156,7 @@ varlist : T_ID { $$ = symtab->newVariable($1, tv, NULL); }
 /*define um novo escopo para as mais diferentes estruturas, como lacos condicionais, funcoes, etc. Para isso, a mesma cria uma nova
 tabela de escopo e seta a tabela de origem da mesma como a tabela atual do sistema. Depois disso, torna a tabela criada como a padrao
 para ser utilizada no momento*/
-novoEscopo : {ST::SymbolTable* tabelaEscopo = new ST::SymbolTable; tabelaEscopo->defineTabelaOrigem(symtab); symtab = tabelaEscopo;}
+novoEscopo : {ST::SymbolTable* tabelaEscopo = new ST::SymbolTable; tabelaEscopo->defineTabelaOrigem(symtab); symtab = tabelaEscopo; $$ = symtab;}
 
 /*Encerra o escopo de uma tabela de simbolos, dando a autoridade para a tabela que deu origem a tabela encerrada*/
 mataEscopo : {symtab = symtab->tabelaOrigem;}

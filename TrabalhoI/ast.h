@@ -145,9 +145,11 @@ namespace AST {
 	public:
 		ST::SymbolTable* tabSim;
 		Node* var;
-		Node* escopo;
+		AST::Block* escopoComplexo;
 
-		Complexo(Node* var) : var(var) { }
+		Complexo(Node* var, Block* escopoComplexo, ST::SymbolTable* tabelaEscopo) : var(var), escopoComplexo(escopoComplexo) { 
+			tabSim = tabelaEscopo; 
+		}
 
 		void printTree();
 	};

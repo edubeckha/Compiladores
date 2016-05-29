@@ -60,6 +60,10 @@ nome [a-z]+
 "else"				{return T_ELSE;}
 "end"				{return T_END;}
 
+"def"				{return T_DEFI;}
+"type"				{return T_TYPE;}
+
+
 ";"					{return T_FINALEXP;}
 "\n"                {return T_NL;}
 {nome}              {yylval.name = strdup(yytext); return T_ID;}
