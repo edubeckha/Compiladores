@@ -63,6 +63,11 @@ nome [a-z]+
 "def"				{return T_DEFI;}
 "type"				{return T_TYPE;}
 
+"fun" 				{return T_FUN;}
+"return" 			{return T_RETO;}
+"decl" {return T_DECL;}
+
+
 
 ";"					{return T_FINALEXP;}
 "\n"                {return T_NL;}

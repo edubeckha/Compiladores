@@ -3,6 +3,8 @@
 #include "st.h"
 ST::SymbolTable* symtab = new ST::SymbolTable();  /* main symbol table */
 AST::Block *programRoot; /* the root node of our program AST:: */
+std::vector<AST::Variable*> teste;
+std::vector<ST::Symbol*> parametros;
 extern int yylex();
 extern void yyerror(const char* s, ...);
 static Tipos::Tipo tv = Tipos::indefinido;
@@ -30,15 +32,14 @@ static Tipos::Tipo tv = Tipos::indefinido;
 %token <doubler> T_DOUBLE
 %token <booleano> T_BOOLTRUE T_BOOLFALSE
 %token <name> T_ID
-%token T_NL T_ASSIGN T_FINALEXP T_IGUAL T_DINT T_DREAL T_DBOOL T_DEF T_COMMA T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_DIFERENTE T_UNIBOOL T_PARA T_PARAF T_ARRA T_ARRAF T_IF T_THEN T_ELSE T_END T_WHILE T_DO T_DEFI
-T_TYPE
+%token T_NL T_ASSIGN T_FINALEXP T_IGUAL T_DINT T_DREAL T_DBOOL T_DEF T_COMMA T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_DIFERENTE T_UNIBOOL T_PARA T_PARAF T_ARRA T_ARRAF T_IF T_THEN T_ELSE T_END T_WHILE T_DO T_DEFI T_TYPE T_FUN T_RETO T_DECL
 
 /* type defines the type of our nonterminal symbols.
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
 
-%type <node> expr line varlist unexpr declaracoes assignments condicionais elseIf definicoes
+%type <node> expr line varlist unexpr declaracoes assignments condicionais elseIf definicoes param
 %type <block> lines program corpoComplexo
 %type <operacao> tipoOperacao
 %type<tabelaEscopo> novoEscopo
@@ -83,6 +84,14 @@ declaracoes :
 		
         /*declaracao de arranjos do tipo complexo*/
         |T_ID T_ARRA unexpr T_ARRAF T_DEF T_ID T_FINALEXP {AST::Node* complexo = symtab->useVariable($1);};
+
+        /*declaracao de funcoes*/
+        | T_DECL T_FUN tipoVariavel T_DEF T_ID novoEscopo T_PARA param T_PARAF mataEscopo T_FINALEXP {
+            AST::Node* node = symtab->newFunction($5, tv, parametros);
+            $$ = new AST::Funcao($5, tv, teste);
+            parametros.clear();
+            teste.clear();
+            }
         ;
 
 assignments : 
@@ -91,6 +100,12 @@ assignments :
 
 		/*assign em arranjos*/
 		|T_ID T_ARRA unexpr T_ARRAF T_ASSIGN unexpr T_FINALEXP {AST::Node* node = symtab->assignVariable($1); $$ = new AST::BinOp(new AST::Arranjo($3, node), Tipos::assign, $6);}
+
+        /*Reconhece uma ou mais declarações de retorno de uma função.*/
+        | T_RETO unexpr T_FINALEXP {
+            $$ = new AST::Retorno($2);
+        }
+        ;
 
 condicionais: 
 		/*tratamento de expressoes condicionais do tipo if*/
@@ -102,7 +117,14 @@ condicionais:
 definicoes:
         /*Definicao de tipos complexos*/
         T_DEFI T_TYPE T_DEF T_ID novoEscopo corpoComplexo mataEscopo T_END T_DEFI {AST::Node* var = symtab->newVariable($4, Tipos::complexo, NULL); $$ = new AST::Complexo(var, $6, $5);}
+
+        /*definição da função previamente delcarada.*/
+        |T_DEFI T_FUN tipoVariavel T_DEF T_ID novoEscopo T_PARA param T_PARAF lines mataEscopo T_END T_DEFI {
+            AST::Node* var = symtab->assignFunction($5, parametros, $10);
+                $$ = new AST::DefineFuncao($5, tv, teste, $10);
+            }
         ;
+        
 
 /*Trata do que pode ser aceito no corpo de uma estrutura complexa. Tratado como um bloco a parte do programa*/
 corpoComplexo  : declaracoes {$$ = new AST::Block(); if($1 != NULL) $$->lines.push_back($1); }
@@ -162,6 +184,27 @@ novoEscopo : {ST::SymbolTable* tabelaEscopo = new ST::SymbolTable; tabelaEscopo-
 
 /*Encerra o escopo de uma tabela de simbolos, dando a autoridade para a tabela que deu origem a tabela encerrada*/
 mataEscopo : {symtab = symtab->tabelaOrigem;}
+
+/*define um ou mais parametros de acordo com a vontade do usuario*/
+param : tipoVariavel T_DEF T_ID T_COMMA param {
+            ST::Symbol* smb = new ST::Symbol(tv, ST::variable, 0, false);
+            symtab->addSymbol($3, *smb);
+            parametros.push_back(smb);
+            AST::Variable* vari = new AST::Variable($3, tv, $5);
+            teste.push_back(vari);
+            $$ = vari;
+        }
+      | 
+      tipoVariavel T_DEF T_ID {
+            ST::Symbol* smb = new ST::Symbol(tv, ST::variable, 0, false);
+            symtab->addSymbol($3, *smb);
+            parametros.push_back(smb);
+            AST::Variable* vari = new AST::Variable($3, tv, NULL);
+            teste.push_back(vari);
+            $$ = vari;
+        }
+        | {$$ = NULL;}
+      ;
 
 %%
 

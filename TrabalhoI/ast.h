@@ -111,6 +111,34 @@ namespace AST {
 	    void printTree();		
 	};
 
+	/*Nodo que define um nodo funcao. O mesmo tem um id, um tipo e um vetor de parametros*/
+	class Funcao : public Node {
+	     public:
+	         std::string id;
+	         Tipos::Tipo tipo;
+	         std::vector<AST::Variable*> parametros;
+	         Funcao(std::string id, Tipos::Tipo tipo, std::vector<AST::Variable*> parametros) : id(id), tipo(tipo), parametros(parametros) { }
+	         void printTree();
+	};
+
+	/*Nodo que tem a funcao de definir uma funcao*/
+	class DefineFuncao : public Node {
+	     public:
+	         std::string id;
+	         std::vector<AST::Variable*> parametros;
+	         Tipos::Tipo tipo;
+	         Node* body;
+	         DefineFuncao(std::string id, Tipos::Tipo tipo, std::vector<AST::Variable*> parametros, Node* body) : id(id), tipo(tipo), parametros(parametros), body(body) { }
+	         void printTree();
+	};
+
+	/*Nodo que define o retorno da funcao*/
+	class Retorno : public Node{
+	public:
+		Node* ret;
+		Retorno(AST::Node* ret) : ret(ret){}
+		void printTree();
+	};
 
 	/*Node que representa a estrutura condicional. A mesma possui tres
 	partes distintas: condicao, corpo do laco if e corpo do lado else*/

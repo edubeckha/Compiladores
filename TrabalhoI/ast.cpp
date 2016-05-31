@@ -194,7 +194,6 @@ void Complexo::printTree(){
     std::cout << "Fim definicao" << std::endl;
 }
 
-
 /*Funcao que recebe um tipo e retorna uma string, ajudando na impressao das informacoes do nodo que contenha tipo*/
 std::string AST::tipoParaString(Tipos::Tipo tipo){
     switch(tipo){
@@ -209,7 +208,7 @@ std::string AST::tipoParaString(Tipos::Tipo tipo){
 AST::Node* AST::realizaCoercao(std::string id, AST::Node* left, AST::Node* right, ST::SymbolTable* symtab){
     if(Tipos::necessitaCoersao(left->tipo, right->tipo)){
         symtab->realizaCoercao(id);
-        std::cout << "Erro semantico: operacao de assign esperava dois tipos compativeis, mas recebeu " << Tipos::tipoParaString(right->tipo) << " e " << Tipos::tipoParaString(left->tipo);
+        std::cout << "Erro semantico: operacao de assign esperava dois tipos compativeis, mas recebeu " << Tipos::tipoParaString(right->tipo) << " e " << Tipos::tipoParaString(left->tipo) << std::endl;
         return new AST::UniOp(left, Tipos::coercao, Tipos::real);
     }
    return left;
@@ -223,6 +222,48 @@ void Laco::printTree(){
     std::cout << "+faca: " << std::endl;
     corpoLaco->printTree(); std::cout << "\n";
     std::cout << "Fim laco" << std::endl;
+}
+
+/*Imprime quando ocorre a declaração de um função.*/
+void Funcao::printTree(){
+    std::cout << "Declaração da função "<<AST::tipoParaString(tipo)<<": "<<id<<std::endl;
+    std::cout<<"+parametros:"<<std::endl;
+
+    if(parametros.size() == 0) {
+        std::cout<<"sem parametros"<<std::endl;
+    }else if (parametros.at(parametros.size() - 1) != NULL && parametros.size() > 0){
+        parametros.at(parametros.size() - 1)->printTree();
+        std::cout<<" "<<std::endl;
+    } 
+    std::cout<<"Fim declaração."<<std::endl;
+}
+
+/*Imprime quando ocorre uma definição de uma função.*/
+void DefineFuncao::printTree(){
+    std::cout << "Definição de função "<<AST::tipoParaString(tipo)<<": "<<id<<std::endl;
+
+    std::cout<<"+parametros:"<<std::endl;
+    if(parametros.size() == 0) {
+        std::cout<<"sem parametros"<<std::endl;
+    } else 
+    if(parametros.at(parametros.size() - 1) != NULL && parametros.size() > 0){
+        parametros.at(parametros.size() - 1)->printTree();
+        // std::cout<<" "<<std::endl;
+    }
+    std::cout<<" "<<std::endl;
+    std::cout<<"+corpo:"<<std::endl;
+     if (body != NULL){
+        body->printTree();
+    }
+    std::cout<<"Fim definição."<<std::endl;
+}
+
+/*Imprime sempre que houver um retorno em uma função.*/
+void Retorno::printTree(){
+    std::cout<<"Retorno de função: "<<std::endl;
+     if (ret != NULL){
+        ret->printTree();
+    }
 }
 
 

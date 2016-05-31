@@ -89,7 +89,7 @@ void Tipos::erroCondicao(Operation operacao, Tipo primeiroRecebido, Tipo segundo
 	if(segundoEsperado != indefinido){
 		std::cout << " ou " + tipoParaString(segundoEsperado);
 	}
-	std::cout << " mas recebeu " << tipoParaString(primeiroRecebido) << " e " << tipoParaString(segundoRecebido) << "\n";
+	std::cout << " mas recebeu " << tipoParaString(primeiroRecebido) << " e " << tipoParaString(segundoRecebido) << std::endl;
 }
 
 /*Mostra na tela erros de condicoes de tipagem*/

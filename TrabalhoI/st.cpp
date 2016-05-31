@@ -53,3 +53,29 @@ void SymbolTable::realizaCoercao(std::string id){
     }
     entryList[id].type = Tipos::real;
 }
+
+AST::Node* SymbolTable::newFunction(std::string id, Tipos::Tipo tipoVariavel, std::vector<ST::Symbol*> parametros){
+    if( checkId(id) )
+        yyerror("Erro semantico: função %s já existe.\n", id.c_str());
+    else {
+        Symbol entry(tipoVariavel, function, parametros, false);
+        addSymbol(id,entry);
+    }
+    return NULL;
+}
+
+AST::Node* SymbolTable::assignFunction(std::string id, std::vector<ST::Symbol*> next, AST::Node* body){
+    if ( ! checkId(id) ) {
+        yyerror("função ainda não definida! %s\n", id.c_str());
+    }
+    ST::Symbol tmp = this->getFunction(id);
+    for (int i = 0; i < next.size(); i++)
+    {
+        if (tmp.parametros.at(i)->type != next.at(i)->type)
+        {
+            std::cout<<"Atenção: tipo de parametro incompativel."<<std::endl;
+        }
+    }
+    entryList[id].initialized = true;
+    return NULL;
+}

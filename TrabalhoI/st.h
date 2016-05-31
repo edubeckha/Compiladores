@@ -20,9 +20,13 @@ class Symbol {
         Kind kind;              /*Kind of symbol: variable, function, etc.*/
         int64_t value;        /*Space to store a value while we are doing interpretation.*/
         bool initialized;       /*Defines if symbol has been initialized or not.*/
+        std::vector<ST::Symbol*> parametros; /*Stores the parameters of function*/
+        
         Symbol(Tipos::Tipo type, Kind kind, int64_t value, bool initialized) :
             type(type), kind(kind), value(value), initialized(initialized) {  }
         Symbol() {type = Tipos::indefinido; kind = variable; value = 0; initialized = false;}
+        Symbol(Tipos::Tipo type, Kind kind, std::vector<ST::Symbol*> parametros, bool initialized) :
+            type(type), kind(kind), parametros(parametros), initialized(initialized) { }
 };
 
 class SymbolTable {
@@ -40,6 +44,11 @@ class SymbolTable {
         void realizaCoercao(std::string id);
         void defineTabelaOrigem(ST::SymbolTable* to) {tabelaOrigem = to;};
         ST::SymbolTable* tabelaOrigem = NULL;
+
+        ST::Symbol getFunction(std::string id){return entryList[id];};
+        AST::Node* newFunction(std::string id, Tipos::Tipo tipoVariavel, std::vector<ST::Symbol*> parametros);
+        // AST::Node* newFunction(std::string id, Tipos::Tipo tipoVariavel, AST::Node* parametros);
+        AST::Node* assignFunction(std::string id, std::vector<ST::Symbol*> next, AST::Node* body);
 };
 
 }
