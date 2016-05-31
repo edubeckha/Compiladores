@@ -1,4 +1,4 @@
-/*Ja previamente definido por Laércio Lima Pilla*/
+/*Ja previamente definido por Laércio Lima Pilla e ampliado para aceitar funcoes e outros tipos de estruturas*/
 #include "st.h"
 
 using namespace ST;
@@ -54,6 +54,7 @@ void SymbolTable::realizaCoercao(std::string id){
     entryList[id].type = Tipos::real;
 }
 
+/*Cria uma nova funcao na tabela de simbolos*/
 AST::Node* SymbolTable::newFunction(std::string id, Tipos::Tipo tipoVariavel, std::vector<ST::Symbol*> parametros){
     if( checkId(id) )
         yyerror("Erro semantico: função %s já existe.\n", id.c_str());
@@ -64,9 +65,10 @@ AST::Node* SymbolTable::newFunction(std::string id, Tipos::Tipo tipoVariavel, st
     return NULL;
 }
 
-AST::Node* SymbolTable::assignFunction(std::string id, std::vector<ST::Symbol*> next, AST::Node* body){
+/*Define o corpo da funcao e caso ela nao foi declarada, a mesma eh criada*/
+AST::Node* SymbolTable::assignFunction(std::string id, Tipos::Tipo tipoVariavel, std::vector<ST::Symbol*> next, AST::Node* body){
     if ( ! checkId(id) ) {
-        yyerror("função ainda não definida! %s\n", id.c_str());
+        this->newFunction(id, tipoVariavel, next);
     }
     ST::Symbol tmp = this->getFunction(id);
     for (int i = 0; i < next.size(); i++)

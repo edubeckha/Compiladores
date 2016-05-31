@@ -252,7 +252,6 @@ void DefineFuncao::printTree(){
     } else 
     if(parametros.at(parametros.size() - 1) != NULL && parametros.size() > 0){
         parametros.at(parametros.size() - 1)->printTree();
-        // std::cout<<" "<<std::endl;
     }
     std::cout<<" "<<std::endl;
     std::cout<<"+corpo:"<<std::endl;

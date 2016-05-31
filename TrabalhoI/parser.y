@@ -24,6 +24,7 @@ static Tipos::Tipo tv = Tipos::indefinido;
     Tipos::Operation operacao;
     const char *name;
     ST::SymbolTable* tabelaEscopo;
+    Tipos::Tipo tipoVariavel;
 }
 
 /* token defines our terminal symbols (tokens).
@@ -43,7 +44,7 @@ static Tipos::Tipo tv = Tipos::indefinido;
 %type <block> lines program corpoComplexo
 %type <operacao> tipoOperacao
 %type<tabelaEscopo> novoEscopo
-
+%type<tipoVariavel> tipoVariavel
 
 /* Operator precedence for mathematical operators
  * The latest it is listed, the highest the precedence
@@ -90,8 +91,8 @@ declaracoes :
 
         /*declaracao de funcoes*/
         | T_DECL T_FUN tipoVariavel T_DEF T_ID novoEscopo T_PARA param T_PARAF mataEscopo T_FINALEXP {
-          AST::Node* node = symtab->newFunction($5, tv, parametros);
-          $$ = new AST::Funcao($5, tv, teste);
+          AST::Node* node = symtab->newFunction($5, $3, parametros);
+          $$ = new AST::Funcao($5, $3, teste);
           parametros.clear();
           teste.clear();
         }
@@ -124,8 +125,8 @@ definicoes:
 
         /*definição da função previamente declarada.*/
         |T_DEFI T_FUN tipoVariavel T_DEF T_ID novoEscopo T_PARA param T_PARAF lines mataEscopo T_END T_DEFI {
-          AST::Node* var = symtab->assignFunction($5, parametros, $10);
-          $$ = new AST::DefineFuncao($5, tv, teste, $10);
+          AST::Node* var = symtab->assignFunction($5, $3, parametros, $10);
+          $$ = new AST::DefineFuncao($5, $3, teste, $10);
         }
         ;
         
