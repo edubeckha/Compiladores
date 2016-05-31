@@ -46,10 +46,20 @@ Tipo Tipos::opBinaria(Tipo tipoNodoEsquerda, Tipo tipoNodoDireita, Operation op)
 	switch(op){
 	case assign:
 			if(tipoNodoEsquerda != tipoNodoDireita){
-				Tipos::tiposIncompativeis(tipoNodoEsquerda, tipoNodoDireita);
+				Tipos::tiposIncompativeis(tipoNodoEsquerda, tipoNodoDireita, op);
 			}
-		return tipoNodoEsquerda;		
+		return tipoNodoEsquerda;
+	case ande:
+		if(tipoNodoEsquerda != booleano){
+			Tipos::erroTipagem(ande, booleano, indefinido, tipoNodoEsquerda);
+			break;
+		}	
+		if(tipoNodoDireita != booleano){
+			Tipos::erroTipagem(ande, booleano, indefinido, tipoNodoEsquerda);
+			break;
+		}	
 	 break;
+
 		default:
 		if(op == plus || op == sub || op == times || op == divi){
 			if(tipoNodoEsquerda == real || tipoNodoDireita == real){
@@ -75,7 +85,13 @@ Tipo Tipos::opBinaria(Tipo tipoNodoEsquerda, Tipo tipoNodoDireita, Operation op)
 				}
 				return booleano;
 
-		} else {
+		} else if(op == igual || op == diferente){
+				if(tipoNodoEsquerda != tipoNodoDireita){
+					Tipos::tiposIncompativeis(tipoNodoEsquerda, tipoNodoDireita, op);
+				}
+				return booleano;
+
+		}else {
 				std::cout << "Operacao nao suportada em operacoes binarias!" << std::endl;
 		}
 	}
@@ -102,8 +118,8 @@ void Tipos::erroTipagem(Operation operacao, Tipo primeiroTipo, Tipo segundoTipo,
 }
 
 /*Mostra na tela erros de tipos incompativeis entre variavei*/
-void Tipos::tiposIncompativeis(Tipo primeiroTipo, Tipo segundoTipo){
-	std::cout << "Erro semantico: operacao de assign esperava dois tipos compativeis, mas recebeu " <<
+void Tipos::tiposIncompativeis(Tipo primeiroTipo, Tipo segundoTipo, Operation operacao){
+	std::cout << "Erro semantico: operacao de " << opParaString(operacao) << " esperava dois tipos compativeis, mas recebeu " <<
 	tipoParaString(primeiroTipo, true) << " e " << tipoParaString(segundoTipo, true) << std::endl;
 }
 
@@ -137,12 +153,17 @@ std::string Tipos::tipoParaString(Tipo tipo, bool ehMasc){
 /*Converte uma operacao passada como parametro para string a fim de ser impressa*/
 std::string Tipos::opParaString(Operation op){
 	switch(op){
+		case assign: return "assign";
 		case plus: return "soma";
 		case sub: return "subtracao";
 		case maior: return "maior";
 		case maiorigual: return "maior ou igual";
 		case menor : return "menor";
 		case menorigual : return "menor ou igual";
+		case ande : return "and";
+		case ore : return "or";
+		case igual : return "igual";
+		case diferente : return "diferente";
 		default: return "indefinida";
 	}
 }

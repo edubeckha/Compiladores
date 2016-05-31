@@ -117,11 +117,12 @@ condicionais:
 		    /*tratamento de lacos*/
         | T_WHILE unexpr T_DO novoEscopo lines mataEscopo T_END T_WHILE { $$ = new AST::Laco($2, $5);}
 		;
+
 definicoes:
         /*Definicao de tipos complexos*/
         T_DEFI T_TYPE T_DEF T_ID novoEscopo corpoComplexo mataEscopo T_END T_DEFI {AST::Node* var = symtab->newVariable($4, Tipos::complexo, NULL); $$ = new AST::Complexo(var, $6, $5);}
 
-        /*definição da função previamente delcarada.*/
+        /*definição da função previamente declarada.*/
         |T_DEFI T_FUN tipoVariavel T_DEF T_ID novoEscopo T_PARA param T_PARAF lines mataEscopo T_END T_DEFI {
           AST::Node* var = symtab->assignFunction($5, parametros, $10);
           $$ = new AST::DefineFuncao($5, tv, teste, $10);

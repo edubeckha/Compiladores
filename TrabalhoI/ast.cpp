@@ -113,6 +113,20 @@ void BinOp::printTree(){
             right->printTree(); 
             std::cout << ")"; 
         break;
+
+        case Tipos::igual: 
+            std::cout << "("; left->printTree(); 
+            std::cout << " (igual) "; 
+            right->printTree(); 
+            std::cout << ")"; 
+        break;
+
+        case Tipos::diferente: 
+            std::cout << "("; left->printTree(); 
+            std::cout << " (diferente) "; 
+            right->printTree(); 
+            std::cout << ")"; 
+        break;
        
         default: std::cout << "Operador nao tratado" << std::endl; break;
     }  
