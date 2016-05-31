@@ -23,8 +23,8 @@ void Boolean::printTree(){
 
 /*Imprime o arranjo, seu tipo e seu indice quando o nodo for do tipo arranjo*/
 void Arranjo::printTree(){
-    std::cout << "arranjo"<< 
-    AST::tipoParaString(dynamic_cast<Variable*>(var)->tipo)
+    std::cout << "arranjo "<< 
+    Tipos::tipoParaString(dynamic_cast<Variable*>(var)->tipo, true)
     << std::endl << "{+indice: ";
     indice->printTree();
     std::cout << "}";
@@ -37,28 +37,28 @@ void BinOp::printTree(){
         case Tipos::assign: 
             std::cout << "Atribuicao de valor para ";
             left->printTree(); 
-            std::cout << ": "; 
+            std::cout << " ";
             right->printTree(); 
         break;
 
         case Tipos::plus: 
             std::cout << "("; 
             left->printTree(); 
-            std::cout << " (soma) "; 
+            std::cout << " (soma " << Tipos::tipoParaString(tipo, false) << ") "; 
             right->printTree(); 
             std::cout << ")"; 
         break;
 
         case Tipos::sub: 
             std::cout << "("; left->printTree(); 
-            std::cout << " (subtracao) "; 
+            std::cout << " (subtracao " << Tipos::tipoParaString(tipo, false) << ") "; 
             right->printTree(); 
             std::cout << ")"; 
         break;
 
         case Tipos::times:
             std::cout << "("; left->printTree(); 
-            std::cout << " (multiplicacao) "; 
+            std::cout << " (multiplicacao " << Tipos::tipoParaString(tipo, false) << ") "; 
             right->printTree(); 
             std::cout << ")"; 
         break;
@@ -66,21 +66,21 @@ void BinOp::printTree(){
         case Tipos::divi: 
             std::cout << "("; 
             left->printTree(); 
-            std::cout << " (divisao) "; 
+            std::cout << " (divisao " << Tipos::tipoParaString(tipo, false) << ") "; 
             right->printTree(); 
             std::cout << ")"; 
         break;
         
         case Tipos::maior: 
             std::cout << "("; left->printTree(); 
-            std::cout << " (maior que) "; 
+            std::cout << " (maior booleano) "; 
             right->printTree(); 
             std::cout << ")"; 
         break;
 
         case Tipos::menor: 
             std::cout << "("; left->printTree(); 
-            std::cout << " (menor que) "; 
+            std::cout << " (menor booleano) "; 
             right->printTree(); 
             std::cout << ")"; 
         break;
@@ -88,14 +88,14 @@ void BinOp::printTree(){
 
         case Tipos::maiorigual: 
             std::cout << "("; left->printTree(); 
-            std::cout << " (maior ou igual que) "; 
+            std::cout << " (maior ou igual booleano) "; 
             right->printTree();
             std::cout << ")"; 
         break;
 
         case Tipos::menorigual: 
             std::cout << "("; left->printTree(); 
-            std::cout << " (menor ou igual que) "; 
+            std::cout << " (menor ou igual booleano) "; 
             right->printTree(); 
             std::cout << ")"; 
         break;
@@ -132,7 +132,7 @@ void Variable::printTree(){
         next->printTree();
         std::cout << ", " << id;
     } else {
-        std::cout << "variavel do tipo" << AST::tipoParaString(tipo) << id;
+        std::cout << "variavel " << Tipos::tipoParaString(tipo, false) << " : " << id;
     }
 }
 
@@ -145,7 +145,7 @@ void UniOp::printTree(){
         break;
 
         case Tipos::unario: 
-            std::cout << "(menor unario" << AST::tipoParaString(node->tipo) << ")";
+            std::cout << "(menor unario" << Tipos::tipoParaString(node->tipo, true) << ")";
             node->printTree();  
         break;
 
@@ -194,21 +194,11 @@ void Complexo::printTree(){
     std::cout << "Fim definicao" << std::endl;
 }
 
-/*Funcao que recebe um tipo e retorna uma string, ajudando na impressao das informacoes do nodo que contenha tipo*/
-std::string AST::tipoParaString(Tipos::Tipo tipo){
-    switch(tipo){
-        case Tipos::inteiro : return " inteiro ";
-        case Tipos::real : return " real ";
-        case Tipos::booleano : return " booleano ";
-        default : return " indefinido ";
-    }
-}
-
 /*Realiza coercao dos nodos necessarios*/
 AST::Node* AST::realizaCoercao(std::string id, AST::Node* left, AST::Node* right, ST::SymbolTable* symtab){
     if(Tipos::necessitaCoersao(left->tipo, right->tipo)){
         symtab->realizaCoercao(id);
-        std::cout << "Erro semantico: operacao de assign esperava dois tipos compativeis, mas recebeu " << Tipos::tipoParaString(right->tipo) << " e " << Tipos::tipoParaString(left->tipo) << std::endl;
+        std::cout << "Erro semantico: operacao de assign esperava dois tipos compativeis, mas recebeu " << Tipos::tipoParaString(right->tipo, true) << " e " << Tipos::tipoParaString(left->tipo, true) << std::endl;
         return new AST::UniOp(left, Tipos::coercao, Tipos::real);
     }
    return left;
@@ -226,7 +216,7 @@ void Laco::printTree(){
 
 /*Imprime quando ocorre a declaração de um função.*/
 void Funcao::printTree(){
-    std::cout << "Declaração da função "<<AST::tipoParaString(tipo)<<": "<<id<<std::endl;
+    std::cout << "Declaração da função "<< Tipos::tipoParaString(tipo, false)<<": "<<id<<std::endl;
     std::cout<<"+parametros:"<<std::endl;
 
     if(parametros.size() == 0) {
@@ -240,7 +230,7 @@ void Funcao::printTree(){
 
 /*Imprime quando ocorre uma definição de uma função.*/
 void DefineFuncao::printTree(){
-    std::cout << "Definição de função "<<AST::tipoParaString(tipo)<<": "<<id<<std::endl;
+    std::cout << "Definição de função "<< Tipos::tipoParaString(tipo, false)<<": "<<id<<std::endl;
 
     std::cout<<"+parametros:"<<std::endl;
     if(parametros.size() == 0) {

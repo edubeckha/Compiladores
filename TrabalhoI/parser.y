@@ -50,6 +50,9 @@ static Tipos::Tipo tv = Tipos::indefinido;
  */
 %left T_PLUS T_SUB
 %left T_TIMES T_DIV
+%left T_UNIBOOL
+%left T_MAIOR T_MAIORIGUAL T_MENOR T_MENORIGUAL 
+
 
 
 %nonassoc error
@@ -69,17 +72,17 @@ lines   : line { $$ = new AST::Block(); if($1 != NULL) $$->lines.push_back($1); 
         ;
 
 line    : T_NL { $$ = NULL; } 
-		| declaracoes {$$ = $1;}
-		| assignments {$$ = $1;}
-		| condicionais {$$ = $1;}
+    		| declaracoes {$$ = $1;}
+    		| assignments {$$ = $1;}
+    		| condicionais {$$ = $1;}
         | definicoes {$$ = $1;}
         ;
 
 declaracoes : 
-		/*declaracao de variaveis*/
-		tipoVariavel T_DEF varlist T_FINALEXP { $$ = new AST::UniOp($3, Tipos::declaracao, tv);}
+    		/*declaracao de variaveis*/
+    		tipoVariavel T_DEF varlist T_FINALEXP { $$ = new AST::UniOp($3, Tipos::declaracao, tv);}
 
-		/*declaracao de arranjos*/
+		    /*declaracao de arranjos*/
         |tipoVariavel T_ARRA unexpr T_ARRAF T_DEF T_ID T_FINALEXP {AST::Node* var = symtab->newVariable($6, tv, NULL); $$ = new AST::UniOp(new AST::Arranjo($3 ,var), Tipos::declaracao, tv);};
 		
         /*declaracao de arranjos do tipo complexo*/
@@ -87,19 +90,19 @@ declaracoes :
 
         /*declaracao de funcoes*/
         | T_DECL T_FUN tipoVariavel T_DEF T_ID novoEscopo T_PARA param T_PARAF mataEscopo T_FINALEXP {
-            AST::Node* node = symtab->newFunction($5, tv, parametros);
-            $$ = new AST::Funcao($5, tv, teste);
-            parametros.clear();
-            teste.clear();
-            }
+          AST::Node* node = symtab->newFunction($5, tv, parametros);
+          $$ = new AST::Funcao($5, tv, teste);
+          parametros.clear();
+          teste.clear();
+        }
         ;
 
 assignments : 
-		/*assign em variaveis*/
-		T_ID T_ASSIGN unexpr T_FINALEXP { AST::Node* node = symtab->assignVariable($1); node = AST::realizaCoercao($1, node, $3, symtab); $$ = new AST::BinOp(node,Tipos::assign,$3);}
+    		/*assign em variaveis*/
+    		T_ID T_ASSIGN unexpr T_FINALEXP { AST::Node* node = symtab->assignVariable($1); node = AST::realizaCoercao($1, node, $3, symtab); $$ = new AST::BinOp(node,Tipos::assign,$3);}
 
-		/*assign em arranjos*/
-		|T_ID T_ARRA unexpr T_ARRAF T_ASSIGN unexpr T_FINALEXP {AST::Node* node = symtab->assignVariable($1); $$ = new AST::BinOp(new AST::Arranjo($3, node), Tipos::assign, $6);}
+    		/*assign em arranjos*/
+    		|T_ID T_ARRA unexpr T_ARRAF T_ASSIGN unexpr T_FINALEXP {AST::Node* node = symtab->assignVariable($1); $$ = new AST::BinOp(new AST::Arranjo($3, node), Tipos::assign, $6);}
 
         /*Reconhece uma ou mais declarações de retorno de uma função.*/
         | T_RETO unexpr T_FINALEXP {
@@ -108,10 +111,10 @@ assignments :
         ;
 
 condicionais: 
-		/*tratamento de expressoes condicionais do tipo if*/
+		    /*tratamento de expressoes condicionais do tipo if*/
         T_IF unexpr T_THEN novoEscopo lines mataEscopo elseIf T_END T_IF{ $$ = new AST::Condicao($2, $5, $7);}
 		
-		/*tratamento de lacos*/
+		    /*tratamento de lacos*/
         | T_WHILE unexpr T_DO novoEscopo lines mataEscopo T_END T_WHILE { $$ = new AST::Laco($2, $5);}
 		;
 definicoes:
@@ -120,26 +123,28 @@ definicoes:
 
         /*definição da função previamente delcarada.*/
         |T_DEFI T_FUN tipoVariavel T_DEF T_ID novoEscopo T_PARA param T_PARAF lines mataEscopo T_END T_DEFI {
-            AST::Node* var = symtab->assignFunction($5, parametros, $10);
-                $$ = new AST::DefineFuncao($5, tv, teste, $10);
-            }
+          AST::Node* var = symtab->assignFunction($5, parametros, $10);
+          $$ = new AST::DefineFuncao($5, tv, teste, $10);
+        }
         ;
         
 
 /*Trata do que pode ser aceito no corpo de uma estrutura complexa. Tratado como um bloco a parte do programa*/
-corpoComplexo  : declaracoes {$$ = new AST::Block(); if($1 != NULL) $$->lines.push_back($1); }
+corpoComplexo  : 
+        declaracoes {$$ = new AST::Block(); if($1 != NULL) $$->lines.push_back($1); }
         | corpoComplexo declaracoes { if($2 != NULL) $1->lines.push_back($2); }
         ;
 
 /*Trata da parte do else no laco if*/
 elseIf : {$$ = NULL;}
-		| T_ELSE novoEscopo lines mataEscopo {$$ = $3;}
-		;
+    		| T_ELSE novoEscopo lines mataEscopo {$$ = $3;}
+    		;
 
 /*Trata da parte de expressoes*/
-unexpr : unexpr tipoOperacao expr {$$ = new AST::BinOp($1, $2, $3);}
+unexpr : 
+        unexpr tipoOperacao expr {$$ = new AST::BinOp($1, $2, $3);}
         | expr {$$ = $1;}
-		;
+		    ;
 
 /*tratamento de todas as expressoes utilizadas no programa*/
 expr    : T_PARA unexpr T_PARAF {$$ = $2;}
@@ -154,26 +159,29 @@ expr    : T_PARA unexpr T_PARAF {$$ = $2;}
         ;
 
 /*define todos os tipos de variaveis que possamos ter no programa*/
-tipoVariavel : T_DINT { tv = Tipos::inteiro; } 
-             | T_DREAL { tv = Tipos::real; }
-             | T_DBOOL { tv = Tipos::booleano; }
-             ;
+tipoVariavel : 
+        T_DINT { tv = Tipos::inteiro; } 
+        | T_DREAL { tv = Tipos::real; }
+        | T_DBOOL { tv = Tipos::booleano; }
+        ;
 /*define todos os tipos de operacoes que possamos ter no programa*/
-tipoOperacao : T_PLUS {$$ = Tipos::plus;}
-             | T_SUB {$$ = Tipos::sub;}
-             | T_TIMES {$$ = Tipos::times;}
-             | T_DIV {$$ = Tipos::divi;}
-             | T_MAIOR  {$$ = Tipos::maior;}
-             | T_MENOR {$$ = Tipos::menor;}
-             | T_MAIORIGUAL {$$ = Tipos::maiorigual;}
-             | T_MENORIGUAL {$$ = Tipos::menorigual;}
-             | T_AND {$$ = Tipos::ande;}
-             | T_OR {$$ = Tipos::ore;}
-             | T_IGUAL {$$ = Tipos::igual;}
-             | T_DIFERENTE {$$ = Tipos::diferente;}
-             ;
+tipoOperacao : 
+        T_PLUS {$$ = Tipos::plus;}
+        | T_SUB {$$ = Tipos::sub;}
+        | T_TIMES {$$ = Tipos::times;}
+        | T_DIV {$$ = Tipos::divi;}
+        | T_MAIOR  {$$ = Tipos::maior;}
+        | T_MENOR {$$ = Tipos::menor;}
+        | T_MAIORIGUAL {$$ = Tipos::maiorigual;}
+        | T_MENORIGUAL {$$ = Tipos::menorigual;}
+        | T_AND {$$ = Tipos::ande;}
+        | T_OR {$$ = Tipos::ore;}
+        | T_IGUAL {$$ = Tipos::igual;}
+        | T_DIFERENTE {$$ = Tipos::diferente;}
+        ;
 /*define uma ou mais variaveis de acordo com a vontade do usuario*/
-varlist : T_ID { $$ = symtab->newVariable($1, tv, NULL); }
+varlist : 
+        T_ID { $$ = symtab->newVariable($1, tv, NULL); }
         | varlist T_COMMA T_ID { $$ = symtab->newVariable($3, tv, $1); }
         ;
 
@@ -186,24 +194,24 @@ novoEscopo : {ST::SymbolTable* tabelaEscopo = new ST::SymbolTable; tabelaEscopo-
 mataEscopo : {symtab = symtab->tabelaOrigem;}
 
 /*define um ou mais parametros de acordo com a vontade do usuario*/
-param : tipoVariavel T_DEF T_ID T_COMMA param {
-            ST::Symbol* smb = new ST::Symbol(tv, ST::variable, 0, false);
-            symtab->addSymbol($3, *smb);
-            parametros.push_back(smb);
-            AST::Variable* vari = new AST::Variable($3, tv, $5);
-            teste.push_back(vari);
-            $$ = vari;
-        }
-      | 
-      tipoVariavel T_DEF T_ID {
-            ST::Symbol* smb = new ST::Symbol(tv, ST::variable, 0, false);
-            symtab->addSymbol($3, *smb);
-            parametros.push_back(smb);
-            AST::Variable* vari = new AST::Variable($3, tv, NULL);
-            teste.push_back(vari);
-            $$ = vari;
-        }
-        | {$$ = NULL;}
+param : 
+      tipoVariavel T_DEF T_ID T_COMMA param {
+        ST::Symbol* smb = new ST::Symbol(tv, ST::variable, 0, false);
+        symtab->addSymbol($3, *smb);
+        parametros.push_back(smb);
+        AST::Variable* vari = new AST::Variable($3, tv, $5);
+        teste.push_back(vari);
+        $$ = vari;
+      }
+      |tipoVariavel T_DEF T_ID {
+        ST::Symbol* smb = new ST::Symbol(tv, ST::variable, 0, false);
+        symtab->addSymbol($3, *smb);
+        parametros.push_back(smb);
+        AST::Variable* vari = new AST::Variable($3, tv, NULL);
+        teste.push_back(vari);
+        $$ = vari;
+      }
+      | {$$ = NULL;}
       ;
 
 %%

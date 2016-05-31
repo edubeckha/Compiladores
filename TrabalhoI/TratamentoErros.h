@@ -16,7 +16,7 @@ namespace Tipos{
 	void erroIndiceArranjo(Tipo primeiroTipo, Tipo segundoTipo);
 	void erroCondicaoLaco(Tipo esperado, Tipo recebido);
 
-	std::string tipoParaString(Tipo tipo);
+	std::string tipoParaString(Tipo tipo, bool ehMasc);
 	std::string opParaString(Operation tipo);
 	bool necessitaCoersao(Tipo tipoNodoEsquerda, Tipo tipoNodoDireita);
 }
