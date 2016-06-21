@@ -18,6 +18,7 @@ nome [a-z]+
 "int"				{return T_DINT;}
 "real"				{return T_DREAL;}
 "bool"				{return T_DBOOL;}
+"string"			{return T_DSTRING;}
 
 {digs}              {yylval.integer = std::atoi(yytext); return T_INT;}
 
@@ -33,19 +34,17 @@ nome [a-z]+
 "*"                 {return T_TIMES;}
 "/"                 {return T_DIV;}
 
-":"                 {return T_DEF;}
 ","                 {return T_COMMA;}
-":="                {return T_ASSIGN;}
-"~="				{return T_DIFERENTE;}
+"="                 {return T_ASSIGN;}
+"!="				{return T_DIFERENTE;}
 ">"					{return T_MAIOR;}
 "<"					{return T_MENOR;}
-"="					{return T_IGUAL;}
+"=="				{return T_IGUAL;}
 ">="				{return T_MAIORIGUAL;}
 "<="				{return T_MENORIGUAL;}
 
 "AND"				{return T_AND;}
 "OR"				{return T_OR;}
-
 "~"					{return T_UNIBOOL;}
 
 "("					{return T_PARA;}
@@ -65,9 +64,10 @@ nome [a-z]+
 
 "fun" 				{return T_FUN;}
 "return" 			{return T_RETO;}
-"decl" {return T_DECL;}
+"decl" 				{return T_DECL;}
 
-
+"{"					{return T_CHAVE;}
+"}"					{return T_CHAVEF;}
 
 ";"					{return T_FINALEXP;}
 "\n"                {return T_NL;}

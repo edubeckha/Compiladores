@@ -18,6 +18,7 @@ static Tipos::Tipo tv = Tipos::indefinido;
 %union {
     int integer;
     double doubler;
+    const char* string;
     const char* booleano;
     AST::Node *node;
     AST::Block *block;
@@ -31,9 +32,10 @@ static Tipos::Tipo tv = Tipos::indefinido;
  */
 %token <integer> T_INT
 %token <doubler> T_DOUBLE
+%token <string> T_DSTRING
 %token <booleano> T_BOOLTRUE T_BOOLFALSE
 %token <name> T_ID
-%token T_NL T_ASSIGN T_FINALEXP T_IGUAL T_DINT T_DREAL T_DBOOL T_DEF T_COMMA T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_DIFERENTE T_UNIBOOL T_PARA T_PARAF T_ARRA T_ARRAF T_IF T_THEN T_ELSE T_END T_WHILE T_DO T_DEFI T_TYPE T_FUN T_RETO T_DECL
+%token T_NL T_ASSIGN T_FINALEXP T_IGUAL T_DINT T_DREAL T_DBOOL  T_COMMA T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_DIFERENTE T_UNIBOOL T_PARA T_PARAF T_ARRA T_ARRAF T_IF T_THEN T_ELSE T_END T_WHILE T_DO T_DEFI T_TYPE T_FUN T_RETO T_DECL T_CHAVE T_CHAVEF
 
 /* type defines the type of our nonterminal symbols.
  * Types should match the names used in the union.
@@ -80,19 +82,19 @@ line    : T_NL { $$ = NULL; }
         ;
 
 declaracoes : 
-    		/*declaracao de variaveis*/
-    		tipoVariavel T_DEF varlist T_FINALEXP { $$ = new AST::UniOp($3, Tipos::declaracao, tv);}
+    	/*declaracao de variaveis*/
+    	tipoVariavel  varlist T_FINALEXP { $$ = new AST::UniOp($2, Tipos::declaracao, tv);}
 
-		    /*declaracao de arranjos*/
-        |tipoVariavel T_ARRA unexpr T_ARRAF T_DEF T_ID T_FINALEXP {AST::Node* var = symtab->newVariable($6, tv, NULL); $$ = new AST::UniOp(new AST::Arranjo($3 ,var), Tipos::declaracao, tv);};
+		/*declaracao de arranjos*/
+        |tipoVariavel T_ID T_ARRA unexpr T_ARRAF T_FINALEXP {AST::Node* var = symtab->newVariable($2, tv, NULL); $$ = new AST::UniOp(new AST::Arranjo($4 ,var), Tipos::declaracao, tv);};
 		
         /*declaracao de arranjos do tipo complexo*/
-        |T_ID T_ARRA unexpr T_ARRAF T_DEF T_ID T_FINALEXP {AST::Node* complexo = symtab->useVariable($1);};
+        |T_ID T_ARRA unexpr T_ARRAF  T_ID T_FINALEXP {AST::Node* complexo = symtab->useVariable($1);};
 
         /*declaracao de funcoes*/
-        | T_DECL T_FUN tipoVariavel T_DEF T_ID novoEscopo T_PARA param T_PARAF mataEscopo T_FINALEXP {
-          AST::Node* node = symtab->newFunction($5, $3, parametros);
-          $$ = new AST::Funcao($5, $3, teste);
+        | T_DECL T_FUN tipoVariavel  T_ID novoEscopo T_PARA param T_PARAF mataEscopo T_FINALEXP {
+          AST::Node* node = symtab->newFunction($4, $3, parametros);
+          $$ = new AST::Funcao($4, $3, teste);
           parametros.clear();
           teste.clear();
         }
@@ -113,7 +115,7 @@ assignments :
 
 condicionais: 
 		    /*tratamento de expressoes condicionais do tipo if*/
-        T_IF unexpr T_THEN novoEscopo lines mataEscopo elseIf T_END T_IF{ $$ = new AST::Condicao($2, $5, $7);}
+        T_IF T_PARA unexpr T_PARAF T_CHAVE novoEscopo lines mataEscopo elseIf T_CHAVEF T_IF{ std::cout<<"ase"<<std::endl; $$ = new AST::Condicao($3, $7, $9);}
 		
 		    /*tratamento de lacos*/
         | T_WHILE unexpr T_DO novoEscopo lines mataEscopo T_END T_WHILE { $$ = new AST::Laco($2, $5);}
@@ -121,12 +123,12 @@ condicionais:
 
 definicoes:
         /*Definicao de tipos complexos*/
-        T_DEFI T_TYPE T_DEF T_ID novoEscopo corpoComplexo mataEscopo T_END T_DEFI {AST::Node* var = symtab->newVariable($4, Tipos::complexo, NULL); $$ = new AST::Complexo(var, $6, $5);}
+        T_DEFI T_TYPE  T_ID novoEscopo corpoComplexo mataEscopo T_END T_DEFI {AST::Node* var = symtab->newVariable($3, Tipos::complexo, NULL); $$ = new AST::Complexo(var, $5, $4);}
 
         /*definição da função previamente declarada.*/
-        |T_DEFI T_FUN tipoVariavel T_DEF T_ID novoEscopo T_PARA param T_PARAF lines mataEscopo T_END T_DEFI {
-          AST::Node* var = symtab->assignFunction($5, $3, parametros, $10);
-          $$ = new AST::DefineFuncao($5, $3, teste, $10);
+        |T_DEFI T_FUN tipoVariavel  T_ID novoEscopo T_PARA param T_PARAF lines mataEscopo T_END T_DEFI {
+          AST::Node* var = symtab->assignFunction($4, $3, parametros, $9);
+          $$ = new AST::DefineFuncao($4, $3, teste, $9);
         }
         ;
         
@@ -197,19 +199,19 @@ mataEscopo : {symtab = symtab->tabelaOrigem;}
 
 /*define um ou mais parametros de acordo com a vontade do usuario*/
 param : 
-      tipoVariavel T_DEF T_ID T_COMMA param {
+      tipoVariavel  T_ID T_COMMA param {
         ST::Symbol* smb = new ST::Symbol(tv, ST::variable, 0, false);
-        symtab->addSymbol($3, *smb);
+        symtab->addSymbol($2, *smb);
         parametros.push_back(smb);
-        AST::Variable* vari = new AST::Variable($3, tv, $5);
+        AST::Variable* vari = new AST::Variable($2, tv, $4);
         teste.push_back(vari);
         $$ = vari;
       }
-      |tipoVariavel T_DEF T_ID {
+      |tipoVariavel  T_ID {
         ST::Symbol* smb = new ST::Symbol(tv, ST::variable, 0, false);
-        symtab->addSymbol($3, *smb);
+        symtab->addSymbol($2, *smb);
         parametros.push_back(smb);
-        AST::Variable* vari = new AST::Variable($3, tv, NULL);
+        AST::Variable* vari = new AST::Variable($2, tv, NULL);
         teste.push_back(vari);
         $$ = vari;
       }
