@@ -119,6 +119,9 @@ condicionais:
 
 		    /*tratamento de lacos*/
         | T_WHILE T_PARA unexpr T_PARAF T_CHAVE novoEscopo lines mataEscopo T_CHAVEF { $$ = new AST::Laco($3, $7);}
+
+        /*declara uma nova classe (em implementacao)*/
+        //| T_CLASS T_ID T_CHAVE novoEscopo lines mataEscopo T_CHAVEF {$$ = NULL; }// precisa ver a acao que vai ser tomada ( TO DO)
 		;
 
 definicoes:
