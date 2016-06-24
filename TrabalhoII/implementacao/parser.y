@@ -66,15 +66,15 @@ static Tipos::Tipo tv = Tipos::indefinido;
 
 %%
 
-program : lines { programRoot = $1; }
+program : lines {programRoot = $1; }
         ;
 
-lines   : line { $$ = new AST::Block(); if($1 != NULL) $$->lines.push_back($1); }
-        | lines line { if($2 != NULL) $1->lines.push_back($2); }
+lines   : line {$$ = new AST::Block(); if($1 != NULL) $$->lines.push_back($1); }
+        | lines line {if($2 != NULL) $1->lines.push_back($2); }
         | lines error T_NL { yyerrok; }
         ;
 
-line    : T_NL { $$ = NULL; } 
+line    : T_NL {$$ = NULL; } 
     		| declaracoes {$$ = $1;}
     		| assignments {$$ = $1;}
     		| condicionais {$$ = $1;}
@@ -115,10 +115,10 @@ assignments :
 
 condicionais: 
 		    /*tratamento de expressoes condicionais do tipo if*/
-        T_IF T_PARA unexpr T_PARAF T_CHAVE novoEscopo lines mataEscopo elseIf T_CHAVEF T_IF{ std::cout<<"ase"<<std::endl; $$ = new AST::Condicao($3, $7, $9);}
-		
+        T_IF T_PARA unexpr T_PARAF T_CHAVE novoEscopo lines mataEscopo T_CHAVEF elseIf { $$ = new AST::Condicao($3, $7, $10);}
+
 		    /*tratamento de lacos*/
-        | T_WHILE unexpr T_DO novoEscopo lines mataEscopo T_END T_WHILE { $$ = new AST::Laco($2, $5);}
+        | T_WHILE T_PARA unexpr T_PARAF T_CHAVE novoEscopo lines mataEscopo T_CHAVEF { $$ = new AST::Laco($3, $7);}
 		;
 
 definicoes:
@@ -141,7 +141,7 @@ corpoComplexo  :
 
 /*Trata da parte do else no laco if*/
 elseIf : {$$ = NULL;}
-    		| T_ELSE novoEscopo lines mataEscopo {$$ = $3;}
+    		| T_ELSE T_CHAVE novoEscopo lines mataEscopo T_CHAVEF {$$ = $4;}
     		;
 
 /*Trata da parte de expressoes*/
