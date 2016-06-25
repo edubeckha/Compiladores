@@ -13,7 +13,7 @@ class intepreter {
 public:
 	bool isDefined( std::string id );
 	ITNode::NodeType getType( std::string id );
-	Data processNode(ITNode* node);ls
+	Data processNode( ITNode* node ); ls
 private:
 	std::map<std::string, ITNode*> idTable;
 };
