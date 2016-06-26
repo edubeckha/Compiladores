@@ -6,30 +6,34 @@
 #include "TratamentoErros.h"
 #include "st.h"
 
-extern void yyerror( const char *s, ... );
+extern void yyerror ( const char * s, ... );
 namespace ST {class SymbolTable;};
-extern ST::SymbolTable* symbolTable;
+extern ST::SymbolTable * symbolTable;
 namespace AST {
 
 	class Node;
-	typedef std::vector<Node*> NodeList; //List of ASTs
+	typedef std::vector<Node *> NodeList; //List of ASTs
 
 	class Node {
 	public:
 		Tipos::Tipo tipo = Tipos::indefinido;
 		virtual ~Node() {}
 		virtual void printTree() {}
+		void temErro ( bool erro ) {this->erro = erro;}
+	private:
+		bool erro = false;
+
 	};
 
 
-	std::string tipoParaString( Tipos::Tipo tipo );
-	AST::Node* realizaCoercao( std::string id, AST::Node* left, AST::Node* right, ST::SymbolTable* symtab );
+	std::string tipoParaString ( Tipos::Tipo tipo );
+	AST::Node * realizaCoercao ( std::string id, AST::Node * left, AST::Node * right, ST::SymbolTable * symtab );
 
 	/*Nodo que define um inteiro, com seu tipo e valor do tipo inteiro*/
 	class Integer : public Node {
 	public:
 		int value;
-		Integer( int value ) : value( value ) {
+		Integer ( int value ) : value ( value ) {
 			tipo = Tipos::inteiro;
 		}
 		void printTree();
@@ -39,7 +43,7 @@ namespace AST {
 	class Doubler : public Node {
 	public:
 		double value;
-		Doubler( double value ) : value( value ) {
+		Doubler ( double value ) : value ( value ) {
 			tipo = Tipos::real;
 		}
 		void printTree();
@@ -49,12 +53,14 @@ namespace AST {
 	class Boolean : public Node {
 	public:
 		bool value;
-		Boolean( bool value ) : value( value ) {
+		Boolean ( bool value ) : value ( value ) {
 			tipo = Tipos::booleano;
 		}
 		void printTree();
 		std::string tipoParaString() {
-			if( value ) return "TRUE"; return "FALSE";
+			if ( value ) { return "TRUE"; }
+
+			return "FALSE";
 		}
 	};
 
@@ -62,11 +68,11 @@ namespace AST {
 	class BinOp : public Node {
 	public:
 		Tipos::Operation op;
-		Node *left;
-		Node *right;
-		BinOp( Node *l, Tipos::Operation op, Node *r ) :
-			left( l ), right( r ), op( op ) {
-			tipo = Tipos::opBinaria( left->tipo, right->tipo, op );
+		Node * left;
+		Node * right;
+		BinOp ( Node * l, Tipos::Operation op, Node * r ) :
+			left ( l ), right ( r ), op ( op ) {
+			tipo = Tipos::opBinaria ( left->tipo, right->tipo, op );
 		}
 		void printTree();
 	};
@@ -76,11 +82,12 @@ namespace AST {
 	class Variable : public Node {
 	public:
 		std::string id;
-		Node *next;
-		Variable( std::string id, Tipos::Tipo t, Node *next ) : id( id ), next( next ) {
+		Node * next;
+		Variable ( std::string id, Tipos::Tipo t, Node * next ) : id ( id ), next ( next ) {
 			tipo = t;
 		}
 		void printTree();
+
 	};
 
 	/*Nodo responsavel por um bloco de linhas do sistema*/
@@ -95,8 +102,8 @@ namespace AST {
 	class UniOp : public Node {
 	public:
 		Tipos::Operation op;
-		Node *node;
-		UniOp( Node* node, Tipos::Operation op, Tipos::Tipo tipoRetorno ) : node( node ), op( op ) {
+		Node * node;
+		UniOp ( Node * node, Tipos::Operation op, Tipos::Tipo tipoRetorno ) : node ( node ), op ( op ) {
 			tipo = tipoRetorno;
 		}
 		void printTree();
@@ -106,10 +113,10 @@ namespace AST {
 	da a liberdade de colocarmos uma expressao qualquer como indice do arranjo*/
 	class Arranjo : public Node {
 	public:
-		Node* indice;
-		Node* var;
-		Arranjo( Node* indice, Node* var ) : indice( indice ), var( var ) {
-			Tipos::opUnaria( indice->tipo, Tipos::defineIndiceArranjo );
+		Node * indice;
+		Node * var;
+		Arranjo ( Node * indice, Node * var ) : indice ( indice ), var ( var ) {
+			Tipos::opUnaria ( indice->tipo, Tipos::defineIndiceArranjo );
 			tipo = var->tipo;
 		}
 		void printTree();
@@ -120,8 +127,8 @@ namespace AST {
 	public:
 		std::string id;
 		Tipos::Tipo tipo;
-		std::vector<AST::Variable*> parametros;
-		Funcao( std::string id, Tipos::Tipo tipo, std::vector<AST::Variable*> parametros ) : id( id ), tipo( tipo ), parametros( parametros ) { }
+		std::vector<AST::Variable *> parametros;
+		Funcao ( std::string id, Tipos::Tipo tipo, std::vector<AST::Variable *> parametros ) : id ( id ), tipo ( tipo ), parametros ( parametros ) { }
 		void printTree();
 	};
 
@@ -129,18 +136,18 @@ namespace AST {
 	class DefineFuncao : public Node {
 	public:
 		std::string id;
-		std::vector<AST::Variable*> parametros;
+		std::vector<AST::Variable *> parametros;
 		Tipos::Tipo tipo;
-		Node* body;
-		DefineFuncao( std::string id, Tipos::Tipo tipo, std::vector<AST::Variable*> parametros, Node* body ) : id( id ), tipo( tipo ), parametros( parametros ), body( body ) { }
+		Node * body;
+		DefineFuncao ( std::string id, Tipos::Tipo tipo, std::vector<AST::Variable *> parametros, Node * body ) : id ( id ), tipo ( tipo ), parametros ( parametros ), body ( body ) { }
 		void printTree();
 	};
 
 	/*Nodo que define o retorno da funcao*/
 	class Retorno : public Node {
 	public:
-		Node* ret;
-		Retorno( AST::Node* ret ) : ret( ret ) {}
+		Node * ret;
+		Retorno ( AST::Node * ret ) : ret ( ret ) {}
 		void printTree();
 	};
 
@@ -148,14 +155,14 @@ namespace AST {
 	partes distintas: condicao, corpo do laco if e corpo do lado else*/
 	class Condicao : public Node {
 	public:
-		Node* condicao;
-		Node* corpoIf;
-		Node* corpoElse;
+		Node * condicao;
+		Node * corpoIf;
+		Node * corpoElse;
 		//extern ST::SymbolTable* tabelaCondicao; /*Tabela de simbolos do escopo*/
 		/*Talvez ter mais uma tabela para o escopo do else??? verificar!*/
 
-		Condicao( Node* condicao, Node* corpoIf, Node* corpoElse ) : condicao( condicao ), corpoIf( corpoIf ), corpoElse( corpoElse ) {
-			Tipos::opUnaria( condicao->tipo, Tipos::defineCondicaoLaco );
+		Condicao ( Node * condicao, Node * corpoIf, Node * corpoElse ) : condicao ( condicao ), corpoIf ( corpoIf ), corpoElse ( corpoElse ) {
+			Tipos::opUnaria ( condicao->tipo, Tipos::defineCondicaoLaco );
 		}
 		void printTree();
 	};
@@ -163,11 +170,11 @@ namespace AST {
 	/*Classe para tratamento de lacos do tipo while*/
 	class Laco : public Node {
 	public:
-		Node* condicaoLaco;
-		Node* corpoLaco;
+		Node * condicaoLaco;
+		Node * corpoLaco;
 
-		Laco( Node* condicaoLaco, Node* corpoLaco ) : condicaoLaco( condicaoLaco ), corpoLaco( corpoLaco ) {
-			Tipos::opUnaria( condicaoLaco->tipo, Tipos::defineCondicaoLaco );
+		Laco ( Node * condicaoLaco, Node * corpoLaco ) : condicaoLaco ( condicaoLaco ), corpoLaco ( corpoLaco ) {
+			Tipos::opUnaria ( condicaoLaco->tipo, Tipos::defineCondicaoLaco );
 		}
 		void printTree();
 	};
@@ -175,14 +182,15 @@ namespace AST {
 	/*Classe para tratamento de tipos compostos*/
 	class Complexo : public Node {
 	public:
-		ST::SymbolTable* tabSim;
-		Node* var;
-		AST::Block* escopoComplexo;
+		ST::SymbolTable * tabSim;
+		Node * var;
+		AST::Block * escopoComplexo;
 
-		Complexo( Node* var, Block* escopoComplexo, ST::SymbolTable* tabelaEscopo ) : var( var ), escopoComplexo( escopoComplexo ) {
+		Complexo ( Node * var, Block * escopoComplexo, ST::SymbolTable * tabelaEscopo ) : var ( var ), escopoComplexo ( escopoComplexo ) {
 			tabSim = tabelaEscopo;
 		}
 
 		void printTree();
 	};
 }
+

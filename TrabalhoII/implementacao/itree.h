@@ -26,18 +26,20 @@
 
 #ifndef ITREE_H
 #define ITREE_H
+//Local Includes
 #include "data.h"
 
 
-class ITNode {
+class ITNode
+{
 public:
-	enum NodeType {variable, binOp, atrib, value, function};
+    enum NodeType {variable, binOp, atrib, value, function};
 private:
-	Data _value;//Valor de interpretação do nodo.
-	NodeType _type;//Tipo do nodo
-	ITNode* _leftSon = nullptr;
-	ITNode* _rightSon = nullptr;
-	ITNode* _parent = nullptr;
+    Data _value;//Valor de interpretação do nodo.
+    NodeType _type;//Tipo do nodo
+    ITNode * _leftSon = nullptr;
+    ITNode * _rightSon = nullptr;
+    ITNode * _parent = nullptr;
 };
 
 

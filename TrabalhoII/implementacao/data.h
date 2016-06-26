@@ -42,7 +42,7 @@ public:
 	int dataInt();
 	float dataFloat();
 	bool dataBool();
-	string dataString();
+	std::string dataString();
 
 
 

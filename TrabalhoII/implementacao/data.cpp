@@ -47,25 +47,27 @@ b + a; //int 7
 
 /************************************************
  ***************CONSTRUTURES********************/
-Data::Data( int inteiro ) {
+Data::Data ( int inteiro ) {
 	this->_type = Data::integer;
-	this->_data = new int( inteiro );
+	this->_data = new int ( inteiro );
 }
-Data::Data( float real ) {
+//////////
+Data::Data ( float real ) {
 	this->_type = Data::real;
-	this->_data = new float( real );
+	this->_data = new float ( real );
 }
-Data::Data( bool booleano ) {
+//////////
+Data::Data ( bool booleano ) {
 	this->_type =  Data::boolean;
-	this->_data = new bool( booleano );
+	this->_data = new bool ( booleano );
 }
-
-Data::Data( std::__cxx11::string String ) {
+//////////
+Data::Data ( std::__cxx11::string String ) {
 	this->_type = Data::string;
-	this->_data = new std::string( String );
+	this->_data = new std::string ( String );
 }
-
-Data::Data( const Data& other ) {
+//////////
+Data::Data ( const Data & other ) {
 	this->_type = other._type;
 	this->_data = other._data;
 
@@ -74,22 +76,22 @@ Data::Data( const Data& other ) {
  ***************RETORNOS DE DADO****************/
 
 int Data::dataInt() {
-	int * inteiro = ( int* )this->_data;
+	int * inteiro = ( int * ) this->_data;
 	return *inteiro;
 }
-
+//////////
 float Data::dataFloat() {
-	float * real = ( float* )this->_data;
+	float * real = ( float * ) this->_data;
 	return *real;
 }
-
+//////////
 bool Data::dataBool() {
-	bool* booleano = ( bool* )this->_data;
+	bool * booleano = ( bool * ) this->_data;
 	return *booleano;
 }
-
-const Data::string Data::dataString() {
-	std::string String = ( std::string* )this->_data;
+//////////
+std::string Data::dataString() {
+	std::string * String = ( std::string * ) this->_data;
 	return *String;
 }
 
