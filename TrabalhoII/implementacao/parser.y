@@ -91,7 +91,7 @@ declaracoes :
         /*declaracao de arranjos do tipo complexo*/
         |T_ID T_ARRA unexpr T_ARRAF T_ID T_FINALEXP {AST::Node* complexo = symtab->useVariable($1);};
 
-        |T_DSTRING T_ID T_FINALEXP  {AST::Node* var = symtab->newVariable($2, Tipos::string, NULL); $$ = new AST::UniOp( var, Tipos::declaracao, tv);}
+        |tipoVariavel T_ID T_FINALEXP {AST::Node* var = symtab->newVariable($2, tv, NULL); $$ = new AST::UniOp( var, Tipos::declaracao, tv);}
 
         /*declaracao de funcoes*/
         | T_DECL T_FUN tipoVariavel  T_ID novoEscopo T_PARA param T_PARAF mataEscopo T_FINALEXP {
@@ -109,7 +109,7 @@ assignments :
     		/*assign em arranjos*/
     		|T_ID T_ARRA unexpr T_ARRAF T_ASSIGN unexpr T_FINALEXP {AST::Node* node = symtab->assignVariable($1); $$ = new AST::BinOp(new AST::Arranjo($3, node), Tipos::assign, $6);}
 
-          //  |T_DSTRING T_ID T_FINALEXP  {std::cout<<"string"<<std::endl;}
+          //  |T_ID T_ASSIGN recString T_FINALEXP  {std::cout<<"string"<<std::endl;}
 
         /*Reconhece uma ou mais declarações de retorno de uma função.*/
         | T_RETO unexpr T_FINALEXP {
@@ -123,9 +123,6 @@ condicionais:
 
 		    /*tratamento de lacos*/
         | T_WHILE T_PARA unexpr T_PARAF T_CHAVE novoEscopo lines mataEscopo T_CHAVEF { $$ = new AST::Laco($3, $7);}
-
-        /*declara uma nova classe (em implementacao)*/
-        //| T_CLASS T_ID T_CHAVE novoEscopo lines mataEscopo T_CHAVEF {$$ = NULL; }// precisa ver a acao que vai ser tomada ( TO DO)
 		;
 
 definicoes:
@@ -174,6 +171,7 @@ tipoVariavel :
         T_DINT { tv = Tipos::inteiro; } 
         | T_DREAL { tv = Tipos::real; }
         | T_DBOOL { tv = Tipos::booleano; }
+        | T_DSTRING {tv = Tipos::string; }
         ;
 /*define todos os tipos de operacoes que possamos ter no programa*/
 tipoOperacao : 
@@ -224,6 +222,10 @@ param :
       }
       | {$$ = NULL;}
       ;
+
+
+
+// recString : 
 
 %%
 
