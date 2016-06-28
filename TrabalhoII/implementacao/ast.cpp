@@ -294,11 +294,8 @@ void Retorno::printTree() {
 		ret->printTree();
 	}
 }
-
-
-
-
-
-
-
-
+// ///////////////
+// void Integer::printTree() {
+// 	std::cout << "(valor inteiro " << value << ")";
+// 	return;
+// }

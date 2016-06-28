@@ -89,7 +89,9 @@ declaracoes :
         |tipoVariavel T_ID T_ARRA unexpr T_ARRAF T_FINALEXP {AST::Node* var = symtab->newVariable($2, tv, NULL); $$ = new AST::UniOp(new AST::Arranjo($4 ,var), Tipos::declaracao, tv);};
 		
         /*declaracao de arranjos do tipo complexo*/
-        |T_ID T_ARRA unexpr T_ARRAF  T_ID T_FINALEXP {AST::Node* complexo = symtab->useVariable($1);};
+        |T_ID T_ARRA unexpr T_ARRAF T_ID T_FINALEXP {AST::Node* complexo = symtab->useVariable($1);};
+
+        |T_DSTRING T_ID T_FINALEXP  {AST::Node* var = symtab->newVariable($2, Tipos::string, NULL); $$ = new AST::UniOp( var, Tipos::declaracao, tv);}
 
         /*declaracao de funcoes*/
         | T_DECL T_FUN tipoVariavel  T_ID novoEscopo T_PARA param T_PARAF mataEscopo T_FINALEXP {
@@ -106,6 +108,8 @@ assignments :
 
     		/*assign em arranjos*/
     		|T_ID T_ARRA unexpr T_ARRAF T_ASSIGN unexpr T_FINALEXP {AST::Node* node = symtab->assignVariable($1); $$ = new AST::BinOp(new AST::Arranjo($3, node), Tipos::assign, $6);}
+
+          //  |T_DSTRING T_ID T_FINALEXP  {std::cout<<"string"<<std::endl;}
 
         /*Reconhece uma ou mais declarações de retorno de uma função.*/
         | T_RETO unexpr T_FINALEXP {
