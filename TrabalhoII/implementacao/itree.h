@@ -28,23 +28,40 @@
 #define ITREE_H
 //Local Includes
 #include "data.h"
+#include <string>
 
 
 
 
 
 
-
-class ITNode
-{
+class ITNode {
 public:
-    enum NodeType {variable, binOp, atrib, value, function};
+	/*Tipos de nodos*/
+	enum NodeType {variable, binOp, atrib, value, function};
+	/*Tipos de operacao*/
+	enum OperationType {sum, min, mult, div, band, bor};
+
+	/*Retorna o tipo do nodo*/
+	NodeType getType();
+
+	/*Obtém o Identificador*/
+	std::string getId();
+
+	/*Obtém o tipo de operacao*/
+	OperationType getOpType();
+
+	ITNode * _leftSon = nullptr;//Filho a esquerda
+	ITNode * _rightSon = nullptr;//Filho a direita
+	ITNode * _parent = nullptr;//Nodo pai
+
 private:
-    Data _value;//Valor de interpretação do nodo.
-    NodeType _type;//Tipo do nodo
-    ITNode * _leftSon = nullptr;
-    ITNode * _rightSon = nullptr;
-    ITNode * _parent = nullptr;
+	std::string _id;//Identificador do nodo, caso seja variavel ou funcao
+	Data _value;//Valor de interpretação do nodo.
+	NodeType _type;//Tipo do nodo
+	OperationType _opType;//Tipo de operacao do nodo (se for alguma operacao);
+
+
 };
 
 

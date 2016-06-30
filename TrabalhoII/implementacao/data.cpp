@@ -98,12 +98,173 @@ std::string Data::dataString() {
 
 /************************************************
  ***************OPERADORES**********************/
+Data Data::somar ( Data * outro ) {
+	assert ( aritmetico() );
+	assert ( outro->aritmetico() );
+
+	switch ( this->_type ) {
+		case Data::integer: {
+			switch ( outro->_type ) {
+				case Data::integer: {//int com int
+					return Data ( this->dataInt() + outro->dataInt() );
+					break;
+				}
+
+				case Data::real: {//int com real
+					return Data ( this->dataInt() + outro->dataFloat() );
+					break;
+				}
+
+			}
+
+			break;
+		}
+
+		case Data::real: {
+			switch ( outro->_type ) {
+				case Data::integer: {//real com int
+					return Data ( this->dataFloat() + outro->dataInt() );
+					break;
+				}
+
+				case Data::real: {// real com real
+					return Data ( this->dataFloat() + outro->dataFloat() );
+					break;
+				}
+
+			}
+
+			break;
+		}
 
 
+	}//this _type
+
+	std::cerr << "[ATENCAO - realizando uma soma com valores incosistentes!]" << std::endl;
+
+	return Data ( 0 );//Default data return
+}
+//////////
+Data Data::subtrair ( Data outro ) {
+	assert ( aritmetico() );
+	assert ( outro->aritmetico() );
+
+	switch ( this->_type ) {
+		case Data::integer: {
+			switch ( outro->_type ) {
+				case Data::integer: {//int com int
+					return Data ( this->dataInt() - outro->dataInt() );
+					break;
+				}
+
+				case Data::real: {//int com real
+					return Data ( this->dataInt() - outro->dataFloat() );
+					break;
+				}
+
+			}
+
+			break;
+		}
+
+		case Data::real: {
+			switch ( outro->_type ) {
+				case Data::integer: {//real com int
+					return Data ( this->dataFloat() - outro->dataInt() );
+					break;
+				}
+
+				case Data::real: {// real com real
+					return Data ( this->dataFloat() - outro->dataFloat() );
+					break;
+				}
+
+			}
+
+			break;
+		}
 
 
+	}//this _type
+
+	std::cerr << "[ATENCAO - realizando uma subtracao com valores incosistentes!]" << std::endl;
+	return Data ( 0 );//Default data return
+}
+//////////
+Data Data::multiplicar ( Data outro ) {
+	assert ( aritmetico() );
+	assert ( outro->aritmetico() );
+
+	switch ( this->_type ) {
+		case Data::integer: {
+			switch ( outro->_type ) {
+				case Data::integer: {//int com int
+					return Data ( this->dataInt() * outro->dataInt() );
+					break;
+				}
+
+				case Data::real: {//int com real
+					return Data ( this->dataInt() * outro->dataFloat() );
+					break;
+				}
+
+			}
+
+			break;
+		}
+
+		case Data::real: {
+			switch ( outro->_type ) {
+				case Data::integer: {//real com int
+					return Data ( this->dataFloat() * outro->dataInt() );
+					break;
+				}
+
+				case Data::real: {// real com real
+					return Data ( this->dataFloat() * outro->dataFloat() );
+					break;
+				}
+
+			}
+
+			break;
+		}
 
 
+	}//this _type
+
+	std::cerr << "[ATENCAO - realizando uma multiplicacao com valores incosistentes!]" << std::endl;
+	return Data ( 0 );//Default data return
+}
+
+/************************************************
+ ***************AUXILIARES***********************/
+bool Data::aritmetico() {
+	return ( this->_type == Data::integer || this->_type == Data::real );
+}
+//////////
+
+/*Biblioteca escrotissima de templates
+switch tipo de dado
+	switch ( this->_type ) {
+		case Data::integer: {
+			break;
+		}
+
+		case Data::real: {
+			break;
+		}
+
+		case Data::boolean: {
+			break;
+		}
+
+		case Data::string: {
+			break;
+		}
+	}
+-------------------------------------------------
+*/
 
 
 

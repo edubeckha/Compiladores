@@ -27,28 +27,46 @@
 #ifndef DATA_H
 #define DATA_H
 #include <string>
+#include <cassert>
+#include <iostream>
 
 class Data {
 public:
+	/*Tipo de dado*/
 	enum DataType {integer, real, boolean, string};
 
-	Data( int inteiro );
-	Data( float real );
-	Data( bool booleano );
-	Data( std::string String );
-	Data( const Data& other );
+	/*Construtores para os tipos de dados aceitos*/
+	Data ( int inteiro );
+	Data ( float real );
+	Data ( bool booleano );
+	Data ( std::string String );
+	Data ( const Data & other );
 
-	DataType type() {return _type;}
+	/*Obtém o tipo do dado*/
+	DataType type() {
+		return _type;
+	}
+
+	/*Obtem o valor do dado*/
 	int dataInt();
 	float dataFloat();
 	bool dataBool();
 	std::string dataString();
 
+	/*Operadores*/
 
+	Data somar ( Data * outro );
+	Data subtrair ( Data outro );
+	Data multiplicar ( Data outro );
+	Data dividir ( Data outro );
+	Data ou ( Data outro );
+	Data e ( Data outro );
 
+	/*Verifica se o dado é aritmetico*/
+	bool aritmetico ();
 private:
 
-	void* _data;
+	void * _data;
 	DataType _type;
 
 

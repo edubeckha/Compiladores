@@ -25,3 +25,19 @@
  */
 
 #include "itree.h"
+ITNode::NodeType ITNode::getType() {
+	return _type;
+}
+
+
+std::string ITNode::getId() {
+	return _id;
+}
+
+ITNode::OperationType ITNode::getOpType() {
+	return _opType;
+}
+
+
+
+
