@@ -1,0 +1,15 @@
+Funcionando:
+
+string a;
+string a, b, c, d, ef;
+
+Funcionando parcialmente:
+
+string a;
+a = "asfs";
+
+Gera erro:
+qualquer nome de string que tenha numero
+
+string 1ad;
+string as1;

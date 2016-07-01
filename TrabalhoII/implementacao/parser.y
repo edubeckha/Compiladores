@@ -35,7 +35,7 @@ static Tipos::Tipo tv = Tipos::indefinido;
 %token <String> T_STRING
 %token <booleano> T_BOOLTRUE T_BOOLFALSE
 %token <name> T_ID
-%token T_NL T_ASSIGN T_FINALEXP T_IGUAL T_DINT T_DREAL T_DBOOL  T_COMMA T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_DIFERENTE T_UNIBOOL T_PARA T_PARAF T_ARRA T_ARRAF T_IF T_THEN T_ELSE T_END T_WHILE T_DO T_DEFI T_TYPE T_FUN T_RETO T_DECL T_CHAVE T_CHAVEF T_DSTRING T_DEFSTRING
+%token T_NL T_ASSIGN T_FINALEXP T_IGUAL T_DINT T_DREAL T_DBOOL  T_COMMA T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_DIFERENTE T_UNIBOOL T_PARA T_PARAF T_ARRA T_ARRAF T_IF T_THEN T_ELSE T_END T_WHILE T_DO T_DEFI T_TYPE T_FUN T_RETO T_CHAVE T_CHAVEF T_DSTRING T_DEFSTRING
 
 /* type defines the type of our nonterminal symbols.
  * Types should match the names used in the union.
@@ -93,9 +93,9 @@ declaracoes :
         |T_ID T_ARRA unexpr T_ARRAF T_ID T_FINALEXP {AST::Node* complexo = symtab->useVariable($1);};
 
         /*declaracao de funcoes*/
-        | T_DECL T_FUN tipoVariavel  T_ID novoEscopo T_PARA param T_PARAF mataEscopo T_FINALEXP {
-          AST::Node* node = symtab->newFunction($4, $3, parametros);
-          $$ = new AST::Funcao($4, $3, teste);
+        | T_FUN tipoVariavel  T_ID novoEscopo T_PARA param T_PARAF mataEscopo T_FINALEXP {
+          AST::Node* node = symtab->newFunction($3, $2, parametros);
+          $$ = new AST::Funcao($3, $2, teste);
           parametros.clear();
           teste.clear();
         }

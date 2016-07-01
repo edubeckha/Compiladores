@@ -10,7 +10,7 @@ void yyerror(const char* s, ...);
 
 digs [0-9]+
 nome [a-z]+
-strg [a-z]+
+strg a-z+
 
 %%
 
@@ -65,13 +65,12 @@ strg [a-z]+
 
 "fun" 				{return T_FUN;}
 "return" 			{return T_RETO;}
-"decl" 				{return T_DECL;}
 
 "{"					{return T_CHAVE;}
 "}"					{return T_CHAVEF;}
 
 
-"'"				{return T_DEFSTRING;}
+"'"					{return T_DEFSTRING;}
 
 ";"					{return T_FINALEXP;}
 "\n"                {return T_NL;}
