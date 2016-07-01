@@ -204,4 +204,14 @@ namespace AST {
 
 		void printTree();
 	};
+
+	// /*Nodo que define um inteiro, com seu tipo e valor do tipo inteiro*/
+	// class Integer : public Node {
+	// public:
+	// 	int value;
+	// 	Integer ( int value ) : value ( value ) {
+	// 		tipo = Tipos::inteiro;
+	// 	}
+	// 	void printTree();
+	// };
 }

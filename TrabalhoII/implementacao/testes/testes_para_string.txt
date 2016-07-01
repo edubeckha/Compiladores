@@ -6,7 +6,7 @@ string a, b, c, d, ef;
 Funcionando parcialmente:
 
 string a;
-a = "asfs";
+a = 'asfs';
 
 Gera erro:
 qualquer nome de string que tenha numero

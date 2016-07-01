@@ -164,7 +164,9 @@ expr    : T_PARA unexpr T_PARAF {$$ = $2;}
         | T_SUB expr {$$ = new AST::UniOp($2, Tipos::unario, $2->tipo);}
         | T_UNIBOOL expr {$$ = new AST::UniOp($2, Tipos::unibool, Tipos::booleano);}
         | T_ID T_ARRA expr T_ARRAF {$$ = new AST::Arranjo($3, symtab->useVariable($1));} 
+        ///////////////////////////////////////
         | T_STRING { $$ = new AST::String($1); }
+        ///////////////////////////////////////
         ;
 
 /*define todos os tipos de variaveis que possamos ter no programa*/
@@ -172,7 +174,9 @@ tipoVariavel :
         T_DINT { tv = Tipos::inteiro; } 
         | T_DREAL { tv = Tipos::real; }
         | T_DBOOL { tv = Tipos::booleano; }
+        ////////////////////////////
         | T_DSTRING {tv = Tipos::string; }
+        ////////////////////////////
         ;
 /*define todos os tipos de operacoes que possamos ter no programa*/
 tipoOperacao : 

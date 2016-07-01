@@ -20,6 +20,7 @@ strg a-z+
 "real"				{return T_DREAL;}
 "bool"				{return T_DBOOL;}
 "string"			{return T_DSTRING;}
+{strg}              {yylval.String = strdup(yytext); return T_STRING;}
 
 {digs}              {yylval.integer = std::atoi(yytext); return T_INT;}
 
@@ -75,7 +76,6 @@ strg a-z+
 ";"					{return T_FINALEXP;}
 "\n"                {return T_NL;}
 {nome}              {yylval.name = strdup(yytext); return T_ID;}
-{strg}              {yylval.String = strdup(yytext); return T_STRING;}
 .                   {yyerror("Erro lexico: simbolo desconhecido %c\n", *yytext);} 
 
 %%

@@ -37,7 +37,7 @@ void BinOp::printTree() {
 	case Tipos::assign:
 		std::cout << "Atribuicao de valor para ";
 		left->printTree();
-		std::cout << " ";
+		std::cout << " <> ";
 		right->printTree();
 		break;
 
@@ -299,9 +299,7 @@ void String::printTree() {
 	std::cout << "(string " << var << ")";
 	return;
 }
-// //////////
-// /*Imprime o valor do nodo quando o mesmo for real*/
-// void Doubler::printTree() {
-// 	std::cout << "(valor real " << value << ")";
+// void Integer::printTree() {
+// 	std::cout << "(valor inteiro " << value << ")";
 // 	return;
 // }

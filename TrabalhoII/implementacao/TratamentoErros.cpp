@@ -137,7 +137,7 @@ void Tipos::erroTipagem ( Operation operacao, Tipo primeiroTipo, Tipo segundoTip
 	std::cout << " como parâmetro, mas recebeu " << tipoParaString ( recebido, true ) << "." << std::endl;
 }
 //////////
-/*Mostra na tela erros de tipos incompativeis entre variavei*/
+/*Mostra na tela erros de tipos incompativeis entre variaveis*/
 void Tipos::tiposIncompativeis ( Tipo primeiroTipo, Tipo segundoTipo, Operation operacao ) {
 	std::cout << "Erro semantico: operacao de " << opParaString ( operacao ) << " esperava dois tipos compativeis, mas recebeu " <<
 			  tipoParaString ( primeiroTipo, true ) << " e " << tipoParaString ( segundoTipo, true ) << std::endl;
