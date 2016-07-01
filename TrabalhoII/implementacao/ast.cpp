@@ -294,8 +294,14 @@ void Retorno::printTree() {
 		ret->printTree();
 	}
 }
-// ///////////////
-// void string::printTree() {
-// 	std::cout << "(valor inteiro " << value << ")";
+///////////////
+void String::printTree() {
+	std::cout << "(string " << var << ")";
+	return;
+}
+// //////////
+// /*Imprime o valor do nodo quando o mesmo for real*/
+// void Doubler::printTree() {
+// 	std::cout << "(valor real " << value << ")";
 // 	return;
 // }

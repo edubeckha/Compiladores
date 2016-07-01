@@ -170,7 +170,11 @@ std::string Tipos::tipoParaString ( Tipo tipo, bool ehMasc ) {
 	case booleano:
 		retorno = "boolean";
 		break;
-
+///////////////////
+	case string:
+		return "string";
+		break;
+///////////////////
 	default:
 		retorno = "indefinid";
 		break;

@@ -18,7 +18,7 @@ static Tipos::Tipo tv = Tipos::indefinido;
 %union {
     int integer;
     double doubler;
-    const char* string;
+    const char* String;
     const char* booleano;
     AST::Node *node;
     AST::Block *block;
@@ -32,17 +32,17 @@ static Tipos::Tipo tv = Tipos::indefinido;
  */
 %token <integer> T_INT
 %token <doubler> T_DOUBLE
-%token <string> T_DSTRING
+%token <String> T_STRING
 %token <booleano> T_BOOLTRUE T_BOOLFALSE
 %token <name> T_ID
-%token T_NL T_ASSIGN T_FINALEXP T_IGUAL T_DINT T_DREAL T_DBOOL  T_COMMA T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_DIFERENTE T_UNIBOOL T_PARA T_PARAF T_ARRA T_ARRAF T_IF T_THEN T_ELSE T_END T_WHILE T_DO T_DEFI T_TYPE T_FUN T_RETO T_DECL T_CHAVE T_CHAVEF
+%token T_NL T_ASSIGN T_FINALEXP T_IGUAL T_DINT T_DREAL T_DBOOL  T_COMMA T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_DIFERENTE T_UNIBOOL T_PARA T_PARAF T_ARRA T_ARRAF T_IF T_THEN T_ELSE T_END T_WHILE T_DO T_DEFI T_TYPE T_FUN T_RETO T_DECL T_CHAVE T_CHAVEF T_DSTRING T_DEFSTRING
 
 /* type defines the type of our nonterminal symbols.
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
 
-%type <node> expr line varlist unexpr declaracoes assignments condicionais elseIf definicoes param
+%type <node> expr line varlist unexpr declaracoes assignments condicionais elseIf definicoes param //recString
 %type <block> lines program corpoComplexo
 %type <operacao> tipoOperacao
 %type<tabelaEscopo> novoEscopo
@@ -81,6 +81,7 @@ line    : T_NL {$$ = NULL; }
         | definicoes {$$ = $1;}
         ;
 
+
 declaracoes : 
     	/*declaracao de variaveis*/
     	tipoVariavel  varlist T_FINALEXP { $$ = new AST::UniOp($2, Tipos::declaracao, tv);}
@@ -90,8 +91,6 @@ declaracoes :
 		
         /*declaracao de arranjos do tipo complexo*/
         |T_ID T_ARRA unexpr T_ARRAF T_ID T_FINALEXP {AST::Node* complexo = symtab->useVariable($1);};
-
-        |tipoVariavel T_ID T_FINALEXP {AST::Node* var = symtab->newVariable($2, tv, NULL); $$ = new AST::UniOp( var, Tipos::declaracao, tv);}
 
         /*declaracao de funcoes*/
         | T_DECL T_FUN tipoVariavel  T_ID novoEscopo T_PARA param T_PARAF mataEscopo T_FINALEXP {
@@ -109,8 +108,9 @@ assignments :
     		/*assign em arranjos*/
     		|T_ID T_ARRA unexpr T_ARRAF T_ASSIGN unexpr T_FINALEXP {AST::Node* node = symtab->assignVariable($1); $$ = new AST::BinOp(new AST::Arranjo($3, node), Tipos::assign, $6);}
 
-          //  |T_ID T_ASSIGN recString T_FINALEXP  {std::cout<<"string"<<std::endl;}
-
+/////////////////////////////////
+            |T_ID T_ASSIGN T_DEFSTRING expr T_DEFSTRING T_FINALEXP  {AST::Node* node = symtab->assignVariable($1); $$ = new AST::BinOp(node, Tipos::assign, $4);}
+////////////////////////////////
         /*Reconhece uma ou mais declarações de retorno de uma função.*/
         | T_RETO unexpr T_FINALEXP {
             $$ = new AST::Retorno($2);
@@ -164,6 +164,7 @@ expr    : T_PARA unexpr T_PARAF {$$ = $2;}
         | T_SUB expr {$$ = new AST::UniOp($2, Tipos::unario, $2->tipo);}
         | T_UNIBOOL expr {$$ = new AST::UniOp($2, Tipos::unibool, Tipos::booleano);}
         | T_ID T_ARRA expr T_ARRAF {$$ = new AST::Arranjo($3, symtab->useVariable($1));} 
+        | T_STRING { $$ = new AST::String($1); }
         ;
 
 /*define todos os tipos de variaveis que possamos ter no programa*/
@@ -223,9 +224,6 @@ param :
       | {$$ = NULL;}
       ;
 
-
-
-// recString : 
 
 %%
 

@@ -192,5 +192,16 @@ namespace AST {
 
 		void printTree();
 	};
-}
+////////////////////////////////////
+		/*Classe para tratamento de strings*/
+	class String : public Node {
+	public:
+		const char * var;
 
+		String ( const char * var ) : var ( var ) {
+			tipo = Tipos::string;
+		}
+
+		void printTree();
+	};
+}

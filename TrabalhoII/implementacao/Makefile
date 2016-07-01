@@ -10,7 +10,7 @@ all: flex yacc clang
 clang: *.cpp *.h
 	${CC} -o ${OUTPUT} *.cpp ${LLVMPARAM} ${PARAM}
 
-yacc: parser.y
+yacc: parser.y 
 	${BISON} --defines=parser.h --output=parser.cpp parser.y
 
 flex: scanner.l
