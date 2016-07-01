@@ -37,7 +37,7 @@ void BinOp::printTree() {
 	case Tipos::assign:
 		std::cout << "Atribuicao de valor para ";
 		left->printTree();
-		std::cout << " <> ";
+		std::cout << " ";
 		right->printTree();
 		break;
 

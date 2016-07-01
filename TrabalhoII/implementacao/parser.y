@@ -42,7 +42,7 @@ static Tipos::Tipo tv = Tipos::indefinido;
  * Example: %type<node> expr
  */
 
-%type <node> expr line varlist unexpr declaracoes assignments condicionais elseIf definicoes param //recString
+%type <node> expr line varlist unexpr declaracoes assignments condicionais elseIf definicoes param recString
 %type <block> lines program corpoComplexo
 %type <operacao> tipoOperacao
 %type<tabelaEscopo> novoEscopo
@@ -84,7 +84,7 @@ line    : T_NL {$$ = NULL; }
 
 declaracoes : 
     	/*declaracao de variaveis*/
-    	tipoVariavel  varlist T_FINALEXP { $$ = new AST::UniOp($2, Tipos::declaracao, tv);}
+    	tipoVariavel  varlist T_FINALEXP {$$ = new AST::UniOp($2, Tipos::declaracao, tv);}
 
 		/*declaracao de arranjos*/
         |tipoVariavel T_ID T_ARRA unexpr T_ARRAF T_FINALEXP {AST::Node* var = symtab->newVariable($2, tv, NULL); $$ = new AST::UniOp(new AST::Arranjo($4 ,var), Tipos::declaracao, tv);};
@@ -109,12 +109,18 @@ assignments :
     		|T_ID T_ARRA unexpr T_ARRAF T_ASSIGN unexpr T_FINALEXP {AST::Node* node = symtab->assignVariable($1); $$ = new AST::BinOp(new AST::Arranjo($3, node), Tipos::assign, $6);}
 
 /////////////////////////////////
-            |T_ID T_ASSIGN T_DEFSTRING expr T_DEFSTRING T_FINALEXP  {AST::Node* node = symtab->assignVariable($1); $$ = new AST::BinOp(node, Tipos::assign, $4);}
+            |T_ID T_ASSIGN T_DEFSTRING recString T_DEFSTRING T_FINALEXP  {AST::Node* node = symtab->assignVariable($1); $$ = new AST::BinOp(node, Tipos::assign, $4);}
 ////////////////////////////////
         /*Reconhece uma ou mais declarações de retorno de uma função.*/
         | T_RETO unexpr T_FINALEXP {
             $$ = new AST::Retorno($2);
         }
+        ;
+
+recString : 
+///////////////////////////////////////
+        T_ID {$$ = new AST::String($1); }
+        ///////////////////////////////////////
         ;
 
 condicionais: 
@@ -165,7 +171,7 @@ expr    : T_PARA unexpr T_PARAF {$$ = $2;}
         | T_UNIBOOL expr {$$ = new AST::UniOp($2, Tipos::unibool, Tipos::booleano);}
         | T_ID T_ARRA expr T_ARRAF {$$ = new AST::Arranjo($3, symtab->useVariable($1));} 
         ///////////////////////////////////////
-        | T_STRING { $$ = new AST::String($1); }
+       // | T_STRING { $$ = new AST::String($1); }
         ///////////////////////////////////////
         ;
 

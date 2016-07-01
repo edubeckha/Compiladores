@@ -71,7 +71,7 @@ strg a-z+
 "}"					{return T_CHAVEF;}
 
 
-"'"					{return T_DEFSTRING;}
+"\""					{return T_DEFSTRING;}
 
 ";"					{return T_FINALEXP;}
 "\n"                {return T_NL;}
