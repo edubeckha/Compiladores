@@ -64,7 +64,6 @@ nome [a-z]+
 
 "fun" 				{return T_FUN;}
 "return" 			{return T_RETO;}
-"decl" 				{return T_DECL;}
 
 "{"					{return T_CHAVE;}
 "}"					{return T_CHAVEF;}

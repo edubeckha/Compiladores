@@ -62,7 +62,7 @@ Data::Data ( bool booleano ) {
 	this->_data = new bool ( booleano );
 }
 //////////
-Data::Data ( std::__cxx11::string String ) {
+Data::Data ( std::string String ) {
 	this->_type = Data::string;
 	this->_data = new std::string ( String );
 }
