@@ -1,0 +1,27 @@
+class Retangulo{
+
+real base;
+real altura;
+
+Retangulo(real b, real a){
+base=b;
+altura=a;
+}
+
+fun real area(){
+return base * altura;
+}
+
+fun real perimetro(){
+return 2* (base + altura);
+}
+
+ret = new Retangulo(17,9);
+
+real area,per;
+
+area = ret.area();
+per = ret.perimetro();
+
+area;
+per;

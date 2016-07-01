@@ -1,0 +1,21 @@
+int a,b,c;
+real r;
+bool x,y,z;
+
+a = 20-5/7;
+b = 3+a;
+c = -(b);
+
+r = 8.3 * 2;
+
+x = a >= b;
+y = ~ x;
+z = x OR z;
+
+a;
+b;
+c;
+r;
+x;
+y;
+z;

@@ -1,0 +1,4 @@
+[Linha 1] Erro léxico.
+[Linha 3] Erro sintático.
+[Linha 4] Variável de tipo inteiro c declarada porém não inicializada.
+[Linha 5] Variável de tipo desconhecido c não declarada.

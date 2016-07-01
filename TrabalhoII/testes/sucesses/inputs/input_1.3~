@@ -1,0 +1,8 @@
+int res,k;
+res = 6 > 3;
+
+if(res){
+k=10;
+}else{
+k=20
+}
