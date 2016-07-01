@@ -56,11 +56,15 @@ public:
 	/*Operadores*/
 
 	Data somar ( Data * outro );
-	Data subtrair ( Data outro );
-	Data multiplicar ( Data outro );
-	Data dividir ( Data outro );
+	Data subtrair ( Data * outro );
+	Data multiplicar ( Data * outro );
+	Data dividir ( Data * outro );
 	Data ou ( Data outro );
-	Data e ( Data outro );
+	Data e ( Data * outro );
+	Data maior ( Data * outro );
+	Data menor ( Data * outro );
+	Data igual ( Data * outro );
+
 
 	/*Verifica se o dado é aritmetico*/
 	bool aritmetico ();

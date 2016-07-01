@@ -145,7 +145,7 @@ Data Data::somar ( Data * outro ) {
 	return Data ( 0 );//Default data return
 }
 //////////
-Data Data::subtrair ( Data outro ) {
+Data Data::subtrair ( Data * outro ) {
 	assert ( aritmetico() );
 	assert ( outro->aritmetico() );
 
@@ -191,7 +191,7 @@ Data Data::subtrair ( Data outro ) {
 	return Data ( 0 );//Default data return
 }
 //////////
-Data Data::multiplicar ( Data outro ) {
+Data Data::multiplicar ( Data * outro ) {
 	assert ( aritmetico() );
 	assert ( outro->aritmetico() );
 
@@ -236,6 +236,156 @@ Data Data::multiplicar ( Data outro ) {
 	std::cerr << "[ATENCAO - realizando uma multiplicacao com valores incosistentes!]" << std::endl;
 	return Data ( 0 );//Default data return
 }
+//////////
+Data Data::dividir ( Data * outro ) {
+	assert ( aritmetico() );
+	assert ( outro->aritmetico() );
+
+	switch ( this->_type ) {
+		case Data::integer: {
+			switch ( outro->_type ) {
+				case Data::integer: {//int com int
+					assert ( outro->dataInt() != 0 );
+					return Data ( this->dataInt() / outro->dataInt() );
+					break;
+				}
+
+				case Data::real: {//int com real
+					assert ( outro->dataFloat() != 0 );
+					return Data ( this->dataInt() * outro->dataFloat() );
+					break;
+				}
+
+			}
+
+			break;
+		}
+
+		case Data::real: {
+			switch ( outro->_type ) {
+				case Data::integer: {//real com int
+					assert ( outro->dataInt() != 0 );
+					return Data ( this->dataFloat() * outro->dataInt() );
+					break;
+				}
+
+				case Data::real: {// real com real
+					assert ( outro->dataFloat() != 0 );
+					return Data ( this->dataFloat() * outro->dataFloat() );
+					break;
+				}
+
+			}
+
+			break;
+		}
+
+
+	}//this _type
+
+	std::cerr << "[ATENCAO - realizando uma divisao com valores incosistentes!]" << std::endl;
+	return Data ( 0 );//Default data return
+}
+//////////
+Data Data::e ( Data * outro ) {
+	assert ( this->type() == Data::boolean );
+	assert ( outro->type() == Data::boolean );
+	return Data ( this->dataBool() and outro->dataBool() );
+}
+//////////
+Data Data::ou ( Data outro ) {
+	assert ( this->type() == Data::boolean );
+	assert ( outro->type() == Data::boolean );
+	return Data ( this->dataBool() or outro->dataBool() );
+}
+
+//////////
+Data Data::igual ( Data * outro ) {
+	if ( this->type() != outro->type() ) {
+		return Data ( false );
+	}
+
+//Os dados são do mesmo tipo!
+	switch ( this->_type ) {
+		case Data::integer: {
+			return Data ( this->dataInt() == outro->dataInt() );
+			break;
+		}
+
+		case Data::real: {
+			return Data ( this->dataFloat() == outro->dataFloat() );
+			break;
+		}
+
+		case Data::boolean: {
+			return Data ( this->dataBool() == outro->dataBool() );
+			break;
+		}
+
+		case Data::string: {
+			return Data ( this->dataString().compare ( outro->dataString() ) == 0 );
+			break;
+		}
+	}
+
+}
+//////////
+Data Data::maior ( Data * outro ) {
+	if ( this->aritmetico() && outro->aritmetico() ) {
+		switch ( this->_type ) {
+			case Data::integer: {
+				switch ( outro->_type ) {
+					case Data::integer: {//int com int
+
+						return Data ( this->dataInt() > outro->dataInt() );
+						break;
+					}
+
+					case Data::real: {//int com real
+
+						return Data ( this->dataInt() > outro->dataFloat() );
+						break;
+					}
+
+				}
+
+				break;
+			}
+
+			case Data::real: {
+				switch ( outro->_type ) {
+					case Data::integer: {//real com int
+
+						return Data ( this->dataFloat() > outro->dataInt() );
+						break;
+					}
+
+					case Data::real: {// real com real
+
+						return Data ( this->dataFloat() > outro->dataFloat() );
+						break;
+					}
+
+				}
+
+				break;
+			}
+
+
+		}//this _type
+
+	}//aritmetico
+
+	if ( this->type() == outro->type() && this->type() == Data::string ) {
+		return Data ( this->dataString().size() > outro->dataString().size() );
+
+	}
+}
+////////////
+Data Data::menor ( Data * outro ) {
+	return Data ( ! ( this->maior ( outro ).dataBool() && this->igual ( outro ).dataBool() ) );
+}
+
 
 /************************************************
  ***************AUXILIARES***********************/
@@ -265,13 +415,6 @@ switch tipo de dado
 	}
 -------------------------------------------------
 */
-
-
-
-
-
-
-
 
 
 
