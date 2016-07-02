@@ -211,19 +211,6 @@ void Condicao::printTree() {
 	std::cout << "\nFim expressao condicional" << std::endl;
 }
 //////////
-/*Imprime a estrutura do numero complexo, com seu id e componentes*/
-void Complexo::printTree() {
-	std::cout << "Definicao tipo: " << dynamic_cast<Variable *> ( var )->id << std::endl;
-	std::cout << "+componentes:" << std::endl;
-
-	for ( Node * line : escopoComplexo->lines ) {
-		line->printTree();
-		std::cout << std::endl;
-	}
-
-	std::cout << "Fim definicao" << std::endl;
-}
-//////////
 /*Realiza coercao dos nodos necessarios*/
 AST::Node * AST::realizaCoercao ( std::string id, AST::Node * left, AST::Node * right, ST::SymbolTable * symtab ) {
 	if ( Tipos::necessitaCoersao ( left->tipo, right->tipo ) ) {
@@ -293,6 +280,11 @@ void Retorno::printTree() {
 	if ( ret != NULL ) {
 		ret->printTree();
 	}
+}
+
+void Classe::printTree(){
+	std::cout << "Declaracao de classe com o seguinte corpo: " << std::endl;
+	corpoClasse->printTree();
 }
 
 

@@ -68,6 +68,8 @@ nome [a-z]+
 "{"					{return T_CHAVE;}
 "}"					{return T_CHAVEF;}
 
+"class"				{return T_CLASSE;}
+
 ";"					{return T_FINALEXP;}
 "\n"                {return T_NL;}
 {nome}              {yylval.name = strdup(yytext); return T_ID;}

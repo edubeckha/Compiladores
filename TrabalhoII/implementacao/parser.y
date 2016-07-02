@@ -35,7 +35,7 @@ static Tipos::Tipo tv = Tipos::indefinido;
 %token <string> T_DSTRING
 %token <booleano> T_BOOLTRUE T_BOOLFALSE
 %token <name> T_ID
-%token T_NL T_ASSIGN T_FINALEXP T_IGUAL T_DINT T_DREAL T_DBOOL  T_COMMA T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_DIFERENTE T_UNIBOOL T_PARA T_PARAF T_ARRA T_ARRAF T_IF T_THEN T_ELSE T_END T_WHILE T_DO T_DEFI T_TYPE T_FUN T_RETO T_CHAVE T_CHAVEF
+%token T_NL T_ASSIGN T_FINALEXP T_IGUAL T_DINT T_DREAL T_DBOOL  T_COMMA T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_DIFERENTE T_UNIBOOL T_PARA T_PARAF T_ARRA T_ARRAF T_IF T_THEN T_ELSE T_END T_WHILE T_DO T_DEFI T_TYPE T_FUN T_RETO T_CHAVE T_CHAVEF T_CLASSE
 
 /* type defines the type of our nonterminal symbols.
  * Types should match the names used in the union.
@@ -43,7 +43,7 @@ static Tipos::Tipo tv = Tipos::indefinido;
  */
 
 %type <node> expr line varlist unexpr declaracoes assignments condicionais elseIf definicoes param
-%type <block> lines program corpoComplexo
+%type <block> lines program
 %type <operacao> tipoOperacao
 %type<tabelaEscopo> novoEscopo
 %type<tipoVariavel> tipoVariavel
@@ -87,9 +87,6 @@ declaracoes :
 
 		/*declaracao de arranjos*/
         |tipoVariavel T_ID T_ARRA unexpr T_ARRAF T_FINALEXP {AST::Node* var = symtab->newVariable($2, tv, NULL); $$ = new AST::UniOp(new AST::Arranjo($4 ,var), Tipos::declaracao, tv);};
-		
-        /*declaracao de arranjos do tipo complexo*/
-        |T_ID T_ARRA unexpr T_ARRAF  T_ID T_FINALEXP {AST::Node* complexo = symtab->useVariable($1);};
 
         /*declaracao de funcoes*/
         | T_FUN tipoVariavel  T_ID novoEscopo T_PARA param T_PARAF mataEscopo T_FINALEXP {
@@ -98,6 +95,9 @@ declaracoes :
           parametros.clear();
           teste.clear();
         }
+
+        /*declaracao de classes*/
+        | T_CLASSE T_ID T_CHAVE novoEscopo lines mataEscopo T_CHAVEF {$$ = new AST::Classe($2, $5, $4);}
         ;
 
 assignments : 
@@ -125,22 +125,13 @@ condicionais:
 		;
 
 definicoes:
-        /*Definicao de tipos complexos*/
-        T_DEFI T_TYPE  T_ID novoEscopo corpoComplexo mataEscopo T_END T_DEFI {AST::Node* var = symtab->newVariable($3, Tipos::complexo, NULL); $$ = new AST::Complexo(var, $5, $4);}
-
         /*definição da função previamente declarada.*/
-        |T_DEFI T_FUN tipoVariavel  T_ID novoEscopo T_PARA param T_PARAF lines mataEscopo T_END T_DEFI {
+        T_DEFI T_FUN tipoVariavel  T_ID novoEscopo T_PARA param T_PARAF lines mataEscopo T_END T_DEFI {
           AST::Node* var = symtab->assignFunction($4, $3, parametros, $9);
           $$ = new AST::DefineFuncao($4, $3, teste, $9);
         }
         ;
         
-
-/*Trata do que pode ser aceito no corpo de uma estrutura complexa. Tratado como um bloco a parte do programa*/
-corpoComplexo  : 
-        declaracoes {$$ = new AST::Block(); if($1 != NULL) $$->lines.push_back($1); }
-        | corpoComplexo declaracoes { if($2 != NULL) $1->lines.push_back($2); }
-        ;
 
 /*Trata da parte do else no laco if*/
 elseIf : {$$ = NULL;}
