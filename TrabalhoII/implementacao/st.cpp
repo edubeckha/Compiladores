@@ -120,3 +120,19 @@ Symbol SymbolTable::getSymbol ( std::string id ) {
 	return retorno;
 }
 
+AST::Classe* SymbolTable::newClass(std::string id, AST::Node* escopoClasse, ST::SymbolTable* tabelaSimbolosClasse){
+	AST::Classe * classe = new AST::Classe ( id, escopoClasse, tabelaSimbolosClasse  );
+
+	if ( checkId ( id ) ) {
+		yyerror ( "Erro semantico: ja existe uma classe com o nome %s\n", id.c_str() );
+		return NULL;
+	}
+
+	else {
+		Symbol entry ( tabelaSimbolosClasse );
+		addSymbol ( id, entry );
+	}
+
+	return classe;
+}
+

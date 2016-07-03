@@ -185,7 +185,8 @@ namespace AST {
 		Node* corpoClasse;
 		ST::SymbolTable* tabelaSimbolos;
 
-		Classe(std::string labelClasse, Node* corpoClasse, ST::SymbolTable* tabelaSimbolos) : labelClasse(labelClasse), corpoClasse(corpoClasse), tabelaSimbolos(tabelaSimbolos) { }
+		Classe(std::string labelClasse, Node* corpoClasse, ST::SymbolTable* tabelaSimbolos) : labelClasse(labelClasse), corpoClasse(corpoClasse), tabelaSimbolos(tabelaSimbolos) {
+		std::cout << "so um teste"; }
 
 		void printTree();
 	};

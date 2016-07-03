@@ -8,11 +8,12 @@
 
 
 extern void yyerror ( const char * s, ... );
-namespace AST {class Node;}
+namespace AST {class Node; class Classe;}
 namespace ST {
 
 	class Symbol;
-	enum Kind { variable, arranjo,  function };
+	class SymbolTable;
+	enum Kind { variable, arranjo,  function, classe };
 
 	typedef std::map<std::string, Symbol> SymbolList; //Set of Symbols
 
@@ -23,6 +24,7 @@ namespace ST {
 		int64_t value;        /*Space to store a value while we are doing interpretation.*/
 		bool initialized;       /*Defines if symbol has been initialized or not.*/
 		std::vector<ST::Symbol *> parametros; /*Stores the parameters of function*/
+		SymbolTable* tabelaClasse;
 
 		/*Construtor de simbolos para variaveis*/
 		Symbol ( Tipos::Tipo type, Kind kind, int64_t value, bool initialized ) :
@@ -32,6 +34,10 @@ namespace ST {
 		/*Construtor de simbolos para funcoes*/
 		Symbol ( Tipos::Tipo type, Kind kind, std::vector<ST::Symbol *> parametros, bool initialized ) :
 			type ( type ), kind ( kind ), parametros ( parametros ), initialized ( initialized ) { }
+
+		/*Construtor de simbolos para classes*/
+		Symbol(SymbolTable* tabelaClasse) : tabelaClasse(tabelaClasse) {kind = classe; initialized = true;}
+
 	};
 
 	class SymbolTable {
@@ -77,6 +83,8 @@ namespace ST {
 
 		/*Atribui uma função*/
 		AST::Node * assignFunction ( std::string id, Tipos::Tipo tipoVariavel, std::vector<ST::Symbol *> next, AST::Node * body );
+
+		AST::Classe* newClass (std::string id, AST::Node* escopoClasse, ST::SymbolTable* tabelaSimbolosClasse);
 	};
 
 }

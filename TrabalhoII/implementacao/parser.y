@@ -97,7 +97,7 @@ declaracoes :
         }
 
         /*declaracao de classes*/
-        | T_CLASSE T_ID T_CHAVE novoEscopo lines mataEscopo T_CHAVEF {$$ = new AST::Classe($2, $5, $4);}
+        | T_CLASSE T_ID T_CHAVE novoEscopo lines mataEscopo T_CHAVEF { $$ = symtab->newClass($2, $5, $4);}
         ;
 
 assignments : 
