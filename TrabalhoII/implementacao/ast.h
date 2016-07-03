@@ -199,6 +199,7 @@ namespace AST {
 		const char * var;
 
 		String ( const char * var ) : var ( var ) {
+			std::cout<<var<<std::endl;
 			tipo = Tipos::string;
 		}
 

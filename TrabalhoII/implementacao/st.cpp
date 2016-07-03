@@ -35,7 +35,7 @@ AST::Node * SymbolTable::assignVariable ( std::string id ) {
 			retorno->temErro ( true );
 		}
 	}
-
+	std::cout<<id<<std::endl;
 	entryList[id].initialized = true;
 	return retorno;//Creates variable node anyway
 }

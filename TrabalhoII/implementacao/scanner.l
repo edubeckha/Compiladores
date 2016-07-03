@@ -10,9 +10,8 @@ void yyerror(const char* s, ...);
 
 digs [0-9]+
 nome [a-z]+
-strg a-z+
-
-%%
+strg \"([^\"\\\\]|\\\\.)*\" 
+%% http://wordaligned.org/articles/string-literals-and-regular-expressions
 
 [ \t]               ; //ignores spaces
 
@@ -20,7 +19,6 @@ strg a-z+
 "real"				{return T_DREAL;}
 "bool"				{return T_DBOOL;}
 "string"			{return T_DSTRING;}
-{strg}              {yylval.String = strdup(yytext); return T_STRING;}
 
 {digs}              {yylval.integer = std::atoi(yytext); return T_INT;}
 
@@ -61,7 +59,6 @@ strg a-z+
 "else"				{return T_ELSE;}
 "end"				{return T_END;}
 
-"def"				{return T_DEFI;}
 "type"				{return T_TYPE;}
 
 "fun" 				{return T_FUN;}
@@ -71,14 +68,13 @@ strg a-z+
 "}"					{return T_CHAVEF;}
 
 
-"\""					{return T_DEFSTRING;}
-
 ";"					{return T_FINALEXP;}
 "\n"                {return T_NL;}
-{nome}              {yylval.name = strdup(yytext); return T_ID;}
+{nome}              {std::cout<<"name"<<std::endl; yylval.name = strdup(yytext); return T_ID;}
+{strg}     			{std::string tmp = strdup(yytext); std::cout<<tmp<<std::endl; tmp = tmp.substr(1,tmp.size()-2); yylval.String = tmp.c_str(); std::cout<<"strg: "<<yylval.String<<std::endl; return T_STRING;}
 .                   {yyerror("Erro lexico: simbolo desconhecido %c\n", *yytext);} 
 
-%%
+%%1
 
 void yyerror(const char *s, ...){
     va_list ap;

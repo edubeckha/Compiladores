@@ -4,12 +4,8 @@ string a;
 string a, b, c, d, ef;
 
 Funcionando parcialmente:
-
+valor da string reconhecido mas quando vai mostrar o valor é sobre escrito pelo nome da variavel.
 string a;
-a = 'asfs';
+a = "asfs";
 
 Gera erro:
-qualquer nome de string que tenha numero
-
-string 1ad;
-string as1;
