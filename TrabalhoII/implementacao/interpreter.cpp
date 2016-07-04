@@ -18,30 +18,50 @@ Data intepreter::processNodeValue ( ITNode * node ) {
 			_case ( return processNodeValue ( node->_rightSon ); );
 
 		case ITNode::binOp: {
+			assert ( node->_leftSon != nullptr );
+			assert ( node->_rightSon != nullptr );
+
 			switch ( node->getOpType() ) {
 				case ITNode::sum: {
-					
+					Data vNodeL = processNodeValue ( node->_leftSon );
+					Data vNodeR = processNodeValue ( node->_rightSon );
+					return vNodeL.sum ( & vNodeR );
 					break;
 				}
 
 				case ITNode::min: {
+					Data vNodeL = processNodeValue ( node->_leftSon );
+					Data vNodeR = processNodeValue ( node->_rightSon );
+					return vNodeL.subtrair ( & vNodeR );
 					break;
 				}
 
 				case ITNode::mult: {
+					Data vNodeL = processNodeValue ( node->_leftSon );
+					Data vNodeR = processNodeValue ( node->_rightSon );
+					return vNodeL.multiply ( &vNodeR );
 					break;
 				}
 
 				case ITNode::div: {
+					Data vNodeL = processNodeValue ( node->_leftSon );
+					Data vNodeR = processNodeValue ( node->_rightSon );
+					return vNodeL.divide ( &vNodeR );
 					break;
 				}
 
 				case ITNode::band: {
+					Data vNodeL = processNodeValue ( node->_leftSon );
+					Data vNodeR = processNodeValue ( node->_rightSon );
+					return vNodeL.bAnd ( &vNodeR );
 					break;
 				}
 
 				case ITNode::bor: {
-
+					Data vNodeL = processNodeValue ( node->_leftSon );
+					Data vNodeR = processNodeValue ( node->_rightSon );
+					return vNodeL.bOr ( & vNodeR );
+					break;
 				}
 			}//switch op
 

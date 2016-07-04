@@ -55,12 +55,12 @@ public:
 
 	/*Operadores*/
 
-	Data somar ( Data * outro );
+	Data sum ( Data * outro );
 	Data subtrair ( Data * outro );
-	Data multiplicar ( Data * outro );
-	Data dividir ( Data * outro );
-	Data ou ( Data outro );
-	Data e ( Data * outro );
+	Data multiply ( Data * outro );
+	Data divide ( Data * outro );
+	Data bOr ( Data * outro );
+	Data bAnd ( Data * outro );
 	Data maior ( Data * outro );
 	Data menor ( Data * outro );
 	Data igual ( Data * outro );

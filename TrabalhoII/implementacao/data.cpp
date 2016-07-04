@@ -98,7 +98,7 @@ std::string Data::dataString() {
 
 /************************************************
  ***************OPERADORES**********************/
-Data Data::somar ( Data * outro ) {
+Data Data::sum ( Data * outro ) {
 	assert ( aritmetico() );
 	assert ( outro->aritmetico() );
 
@@ -191,7 +191,7 @@ Data Data::subtrair ( Data * outro ) {
 	return Data ( 0 );//Default data return
 }
 //////////
-Data Data::multiplicar ( Data * outro ) {
+Data Data::multiply ( Data * outro ) {
 	assert ( aritmetico() );
 	assert ( outro->aritmetico() );
 
@@ -237,7 +237,7 @@ Data Data::multiplicar ( Data * outro ) {
 	return Data ( 0 );//Default data return
 }
 //////////
-Data Data::dividir ( Data * outro ) {
+Data Data::divide ( Data * outro ) {
 	assert ( aritmetico() );
 	assert ( outro->aritmetico() );
 
@@ -287,13 +287,13 @@ Data Data::dividir ( Data * outro ) {
 	return Data ( 0 );//Default data return
 }
 //////////
-Data Data::e ( Data * outro ) {
+Data Data::bAnd ( Data * outro ) {
 	assert ( this->type() == Data::boolean );
 	assert ( outro->type() == Data::boolean );
 	return Data ( this->dataBool() and outro->dataBool() );
 }
 //////////
-Data Data::ou ( Data outro ) {
+Data Data::bOr ( Data * outro ) {
 	assert ( this->type() == Data::boolean );
 	assert ( outro->type() == Data::boolean );
 	return Data ( this->dataBool() or outro->dataBool() );

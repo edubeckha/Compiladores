@@ -3,6 +3,7 @@
 #define INTERPRETER_H
 //Global Includes
 #include <map>
+#include <cassert>
 //Local Includes
 #include "data.h"
 #include "itree.h"
@@ -29,6 +30,8 @@ private:
 	Data processNodeValue ( ITNode * node );
 	std::map<std::string, ITNode *> _idTable;
 
+	
+	
 	ST::SymbolTable * _currentSyntab;
 
 };
