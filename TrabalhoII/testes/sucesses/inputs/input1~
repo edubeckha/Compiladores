@@ -1,6 +1,0 @@
-int a,b;
-a = 5;
-b = a + 7;
-bool bo, nbo;
-bo = 10 > b;
-nbo = !bo;
