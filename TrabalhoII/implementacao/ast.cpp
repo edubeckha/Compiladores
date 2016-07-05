@@ -138,6 +138,10 @@ void BinOp::printTree() {
 		std::cout << ")";
 		break;
 
+	case Tipos::usoClasse:
+		std::cout << "teste de uso de classe" << std::endl;
+		break;
+
 	default:
 		std::cout << "Operador nao tratado" << std::endl;
 		break;
@@ -285,6 +289,14 @@ void Retorno::printTree() {
 void Classe::printTree(){
 	std::cout << "Declaracao de classe com o seguinte corpo: " << std::endl;
 	corpoClasse->printTree();
+}
+
+void Objeto::printTree(){
+	std::cout << "Declaracao de objeto de nome " << id << " da classe " << classePertencente->id << std::endl;
+}
+
+void ConstrutorClasse::printTree(){
+	
 }
 
 

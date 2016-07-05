@@ -22,6 +22,7 @@ static Tipos::Tipo tv = Tipos::indefinido;
     const char* booleano;
     AST::Node *node;
     AST::Block *block;
+    AST::ConstrutorClasse* constr;
     Tipos::Operation operacao;
     const char *name;
     ST::SymbolTable* tabelaEscopo;
@@ -35,15 +36,16 @@ static Tipos::Tipo tv = Tipos::indefinido;
 %token <string> T_DSTRING
 %token <booleano> T_BOOLTRUE T_BOOLFALSE
 %token <name> T_ID
-%token T_NL T_ASSIGN T_FINALEXP T_IGUAL T_DINT T_DREAL T_DBOOL  T_COMMA T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_DIFERENTE T_UNIBOOL T_PARA T_PARAF T_ARRA T_ARRAF T_IF T_THEN T_ELSE T_END T_WHILE T_DO T_DEFI T_TYPE T_FUN T_RETO T_CHAVE T_CHAVEF T_CLASSE
+%token T_NL T_ASSIGN T_FINALEXP T_IGUAL T_DINT T_DREAL T_DBOOL  T_COMMA T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_DIFERENTE T_UNIBOOL T_PARA T_PARAF T_ARRA T_ARRAF T_IF T_THEN T_ELSE T_END T_WHILE T_DO T_DEFI T_TYPE T_FUN T_RETO T_CHAVE T_CHAVEF T_CLASSE T_DOT T_NEW
 
 /* type defines the type of our nonterminal symbols.
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
 
-%type <node> expr line varlist unexpr declaracoes assignments condicionais elseIf definicoes param
+%type <node> expr line varlist unexpr declaracoes assignments condicionais elseIf definicoes param funcoesObjetos declaracaoClasse escopoClasse declaracaoObjetosClasse
 %type <block> lines program
+%type <constr> construtorClasse
 %type <operacao> tipoOperacao
 %type<tabelaEscopo> novoEscopo
 %type<tipoVariavel> tipoVariavel
@@ -76,10 +78,43 @@ lines   : line {$$ = new AST::Block(); if($1 != NULL) $$->lines.push_back($1); }
 
 line    : T_NL {$$ = NULL; } 
     		| declaracoes {$$ = $1;}
+            | declaracaoClasse {$$ = $1;}
+            | declaracaoObjetosClasse {$$ = $1;}
     		| assignments {$$ = $1;}
     		| condicionais {$$ = $1;}
-        | definicoes {$$ = $1;}
+            | definicoes {$$ = $1;}
+            | funcoesObjetos {$$ = $1;}
         ;
+
+declaracaoClasse :
+        /*declaracao de classes*/
+        T_CLASSE T_ID T_CHAVE novoEscopo construtorClasse escopoClasse mataEscopo T_CHAVEF { $$ = symtab->newClass($2, $4, $5, $6);}
+        ;
+
+
+escopoClasse :
+            T_NL {$$ = NULL; } 
+            | declaracoes {$$ = $1;}
+            | assignments {$$ = $1;}
+            | condicionais {$$ = $1;}
+            | definicoes {$$ = $1;}
+            | funcoesObjetos {$$ = $1;}
+            ;
+
+construtorClasse :
+             /*declaracao de construtores*/
+              T_ID T_PARA param T_PARAF {$$ = new AST::ConstrutorClasse($1, parametros);} 
+             | {$$ = NULL;}
+
+funcoesObjetos: 
+        T_ID T_DOT T_ID T_PARA T_PARAF T_FINALEXP {std::cout << "usando funcoes das classes" << std::endl;}
+        ;
+
+declaracaoObjetosClasse:
+            /*declaracao de objetos de uma classe*/
+            T_ID T_ID T_ASSIGN T_NEW T_ID T_PARA T_PARAF T_FINALEXP {$$ = symtab->newObjeto($2, symtab->useClass($1));}
+            ;  
+
 
 declaracoes : 
     	/*declaracao de variaveis*/
@@ -95,17 +130,17 @@ declaracoes :
           parametros.clear();
           teste.clear();
         }
-
-        /*declaracao de classes*/
-        | T_CLASSE T_ID T_CHAVE novoEscopo lines mataEscopo T_CHAVEF { $$ = symtab->newClass($2, $5, $4);}
         ;
 
 assignments : 
-    		/*assign em variaveis*/
-    		T_ID T_ASSIGN unexpr T_FINALEXP { AST::Node* node = symtab->assignVariable($1); node = AST::realizaCoercao($1, node, $3, symtab); $$ = new AST::BinOp(node,Tipos::assign,$3);}
+    	/*assign em variaveis*/
+    	T_ID T_ASSIGN unexpr T_FINALEXP { AST::Node* node = symtab->assignVariable($1); node = AST::realizaCoercao($1, node, $3, symtab); $$ = new AST::BinOp(node,Tipos::assign,$3);}
 
-    		/*assign em arranjos*/
-    		|T_ID T_ARRA unexpr T_ARRAF T_ASSIGN unexpr T_FINALEXP {AST::Node* node = symtab->assignVariable($1); $$ = new AST::BinOp(new AST::Arranjo($3, node), Tipos::assign, $6);}
+    	/*assign em arranjos*/
+    	|T_ID T_ARRA unexpr T_ARRAF T_ASSIGN unexpr T_FINALEXP {AST::Node* node = symtab->assignVariable($1); $$ = new AST::BinOp(new AST::Arranjo($3, node), Tipos::assign, $6);}
+
+        /*assign em atributos de objetos*/
+        |T_ID T_DOT T_ID T_ASSIGN unexpr T_FINALEXP {std::cout << "assign em atributos de objetos" << std::endl;}
 
         /*Reconhece uma ou mais declarações de retorno de uma função.*/
         | T_RETO unexpr T_FINALEXP {
@@ -151,6 +186,7 @@ expr    : T_PARA unexpr T_PARAF {$$ = $2;}
         | T_BOOLTRUE { $$ = new AST::Boolean(true); }
         | T_BOOLFALSE { $$ = new AST::Boolean(false); }
         | T_ID { $$ = symtab->useVariable($1); }
+        | T_ID T_DOT T_ID {std::cout << "teste em atributosss" << std::endl;}
         | T_SUB expr {$$ = new AST::UniOp($2, Tipos::unario, $2->tipo);}
         | T_UNIBOOL expr {$$ = new AST::UniOp($2, Tipos::unibool, Tipos::booleano);}
         | T_ID T_ARRA expr T_ARRAF {$$ = new AST::Arranjo($3, symtab->useVariable($1));} 

@@ -106,7 +106,7 @@ AST::Node * SymbolTable::assignFunction ( std::string id, Tipos::Tipo tipoVariav
 
 	for ( int i = 0; i < next.size(); i++ ) {
 		if ( tmp.parametros.at ( i )->type != next.at ( i )->type ) {
-			std::cout << "Atenção: tipo de parametro incompativel." << std::endl;
+			std::cout << "Atenção: tipo de parametro incompativel. \n" << std::endl;
 		}
 	}
 
@@ -120,12 +120,11 @@ Symbol SymbolTable::getSymbol ( std::string id ) {
 	return retorno;
 }
 
-AST::Classe* SymbolTable::newClass(std::string id, AST::Node* escopoClasse, ST::SymbolTable* tabelaSimbolosClasse){
-	AST::Classe * classe = new AST::Classe ( id, escopoClasse, tabelaSimbolosClasse  );
+AST::Classe* SymbolTable::newClass(std::string id, ST::SymbolTable* tabelaSimbolosClasse, AST::ConstrutorClasse* construtorClasse, AST::Node* escopoClasse){
+	AST::Classe * classe = new AST::Classe ( id, escopoClasse, tabelaSimbolosClasse, construtorClasse  );
 
 	if ( checkId ( id ) ) {
 		yyerror ( "Erro semantico: ja existe uma classe com o nome %s\n", id.c_str() );
-		return NULL;
 	}
 
 	else {
@@ -135,4 +134,53 @@ AST::Classe* SymbolTable::newClass(std::string id, AST::Node* escopoClasse, ST::
 
 	return classe;
 }
+
+AST::Classe* SymbolTable::useClass(std::string id){
+	if(!checkId(id)){
+		yyerror("Erro semantico: classe referida nao existe \n");
+		return new AST::Classe(id, NULL);
+	}
+
+	ST::Symbol classe = this->entryList.at(id);
+	
+	if(classe.kind != ST::classe){
+		yyerror("Erro semantico: objeto nao tenta referenciar uma classe \n");
+	}
+
+	AST::Classe* c  = new AST::Classe(id, classe.tabelaClasse);
+
+	return c;
+}
+
+AST::Objeto* SymbolTable::newObjeto(std::string id, AST::Classe* classePertencente){
+	AST::Objeto* objeto = new AST::Objeto ( id, classePertencente );
+
+	if ( checkId ( id ) ) {
+		yyerror ( "Erro semantico: ja existe um objeto com o nome %s\n", id.c_str() );
+	}
+	else {
+		Symbol entry ( classePertencente );
+		addSymbol ( id, entry );
+	}
+
+	return objeto;
+}
+
+AST::Objeto* SymbolTable::useObjeto(std::string id){
+	if(!checkId(id)){
+		yyerror("Erro semantico: objeto nao existe \n");
+	}
+
+	ST::Symbol objeto = this->entryList.at(id);
+	
+	if(objeto.kind != ST::objeto){
+		yyerror("Erro semantico: variavel nao e do tipo objeto \n");
+		std::cout << std::endl;
+	}
+
+	AST::Objeto* c  = new AST::Objeto(id, objeto.classePertencente);
+
+	return c;
+}
+
 

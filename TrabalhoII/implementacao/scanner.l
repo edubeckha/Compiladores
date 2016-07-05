@@ -69,6 +69,8 @@ nome [a-z]+
 "}"					{return T_CHAVEF;}
 
 "class"				{return T_CLASSE;}
+"."					{return T_DOT;}
+"new"				{return T_NEW;}
 
 ";"					{return T_FINALEXP;}
 "\n"                {return T_NL;}

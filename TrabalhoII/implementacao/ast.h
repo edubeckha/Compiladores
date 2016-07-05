@@ -7,7 +7,7 @@
 #include "st.h"
 
 extern void yyerror ( const char * s, ... );
-namespace ST {class SymbolTable;};
+namespace ST {class SymbolTable; class Symbol;};
 extern ST::SymbolTable * symbolTable;
 namespace AST {
 
@@ -179,15 +179,36 @@ namespace AST {
 		void printTree();
 	};
 
+
+
+	class ConstrutorClasse : public Node {
+	public:
+		std::string id;
+		std::vector<ST::Symbol *> parametros;
+		ConstrutorClasse ( std::string id, std::vector<ST::Symbol *> parametros ) : id ( id ), parametros ( parametros ) { }
+		void printTree();
+	};
+
 	class Classe : public Node {
 	public:
-		std::string labelClasse;
+		std::string id;
 		Node* corpoClasse;
+		ConstrutorClasse* construtor;
 		ST::SymbolTable* tabelaSimbolos;
 
-		Classe(std::string labelClasse, Node* corpoClasse, ST::SymbolTable* tabelaSimbolos) : labelClasse(labelClasse), corpoClasse(corpoClasse), tabelaSimbolos(tabelaSimbolos) {
-		std::cout << "so um teste"; }
+		Classe(std::string id, Node* corpoClasse, ST::SymbolTable* tabelaSimbolos, ConstrutorClasse* construtor) : id(id), corpoClasse(corpoClasse), tabelaSimbolos(tabelaSimbolos), construtor(construtor) { }
 
+		Classe(std::string id, ST::SymbolTable* tabelaSimbolos) : id(id), tabelaSimbolos(tabelaSimbolos) { }
+
+		void printTree();
+	};
+
+	class Objeto : public Node {
+	public:
+		std::string id;
+		AST::Classe* classePertencente;
+
+		Objeto(std::string id, AST::Classe* classePertencente) : id(id), classePertencente(classePertencente) { }
 		void printTree();
 	};
 }

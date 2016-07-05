@@ -8,12 +8,12 @@
 
 
 extern void yyerror ( const char * s, ... );
-namespace AST {class Node; class Classe;}
+namespace AST {class Node; class Classe; class Objeto; class ConstrutorClasse;}
 namespace ST {
 
 	class Symbol;
 	class SymbolTable;
-	enum Kind { variable, arranjo,  function, classe };
+	enum Kind { variable, arranjo,  function, classe, objeto };
 
 	typedef std::map<std::string, Symbol> SymbolList; //Set of Symbols
 
@@ -25,6 +25,7 @@ namespace ST {
 		bool initialized;       /*Defines if symbol has been initialized or not.*/
 		std::vector<ST::Symbol *> parametros; /*Stores the parameters of function*/
 		SymbolTable* tabelaClasse;
+		AST::Classe* classePertencente;
 
 		/*Construtor de simbolos para variaveis*/
 		Symbol ( Tipos::Tipo type, Kind kind, int64_t value, bool initialized ) :
@@ -38,6 +39,8 @@ namespace ST {
 		/*Construtor de simbolos para classes*/
 		Symbol(SymbolTable* tabelaClasse) : tabelaClasse(tabelaClasse) {kind = classe; initialized = true;}
 
+		/*Construtor de simbolos para objetos*/
+		Symbol(AST::Classe* classePertencente) : classePertencente(classePertencente) {kind = objeto; initialized = true;}
 	};
 
 	class SymbolTable {
@@ -84,7 +87,17 @@ namespace ST {
 		/*Atribui uma função*/
 		AST::Node * assignFunction ( std::string id, Tipos::Tipo tipoVariavel, std::vector<ST::Symbol *> next, AST::Node * body );
 
-		AST::Classe* newClass (std::string id, AST::Node* escopoClasse, ST::SymbolTable* tabelaSimbolosClasse);
+		/*Criacao de nova classe*/
+		AST::Classe* newClass (std::string id, ST::SymbolTable* tabelaSimbolosClasse, AST::ConstrutorClasse* construtorClasse, AST::Node* escopoClasse);
+
+		/*Utiliza classe*/
+		AST::Classe* useClass(std::string id);
+
+		/*Criacao de novo objeto*/
+		AST::Objeto* newObjeto (std::string id, AST::Classe* classePertencente);
+
+		/*Utiliza classe*/
+		AST::Objeto* useObjeto(std::string id);
 	};
 
 }
