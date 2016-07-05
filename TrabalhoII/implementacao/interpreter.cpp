@@ -63,19 +63,38 @@ Data intepreter::processNodeValue ( ITNode * node ) {
 					return vNodeL.bOr ( & vNodeR );
 					break;
 				}
+
+				case ITNode::eq: {
+					Data vNodeL = processNodeValue ( node->_leftSon );
+					Data vNodeR = processNodeValue ( node->_rightSon );
+
+
+					break;
+				}
 			}//switch op
 
 			break; // break binOp
 		}
 
 		case ITNode::function:
-			_case();
+			_case ( return Data ( 666 ); );
 
 		case ITNode::value:
-			_case();
+			_case (
+			 return node->getData();
+			);
 
 		case ITNode::variable:
-			_case();
+
+			_case (
+			 assert ( isDefined ( node->getId() ) );
+			 return this->_idTable.at ( node->getId() )->getData();
+			);
+
+		case ITNode::def:
+			_case (
+			 return node->_leftSon->getData();
+			);
 	}
 }
 //////////
@@ -85,22 +104,53 @@ std::string intepreter::processNode ( ITNode * node ) {
 			_case (
 			 assert ( node->_leftSon->getType() == ITNode::variable );
 			 assert ( isDefined ( node->_leftSon->getId() ) );
+			 std::string id = node->_leftSon->getId();
+			 ITNode * aNode = _idTable.at ( id );
+			 Data newData = processNodeValue ( node->_rightSon );
+			 assert ( aNode->getData().type() == newData.type() );
+			 aNode->updateData ( newData );
+			 return "";
 
 			);
 
 		case ITNode::binOp:
-			_case();
+			_case (
+			 node->updateData ( processNodeValue ( node ) );
+			 return node->getData().toString();
+			);
 
 		case ITNode::function:
-			_case();
+			_case (
+			 return "FUNCAO NAO IMPLEMENTADA!\n";
+			);
 
 		case ITNode::value:
-			_case();
+			_case (
+			 return node->getData().toString();
+			);
 
 		case ITNode::variable:
-			_case();
+			_case (
+			 assert ( isDefined ( node->getId() ) );
+			 return _idTable.at ( node->getId() )->getData().toString();
+			);
+
+		case ITNode::def://Ainda não pensei como fazer com casos do tipo "int a, b,c ;"
+			_case (
+			 std::string newId = node->_leftSon->getId();
+			 assert ( ! ( isDefined ( newId ) ) );
+			 addId ( newId, node->_leftSon );
+			 return ""; //Definição de variavel nao imprime nada!
+			);
 	}
 }
+
+//////////
+void intepreter::addId ( std::string id, ITNode * node ) {
+	assert ( ! ( isDefined ( id ) ) );
+	this->_idTable.insert ( std::pair<std::string, ITNode *> ( id, node ) );
+}
+
 /*Sessão escrotissima de templates
 //Swich no tipo de nodo---------------------
 switch ( node->getType() ) {
@@ -150,3 +200,4 @@ switch ( node->getOpType() ) {
 --------------------------------------------
 
 */
+

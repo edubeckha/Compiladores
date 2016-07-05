@@ -29,14 +29,23 @@ ITNode::NodeType ITNode::getType() {
 	return _type;
 }
 
-
+//////////
 std::string ITNode::getId() {
 	return _id;
 }
-
+//////////
 ITNode::OperationType ITNode::getOpType() {
 	return _opType;
 }
+//////////
+Data ITNode::getData() {
+	return _value;
+}
+//////////
+void ITNode::updateData ( Data newData ) {
+	this->_value = newData;
+}
+
 
 
 

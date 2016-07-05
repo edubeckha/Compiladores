@@ -301,34 +301,61 @@ Data Data::bOr ( Data * outro ) {
 
 //////////
 Data Data::igual ( Data * outro ) {
-	if ( this->type() != outro->type() ) {
-		return Data ( false );
-	}
+	if ( this->aritmetico() && outro->aritmetico() ) {
+		switch ( this->_type ) {
+			case Data::integer: {
+				switch ( outro->_type ) {
+					case Data::integer: { //int com int
+						return Data ( this->dataInt() == outro->dataInt() );
+						break;
+					}
+
+					case Data::real: { // int com float
+						return Data ( this->dataInt() == outro->dataFloat() );
+						break;
+					}
+				}
+
+				break;
+			}
+
+			case Data::real: {
+				switch ( outro->_type ) {
+					case Data::integer: {// float com int
+						return Data ( this-> dataFloat() == outro->dataInt() );
+						break;
+					}
+
+					case Data::real: {// float com float
+						return Data ( this->dataFloat() == outro->dataInt() );
+						break;
+					}
+				}
+
+				break;
+			}
+		}
+
+	} else {
 
 //Os dados são do mesmo tipo!
-	switch ( this->_type ) {
-		case Data::integer: {
-			return Data ( this->dataInt() == outro->dataInt() );
-			break;
-		}
+		switch ( this->_type ) {
 
-		case Data::real: {
-			return Data ( this->dataFloat() == outro->dataFloat() );
-			break;
-		}
+			case Data::boolean: {
+				assert ( outro->type() == Data::boolean );
+				return Data ( this->dataBool() == outro->dataBool() );
+				break;
+			}
 
-		case Data::boolean: {
-			return Data ( this->dataBool() == outro->dataBool() );
-			break;
-		}
-
-		case Data::string: {
-			return Data ( this->dataString().compare ( outro->dataString() ) == 0 );
-			break;
+			case Data::string: {
+				assert ( outro->type() == Data::string );
+				return Data ( this->dataString().compare ( outro->dataString() ) == 0 );
+				break;
+			}
 		}
 	}
-
 }
+
 //////////
 Data Data::maior ( Data * outro ) {
 	if ( this->aritmetico() && outro->aritmetico() ) {
@@ -393,9 +420,36 @@ bool Data::aritmetico() {
 	return ( this->_type == Data::integer || this->_type == Data::real );
 }
 //////////
+std::string Data::toString() {
+
+	// switch tipo de dado
+	switch ( this->_type ) {
+		case Data::integer: {
+			return std::to_string ( this->dataInt() );
+			break;
+		}
+
+		case Data::real: {
+			return std::to_string ( this->dataFloat() );
+			break;
+		}
+
+		case Data::boolean: {
+			bool retorno = this->dataBool();
+			return ( retorno ? "true" : "false" );
+			break;
+		}
+
+		case Data::string: {
+			return this->dataString();
+			break;
+		}
+	}
+}
+
 
 /*Biblioteca escrotissima de templates
-switch tipo de dado
+//switch tipo de dado
 	switch ( this->_type ) {
 		case Data::integer: {
 			break;
@@ -414,6 +468,9 @@ switch tipo de dado
 		}
 	}
 -------------------------------------------------
+
+
+
 */
 
 

@@ -37,19 +37,58 @@
 
 class ITNode {
 public:
-	/*Tipos de nodos*/
-	enum NodeType {variable, binOp, atrib, value, function};
-	/*Tipos de operacao*/
-	enum OperationType {sum, min, mult, div, band, bor};
 
-	/*Retorna o tipo do nodo*/
+	/**
+	 * @brief Tipos de nodos
+	 *
+	 */
+	enum NodeType {variable, binOp, atrib, def, value, function};//Gonna grow!
+
+	/**
+	 * @brief Tipos de operacao
+	 *
+	 */
+	enum OperationType {sum, min, mult, div, band, bor, eq};
+
+
+	/**
+	 * @brief Retorna o tipo do nodo
+	 *
+	 * @return ITNode::NodeType
+	 */
 	NodeType getType();
 
-	/*Obtém o Identificador*/
+
+	/**
+	 * @brief Obtém o Identificador
+	 *
+	 * @return std::string
+	 */
 	std::string getId();
 
-	/*Obtém o tipo de operacao*/
+
+	/**
+	 * @brief Obtém o tipo de operacao
+	 *
+	 * @return ITNode::OperationType
+	 */
 	OperationType getOpType();
+
+
+	/**
+	 * @brief Obtém o dado associado ao nodo
+	 *
+	 * @return Data
+	 */
+	Data getData();
+
+	/**
+	 * @brief Atualiza o valor do nodo
+	 *
+	 * @param newData Novo valor
+	 * @return void
+	 */
+	void updateData ( Data newData );
 
 	ITNode * _leftSon = nullptr;//Filho a esquerda
 	ITNode * _rightSon = nullptr;//Filho a direita

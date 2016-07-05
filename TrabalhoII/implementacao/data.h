@@ -68,6 +68,13 @@ public:
 
 	/*Verifica se o dado é aritmetico*/
 	bool aritmetico ();
+
+	/**
+	 * @brief Retorna uma string com a informação do dado
+	 *
+	 * @return std::__cxx11::string
+	 */
+	std::string toString();
 private:
 
 	void * _data;
