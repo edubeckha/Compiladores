@@ -88,12 +88,12 @@ line    : T_NL {$$ = NULL; }
 
 declaracaoClasse :
         /*declaracao de classes*/
-        T_CLASSE T_ID T_CHAVE novoEscopo construtorClasse escopoClasse mataEscopo T_CHAVEF { $$ = symtab->newClass($2, $4, $5, $6);}
+        T_CLASSE T_ID T_CHAVE construtorClasse escopoClasse T_CHAVEF { std::cout << "eeee" << std::endl; }
         ;
-
 
 escopoClasse :
             T_NL {$$ = NULL; } 
+            | {$$ = NULL;}
             | declaracoes {$$ = $1;}
             | assignments {$$ = $1;}
             | condicionais {$$ = $1;}
@@ -103,8 +103,9 @@ escopoClasse :
 
 construtorClasse :
              /*declaracao de construtores*/
-              T_ID T_PARA param T_PARAF {$$ = new AST::ConstrutorClasse($1, parametros);} 
-             | {$$ = NULL;}
+              T_ID T_PARA param T_PARAF T_CHAVE novoEscopo escopoClasse mataEscopo T_CHAVEF {$$ = new AST::ConstrutorClasse($1, parametros);
+              parametros.clear();}
+              ;
 
 funcoesObjetos: 
         T_ID T_DOT T_ID T_PARA T_PARAF T_FINALEXP {std::cout << "usando funcoes das classes" << std::endl;}

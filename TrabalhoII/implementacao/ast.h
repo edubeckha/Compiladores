@@ -185,7 +185,8 @@ namespace AST {
 	public:
 		std::string id;
 		std::vector<ST::Symbol *> parametros;
-		ConstrutorClasse ( std::string id, std::vector<ST::Symbol *> parametros ) : id ( id ), parametros ( parametros ) { }
+		ConstrutorClasse ( std::string id, std::vector<ST::Symbol *> parametros ) : id ( id ), parametros ( parametros ) {
+		}
 		void printTree();
 	};
 

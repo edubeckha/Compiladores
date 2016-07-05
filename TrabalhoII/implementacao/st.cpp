@@ -123,6 +123,7 @@ Symbol SymbolTable::getSymbol ( std::string id ) {
 AST::Classe* SymbolTable::newClass(std::string id, ST::SymbolTable* tabelaSimbolosClasse, AST::ConstrutorClasse* construtorClasse, AST::Node* escopoClasse){
 	AST::Classe * classe = new AST::Classe ( id, escopoClasse, tabelaSimbolosClasse, construtorClasse  );
 
+	classe->printTree();
 	if ( checkId ( id ) ) {
 		yyerror ( "Erro semantico: ja existe uma classe com o nome %s\n", id.c_str() );
 	}
