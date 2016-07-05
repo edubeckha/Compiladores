@@ -32,9 +32,9 @@ static Tipos::Tipo tv = Tipos::indefinido;
  */
 %token <integer> T_INT
 %token <doubler> T_DOUBLE
-%token <String> T_STRING
 %token <booleano> T_BOOLTRUE T_BOOLFALSE
 %token <name> T_ID
+%token <String> T_STRING
 %token T_NL T_ASSIGN T_FINALEXP T_IGUAL T_DINT T_DREAL T_DBOOL  T_COMMA T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_DIFERENTE T_UNIBOOL T_PARA T_PARAF T_ARRA T_ARRAF T_IF T_THEN T_ELSE T_END T_WHILE T_DO  T_TYPE T_FUN T_RETO T_CHAVE T_CHAVEF T_DSTRING
 
 /* type defines the type of our nonterminal symbols.
@@ -108,20 +108,19 @@ assignments :
     		/*assign em arranjos*/
     		|T_ID T_ARRA unexpr T_ARRAF T_ASSIGN unexpr T_FINALEXP {AST::Node* node = symtab->assignVariable($1); $$ = new AST::BinOp(new AST::Arranjo($3, node), Tipos::assign, $6);}
 
+    		/*Assign em string*/
 /////////////////////////////////
-            |T_ID T_ASSIGN recString T_FINALEXP  {std::cout<<"tid = "<<$3<<std::endl; AST::Node* node = symtab->assignVariable($1); std::cout<<"tid2 = "<<$3<<" 1 "<<$1<<std::endl; $$ = new AST::BinOp(node, Tipos::assign, $3);}
+            |T_ID T_ASSIGN recString T_FINALEXP  { AST::Node* node = symtab->assignVariable($1); $$ = new AST::BinOp(node, Tipos::assign, $3); }
 ////////////////////////////////
         /*Reconhece uma ou mais declarações de retorno de uma função.*/
-        | T_RETO unexpr T_FINALEXP {
-            $$ = new AST::Retorno($2);
-        }
+        | T_RETO unexpr T_FINALEXP { $$ = new AST::Retorno($2); }
         ;
 
+/*reconhece o conteudo atribuido a uma variavel do tipo string.*/
 recString : 
-//////////////////////////////////////
-/*reconhece o conteudo da string atribuida a uma variavel do tipo string.*/
-        T_STRING {std::cout<<"tstring: "<<$1<<std::endl; $$ = new AST::String($1); }
-        ///////////////////////////////////////
+		//////////////////////////////////////
+		T_STRING { $$ = new AST::String($1); }
+       ///////////////////////////////////////
         ;
 
 condicionais: 
@@ -171,9 +170,6 @@ expr    : T_PARA unexpr T_PARAF {$$ = $2;}
         | T_SUB expr {$$ = new AST::UniOp($2, Tipos::unario, $2->tipo);}
         | T_UNIBOOL expr {$$ = new AST::UniOp($2, Tipos::unibool, Tipos::booleano);}
         | T_ID T_ARRA expr T_ARRAF {$$ = new AST::Arranjo($3, symtab->useVariable($1));} 
-        ///////////////////////////////////////
-       // | T_STRING { $$ = new AST::String($1); }
-        ///////////////////////////////////////
         ;
 
 /*define todos os tipos de variaveis que possamos ter no programa*/
@@ -182,7 +178,7 @@ tipoVariavel :
         | T_DREAL { tv = Tipos::real; }
         | T_DBOOL { tv = Tipos::booleano; }
         ////////////////////////////
-        | T_DSTRING {tv = Tipos::string; }
+        | T_DSTRING { tv = Tipos::string; }
         ////////////////////////////
         ;
 /*define todos os tipos de operacoes que possamos ter no programa*/
@@ -234,8 +230,4 @@ param :
       }
       | {$$ = NULL;}
       ;
-
-
 %%
-
-

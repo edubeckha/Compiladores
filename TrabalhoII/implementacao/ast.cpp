@@ -296,10 +296,7 @@ void Retorno::printTree() {
 }
 ///////////////
 void String::printTree() {
-	std::cout << "(string " << var << ")";
-	return;
+	std::string strs = std::string(aux);
+		strs = strs.substr(1,strs.size()-2);
+	std::cout << "(string " << strs << ")";
 }
-// void Integer::printTree() {
-// 	std::cout << "(valor inteiro " << value << ")";
-// 	return;
-// }

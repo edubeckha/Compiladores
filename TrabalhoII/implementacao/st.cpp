@@ -25,17 +25,13 @@ AST::Node * SymbolTable::newVariable ( std::string id, Tipos::Tipo tipoVariavel,
 //////////
 AST::Node * SymbolTable::assignVariable ( std::string id ) {
 	AST::Variable * retorno = new AST::Variable ( id, entryList[id].type, NULL );
-
 	if ( !checkId ( id ) ) {
 		if ( tabelaOrigem != NULL ) {
 			return tabelaOrigem->assignVariable ( id );
-
-		} else {
-			yyerror ( "Variável ainda não definida! %s\n", id.c_str() );
+		} else {			yyerror ( "Variável ainda não definida! %s\n", id.c_str() );
 			retorno->temErro ( true );
 		}
 	}
-	std::cout<<id<<std::endl;
 	entryList[id].initialized = true;
 	return retorno;//Creates variable node anyway
 }

@@ -196,23 +196,14 @@ namespace AST {
 		/*Classe para tratamento de strings*/
 	class String : public Node {
 	public:
-		const char * var;
 
-		String ( const char * var ) : var ( var ) {
-			std::cout<<var<<std::endl;
+		const char * aux;
+
+		String ( const char * aux ) : aux ( aux ) {
 			tipo = Tipos::string;
 		}
 
 		void printTree();
 	};
 
-	// /*Nodo que define um inteiro, com seu tipo e valor do tipo inteiro*/
-	// class Integer : public Node {
-	// public:
-	// 	int value;
-	// 	Integer ( int value ) : value ( value ) {
-	// 		tipo = Tipos::inteiro;
-	// 	}
-	// 	void printTree();
-	// };
 }

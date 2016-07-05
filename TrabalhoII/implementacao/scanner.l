@@ -67,11 +67,10 @@ strg \"([^\"\\\\]|\\\\.)*\"
 "{"					{return T_CHAVE;}
 "}"					{return T_CHAVEF;}
 
-
 ";"					{return T_FINALEXP;}
 "\n"                {return T_NL;}
-{nome}              {std::cout<<"name"<<std::endl; yylval.name = strdup(yytext); return T_ID;}
-{strg}     			{std::string tmp = strdup(yytext); std::cout<<tmp<<std::endl; tmp = tmp.substr(1,tmp.size()-2); yylval.String = tmp.c_str(); std::cout<<"strg: "<<yylval.String<<std::endl; return T_STRING;}
+{nome}              {yylval.name = strdup(yytext); return T_ID;}
+{strg}     			{yylval.String = strdup(yytext); return T_STRING;}
 .                   {yyerror("Erro lexico: simbolo desconhecido %c\n", *yytext);} 
 
 %%1
