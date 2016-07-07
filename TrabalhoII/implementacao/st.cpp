@@ -25,37 +25,17 @@ AST::Node * SymbolTable::newVariable ( std::string id, Tipos::Tipo tipoVariavel,
 }
 //////////
 AST::Node * SymbolTable::assignVariable ( std::string id ) {
-	AST::Variable * retorno = new AST::Variable ( id, entryList[id].type, NULL );
-
-	std::cout << Tipos::tipoParaString(entryList[id].type, false) << std::endl;
-	
-	if ( !checkId ( id ) ) {
-		if ( tabelaOrigem != NULL ) {
-			return tabelaOrigem->assignVariable ( id );
-
-		} else {
-			yyerror ( "Variável ainda não definida! %s\n", id.c_str() );
-			retorno->temErro ( true );
-		}
-	}
-
-	entryList[id].initialized = true;
-	return retorno;	//Creates variable node anyway
+	if(!checkId(id)){
+        if(tabelaOrigem != NULL){
+            return tabelaOrigem->assignVariable(id);
+           } else{
+            yyerror("Variável ainda não definida! %s\n", id.c_str());
+        }
+    }
+    entryList[id].initialized = true;
+    return new AST::Variable(id, entryList[id].type, NULL); //Creates variable node anyway
 }
 
-// //Funcao que e responsavel por dar um assign num atributo de classe
-// AST::Variable * SymbolTable::assignVariableClasse ( AST::Objeto* objeto, std::string idAtributo ) {
-// 	AST::Classe* temp = objeto->classePertencente;
-
-// 	AST::Variable * retorno = new AST::Variable ( idAtributo, temp->tabelaSimbolos->entryList[idAtributo].type, NULL );
-
-// 	temp->tabelaSimbolos->assignVariable(idAtributo);
-
-// 	entryList[idAtributo].initialized = true;
-// 	return retorno;	
-// }
-
-//////////
 AST::Node * SymbolTable::useVariable ( std::string id ) {
 	AST::Variable * retorno = new AST::Variable ( id, entryList[id].type, NULL );
 

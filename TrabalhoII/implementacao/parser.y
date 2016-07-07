@@ -131,13 +131,13 @@ declaracoes :
 
 assignments : 
     	/*assign em variaveis*/
-    	T_ID T_ASSIGN unexpr T_FINALEXP { AST::Node* node = symtab->assignVariable($1); node = AST::realizaCoercao($1, node, $3, symtab); $$ = new AST::BinOp(node,Tipos::assign,$3);}
+    	T_ID T_ASSIGN unexpr T_FINALEXP {AST::Node* node = symtab->assignVariable($1); node = AST::realizaCoercao($1, node, $3, symtab); $$ = new AST::BinOp(node,Tipos::assign,$3);}
 
     	/*assign em arranjos*/
     	|T_ID T_ARRA unexpr T_ARRAF T_ASSIGN unexpr T_FINALEXP {AST::Node* node = symtab->assignVariable($1); $$ = new AST::BinOp(new AST::Arranjo($3, node), Tipos::assign, $6);}
 
         /*assign em atributos de objetos*/
-        |T_ID T_DOT T_ID T_ASSIGN unexpr T_FINALEXP {AST::Atributo* atri = symtab->newAtributo((AST::Variable*) symtab->assignVariable($3), symtab->useObjeto($1)->classePertencente); 
+        |T_ID T_DOT T_ID T_ASSIGN unexpr T_FINALEXP { AST::Classe* c = symtab->useObjeto($1)->classePertencente; AST::Atributo* atri = c->tabelaSimbolos->newAtributo((AST::Variable*) c->tabelaSimbolos->assignVariable($3), symtab->useObjeto($1)->classePertencente); 
         $$ = new AST::BinOp(atri, Tipos::assign, $5); }
 
         /*Reconhece uma ou mais declarações de retorno de uma função.*/
