@@ -26,8 +26,8 @@
 
 #include "itree.h"
 //--------------------------------------------------
-ITNode::ITNode() {
-	_value = Data ( 666 );//Valor padrão - bem definido pra saber onde deu erro;
+ITNode::ITNode() : _value ( Data ( 666 ) ) {
+	this->_value = Data ( 666 );//Valor padrão - bem definido pra saber onde deu erro;
 }
 
 //--------------------------------------------------
