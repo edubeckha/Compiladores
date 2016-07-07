@@ -16,6 +16,7 @@ AST::Node * SymbolTable::newVariable ( std::string id, Tipos::Tipo tipoVariavel,
 	}
 
 	else {
+	//std::cout << Tipos::tipoParaString(tipoVariavel, true) << std::endl;
 		Symbol entry ( tipoVariavel, variable, 0, false );
 		addSymbol ( id, entry );
 	}
@@ -26,6 +27,8 @@ AST::Node * SymbolTable::newVariable ( std::string id, Tipos::Tipo tipoVariavel,
 AST::Node * SymbolTable::assignVariable ( std::string id ) {
 	AST::Variable * retorno = new AST::Variable ( id, entryList[id].type, NULL );
 
+	std::cout << Tipos::tipoParaString(entryList[id].type, false) << std::endl;
+	
 	if ( !checkId ( id ) ) {
 		if ( tabelaOrigem != NULL ) {
 			return tabelaOrigem->assignVariable ( id );
@@ -37,15 +40,26 @@ AST::Node * SymbolTable::assignVariable ( std::string id ) {
 	}
 
 	entryList[id].initialized = true;
-	return retorno;//Creates variable node anyway
+	return retorno;	//Creates variable node anyway
 }
+
+// //Funcao que e responsavel por dar um assign num atributo de classe
+// AST::Variable * SymbolTable::assignVariableClasse ( AST::Objeto* objeto, std::string idAtributo ) {
+// 	AST::Classe* temp = objeto->classePertencente;
+
+// 	AST::Variable * retorno = new AST::Variable ( idAtributo, temp->tabelaSimbolos->entryList[idAtributo].type, NULL );
+
+// 	temp->tabelaSimbolos->assignVariable(idAtributo);
+
+// 	entryList[idAtributo].initialized = true;
+// 	return retorno;	
+// }
+
 //////////
 AST::Node * SymbolTable::useVariable ( std::string id ) {
 	AST::Variable * retorno = new AST::Variable ( id, entryList[id].type, NULL );
 
 	if ( !checkId ( id ) ) {
-
-
 
 		if ( tabelaOrigem != NULL ) {
 			return tabelaOrigem->useVariable ( id );
@@ -120,10 +134,9 @@ Symbol SymbolTable::getSymbol ( std::string id ) {
 	return retorno;
 }
 
-AST::Classe* SymbolTable::newClass(std::string id, ST::SymbolTable* tabelaSimbolosClasse, AST::ConstrutorClasse* construtorClasse, AST::Node* escopoClasse){
-	AST::Classe * classe = new AST::Classe ( id, escopoClasse, tabelaSimbolosClasse, construtorClasse  );
+AST::Classe* SymbolTable::newClass(std::string id, ST::SymbolTable* tabelaSimbolosClasse, AST::Block* escopoClasse){
+	AST::Classe * classe = new AST::Classe ( id, escopoClasse, tabelaSimbolosClasse );
 
-	classe->printTree();
 	if ( checkId ( id ) ) {
 		yyerror ( "Erro semantico: ja existe uma classe com o nome %s\n", id.c_str() );
 	}
@@ -182,6 +195,50 @@ AST::Objeto* SymbolTable::useObjeto(std::string id){
 	AST::Objeto* c  = new AST::Objeto(id, objeto.classePertencente);
 
 	return c;
+}
+
+/*Cria novo atributo de classe*/
+AST::Atributo* SymbolTable::newAtributo(AST::Variable* var, AST::Classe* classePertencente){
+	AST::Atributo* atri = new AST::Atributo ( var, classePertencente );
+
+	if ( checkId ( var->id ) && this->entryList.at(var->id).kind == ST::atributo ) {
+		yyerror ( "Erro semantico: ja existe um atributo com o nome %s\n", var->id.c_str() );
+	}
+	else {
+		Symbol entry ( var, classePertencente );
+		addSymbol ( var->id, entry );
+	}
+	return atri;
+}
+
+AST::Atributo* SymbolTable::assignAtributo ( AST::Variable* var, AST::Classe* classePertencente ){
+	AST::Atributo * retorno = new AST::Atributo ( var, classePertencente );
+
+	if ( !checkId ( var->id ) ) {
+		yyerror ( "Atributo ainda não definida! %s\n", var->id.c_str() );
+		retorno->temErro ( true );
+	}
+
+	classePertencente->tabelaSimbolos->entryList[var->id].initialized = true;
+	return retorno;	//retorna o nodo de qualquer jeito
+}
+
+/*Usa atributo de classe*/
+AST::Atributo* SymbolTable::useAtributo(std::string id){
+	if(!checkId(id)){
+		yyerror("Erro semantico: atributo nao existe \n");
+	}
+
+	ST::Symbol atributo = this->entryList.at(id);
+	
+	if(atributo.kind != ST::atributo){
+		yyerror("Erro semantico: variavel nao e um atributo de classe \n");
+		std::cout << std::endl;
+	}
+
+	AST::Atributo* a  = new AST::Atributo(atributo.var, atributo.classePertencente);
+
+	return a;
 }
 
 

@@ -287,8 +287,15 @@ void Retorno::printTree() {
 }
 
 void Classe::printTree(){
-	std::cout << "Declaracao de classe com o seguinte corpo: " << std::endl;
-	corpoClasse->printTree();
+	std::cout << "Declaracao de classe";
+
+	if(corpoClasse != NULL){
+		std::cout << " com corpo: " << std::endl;
+		corpoClasse->printTree();
+	}
+	else {
+		std::cout << " sem corpo." << std::endl;
+	}
 }
 
 void Objeto::printTree(){
@@ -297,6 +304,10 @@ void Objeto::printTree(){
 
 void ConstrutorClasse::printTree(){
 	
+}
+
+void Atributo::printTree(){
+	std::cout << "atributo da classe " << classePertencente->id << " de nome " << var->id;
 }
 
 

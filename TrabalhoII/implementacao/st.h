@@ -8,12 +8,12 @@
 
 
 extern void yyerror ( const char * s, ... );
-namespace AST {class Node; class Classe; class Objeto; class ConstrutorClasse;}
+namespace AST {class Node; class Variable; class Classe; class Objeto; class ConstrutorClasse; class Block; class Atributo;}
 namespace ST {
 
 	class Symbol;
 	class SymbolTable;
-	enum Kind { variable, arranjo,  function, classe, objeto };
+	enum Kind { variable, arranjo,  function, classe, objeto, atributo };
 
 	typedef std::map<std::string, Symbol> SymbolList; //Set of Symbols
 
@@ -26,6 +26,7 @@ namespace ST {
 		std::vector<ST::Symbol *> parametros; /*Stores the parameters of function*/
 		SymbolTable* tabelaClasse;
 		AST::Classe* classePertencente;
+		AST::Variable* var;
 
 		/*Construtor de simbolos para variaveis*/
 		Symbol ( Tipos::Tipo type, Kind kind, int64_t value, bool initialized ) :
@@ -41,6 +42,9 @@ namespace ST {
 
 		/*Construtor de simbolos para objetos*/
 		Symbol(AST::Classe* classePertencente) : classePertencente(classePertencente) {kind = objeto; initialized = true;}
+
+		/*Construtor de simbolos para atributos de classes*/
+		Symbol(AST::Variable* var, AST::Classe* classePertencente) : var(var), classePertencente(classePertencente) {kind = atributo; initialized = false;}
 	};
 
 	class SymbolTable {
@@ -62,6 +66,9 @@ namespace ST {
 
 		/*Atribui variavel*/
 		AST::Node * assignVariable ( std::string id );
+
+		/*Atribui variavel a um atributo de classe*/
+		AST::Variable * assignVariableClasse ( AST::Objeto* objeto, std::string idAtributo );
 
 		/*Usa uma variavel*/
 		AST::Node * useVariable ( std::string id );
@@ -88,7 +95,7 @@ namespace ST {
 		AST::Node * assignFunction ( std::string id, Tipos::Tipo tipoVariavel, std::vector<ST::Symbol *> next, AST::Node * body );
 
 		/*Criacao de nova classe*/
-		AST::Classe* newClass (std::string id, ST::SymbolTable* tabelaSimbolosClasse, AST::ConstrutorClasse* construtorClasse, AST::Node* escopoClasse);
+		AST::Classe* newClass (std::string id, ST::SymbolTable* tabelaSimbolosClasse, AST::Block* escopoClasse);
 
 		/*Utiliza classe*/
 		AST::Classe* useClass(std::string id);
@@ -98,6 +105,15 @@ namespace ST {
 
 		/*Utiliza classe*/
 		AST::Objeto* useObjeto(std::string id);
+
+		/*Cria novo atributo de classe*/
+		AST::Atributo* newAtributo(AST::Variable* var, AST::Classe* classePertencente);
+
+		/*Usa atributo de classe*/
+		AST::Atributo* useAtributo(std::string id);
+
+		/*Atribui variavel a um atributo de classe*/
+		AST::Atributo * assignAtributo ( AST::Variable* var, AST::Classe* classePertencente );
 	};
 
 }

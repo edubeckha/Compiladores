@@ -193,13 +193,23 @@ namespace AST {
 	class Classe : public Node {
 	public:
 		std::string id;
-		Node* corpoClasse;
-		ConstrutorClasse* construtor;
+		Block* corpoClasse;
 		ST::SymbolTable* tabelaSimbolos;
 
-		Classe(std::string id, Node* corpoClasse, ST::SymbolTable* tabelaSimbolos, ConstrutorClasse* construtor) : id(id), corpoClasse(corpoClasse), tabelaSimbolos(tabelaSimbolos), construtor(construtor) { }
+		Classe(std::string id, Block* corpoClasse, ST::SymbolTable* tabelaSimbolos) : id(id), corpoClasse(corpoClasse), tabelaSimbolos(tabelaSimbolos) { }
 
 		Classe(std::string id, ST::SymbolTable* tabelaSimbolos) : id(id), tabelaSimbolos(tabelaSimbolos) { }
+
+		void printTree();
+	};
+
+	class Atributo : public Node {
+	public:
+		AST::Variable* var;
+		AST::Classe* classePertencente;
+
+		Atributo(AST::Variable* var, AST::Classe* classePertencente) : var (var), classePertencente(classePertencente) { 
+			tipo = var->tipo; }
 
 		void printTree();
 	};

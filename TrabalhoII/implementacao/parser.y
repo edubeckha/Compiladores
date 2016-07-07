@@ -8,6 +8,7 @@ std::vector<ST::Symbol*> parametros;
 extern int yylex();
 extern void yyerror(const char* s, ...);
 static Tipos::Tipo tv = Tipos::indefinido;
+bool variaveisEscopoClasse = false;
 %}
 
 %define parse.trace
@@ -22,7 +23,6 @@ static Tipos::Tipo tv = Tipos::indefinido;
     const char* booleano;
     AST::Node *node;
     AST::Block *block;
-    AST::ConstrutorClasse* constr;
     Tipos::Operation operacao;
     const char *name;
     ST::SymbolTable* tabelaEscopo;
@@ -43,9 +43,8 @@ static Tipos::Tipo tv = Tipos::indefinido;
  * Example: %type<node> expr
  */
 
-%type <node> expr line varlist unexpr declaracoes assignments condicionais elseIf definicoes param funcoesObjetos declaracaoClasse escopoClasse declaracaoObjetosClasse
-%type <block> lines program
-%type <constr> construtorClasse
+%type <node> expr line varlist unexpr declaracoes assignments condicionais elseIf definicoes param funcoesObjetos declaracaoClasse declaracaoObjetosClasse  possibilidadesEscopoClasse
+%type <block> lines program escopoClasse 
 %type <operacao> tipoOperacao
 %type<tabelaEscopo> novoEscopo
 %type<tipoVariavel> tipoVariavel
@@ -88,24 +87,22 @@ line    : T_NL {$$ = NULL; }
 
 declaracaoClasse :
         /*declaracao de classes*/
-        T_CLASSE T_ID T_CHAVE construtorClasse escopoClasse T_CHAVEF { std::cout << "eeee" << std::endl; }
+        T_CLASSE T_ID T_CHAVE novoEscopo escopoClasse mataEscopo T_CHAVEF { $$ = symtab->newClass($2, $4, $5); }
+        | T_CLASSE T_ID T_CHAVE T_CHAVEF { $$ = symtab->newClass($2, NULL, NULL); }
         ;
 
 escopoClasse :
-            T_NL {$$ = NULL; } 
-            | {$$ = NULL;}
-            | declaracoes {$$ = $1;}
+            possibilidadesEscopoClasse {$$ = new AST::Block(); if($1 != NULL) $$->lines.push_back($1);} 
+            | escopoClasse possibilidadesEscopoClasse {if($2 != NULL) $1->lines.push_back($2); }
+            ;
+
+possibilidadesEscopoClasse:
+            declaracoes {$$ = $1;}
             | assignments {$$ = $1;}
             | condicionais {$$ = $1;}
             | definicoes {$$ = $1;}
             | funcoesObjetos {$$ = $1;}
             ;
-
-construtorClasse :
-             /*declaracao de construtores*/
-              T_ID T_PARA param T_PARAF T_CHAVE novoEscopo escopoClasse mataEscopo T_CHAVEF {$$ = new AST::ConstrutorClasse($1, parametros);
-              parametros.clear();}
-              ;
 
 funcoesObjetos: 
         T_ID T_DOT T_ID T_PARA T_PARAF T_FINALEXP {std::cout << "usando funcoes das classes" << std::endl;}
@@ -115,7 +112,6 @@ declaracaoObjetosClasse:
             /*declaracao de objetos de uma classe*/
             T_ID T_ID T_ASSIGN T_NEW T_ID T_PARA T_PARAF T_FINALEXP {$$ = symtab->newObjeto($2, symtab->useClass($1));}
             ;  
-
 
 declaracoes : 
     	/*declaracao de variaveis*/
@@ -141,7 +137,8 @@ assignments :
     	|T_ID T_ARRA unexpr T_ARRAF T_ASSIGN unexpr T_FINALEXP {AST::Node* node = symtab->assignVariable($1); $$ = new AST::BinOp(new AST::Arranjo($3, node), Tipos::assign, $6);}
 
         /*assign em atributos de objetos*/
-        |T_ID T_DOT T_ID T_ASSIGN unexpr T_FINALEXP {std::cout << "assign em atributos de objetos" << std::endl;}
+        |T_ID T_DOT T_ID T_ASSIGN unexpr T_FINALEXP {AST::Atributo* atri = symtab->newAtributo((AST::Variable*) symtab->assignVariable($3), symtab->useObjeto($1)->classePertencente); 
+        $$ = new AST::BinOp(atri, Tipos::assign, $5); }
 
         /*Reconhece uma ou mais declarações de retorno de uma função.*/
         | T_RETO unexpr T_FINALEXP {
@@ -216,7 +213,7 @@ tipoOperacao :
         ;
 /*define uma ou mais variaveis de acordo com a vontade do usuario*/
 varlist : 
-        T_ID { $$ = symtab->newVariable($1, tv, NULL); }
+        T_ID {$$ = symtab->newVariable($1, tv, NULL); }
         | varlist T_COMMA T_ID { $$ = symtab->newVariable($3, tv, $1); }
         ;
 
