@@ -109,6 +109,14 @@ public:
 	 * @return ITNode*
 	 */
 	static ITNode * createVar ( std::string id );
+	//--------------------------------------------------
+	/**
+	 * @brief Cria um nodo tipo variável, somente com seu identificador
+	 *
+	 * @param id Identificador da variavel
+	 * @return ITNode*
+	 */
+	static ITNode * createDefVar ( std::__cxx11::string id, Data::DataType tipo );
 //--------------------------------------------------
 	/**
 	 * @brief Cria um nodo tipo valor, com o valor associado
@@ -117,6 +125,15 @@ public:
 	 * @return ITNode*
 	 */
 	static ITNode * createValue ( Data valor );
+//--------------------------------------------------
+
+	/**
+	 * @brief Cria um nodo de definicao de variavel
+	 *
+	 * @param leftSon Nodo da variavel a ser definida
+	 * @return ITNode*
+	 */
+	static ITNode * createDef ( ITNode * leftSon );
 //--------------------------------------------------
 
 

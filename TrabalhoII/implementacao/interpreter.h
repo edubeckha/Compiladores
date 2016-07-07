@@ -16,14 +16,19 @@ class Interpreter {
 public:
 
 	/**
+	 * @brief Default constructor
+	 *
+	 */
+	Interpreter();
+//--------------------------------------------------
+	/**
 	 * @brief Verifica se o identificador foi definido (Está na tabela de simbolos)
 	 *
 	 * @param id Identificador do nodo
 	 * @return bool
 	 */
 	bool isDefined ( std::string id );
-
-
+//--------------------------------------------------
 	/**
 	 * @brief Verifica o tipo de nodo IT (Variavel, Funcao, Operacao...)
 	 *
@@ -31,8 +36,7 @@ public:
 	 * @return ITNode::NodeType
 	 */
 	ITNode::NodeType getITType ( std::string id );
-
-
+//--------------------------------------------------
 	/**
 	 * @brief Retorna uma resposta equivalente a execucao de um nodo.
 	 * Se for uma operacao, a executa e retorna um valor se fizer sentido
@@ -41,8 +45,7 @@ public:
 	 * @return std::string
 	 */
 	std::string processNode ( ITNode * node );
-
-
+//--------------------------------------------------
 	/**
 	 * @brief Obtém o valor associado a um nodo
 	 *
@@ -50,8 +53,7 @@ public:
 	 * @return Data
 	 */
 	Data getNodeValue ( ITNode * node );
-
-
+//--------------------------------------------------
 	/**
 	 * @brief Adiciona um novo identificador na tabela de simbolos
 	 *
@@ -69,6 +71,7 @@ private:
 	 * @return Data
 	 */
 	Data processNodeValue ( ITNode * node );
+//--------------------------------------------------
 	/**
 	 * @brief Tabela interna de símbolos
 	 *

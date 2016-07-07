@@ -51,22 +51,22 @@ Data::Data ( int inteiro ) {
 	this->_type = Data::integer;
 	this->_data = new int ( inteiro );
 }
-//////////
+//--------------------------------------------------
 Data::Data ( float real ) {
 	this->_type = Data::real;
 	this->_data = new float ( real );
 }
-//////////
+//--------------------------------------------------
 Data::Data ( bool booleano ) {
 	this->_type =  Data::boolean;
 	this->_data = new bool ( booleano );
 }
-//////////
+//--------------------------------------------------
 Data::Data ( std::string String ) {
 	this->_type = Data::string;
 	this->_data = new std::string ( String );
 }
-//////////
+//--------------------------------------------------
 Data::Data ( const Data & other ) {
 	this->_type = other._type;
 	this->_data = other._data;
@@ -79,17 +79,17 @@ int Data::dataInt() {
 	int * inteiro = ( int * ) this->_data;
 	return *inteiro;
 }
-//////////
+//--------------------------------------------------
 float Data::dataFloat() {
 	float * real = ( float * ) this->_data;
 	return *real;
 }
-//////////
+//--------------------------------------------------
 bool Data::dataBool() {
 	bool * booleano = ( bool * ) this->_data;
 	return *booleano;
 }
-//////////
+//--------------------------------------------------
 std::string Data::dataString() {
 	std::string * String = ( std::string * ) this->_data;
 	return *String;
@@ -144,7 +144,7 @@ Data Data::sum ( Data * outro ) {
 
 	return Data ( 0 );//Default data return
 }
-//////////
+//--------------------------------------------------
 Data Data::subtrair ( Data * outro ) {
 	assert ( aritmetico() );
 	assert ( outro->aritmetico() );
@@ -190,7 +190,7 @@ Data Data::subtrair ( Data * outro ) {
 	std::cerr << "[ATENCAO - realizando uma subtracao com valores incosistentes!]" << std::endl;
 	return Data ( 0 );//Default data return
 }
-//////////
+//--------------------------------------------------
 Data Data::multiply ( Data * outro ) {
 	assert ( aritmetico() );
 	assert ( outro->aritmetico() );
@@ -236,7 +236,7 @@ Data Data::multiply ( Data * outro ) {
 	std::cerr << "[ATENCAO - realizando uma multiplicacao com valores incosistentes!]" << std::endl;
 	return Data ( 0 );//Default data return
 }
-//////////
+//--------------------------------------------------
 Data Data::divide ( Data * outro ) {
 	assert ( aritmetico() );
 	assert ( outro->aritmetico() );
@@ -286,20 +286,20 @@ Data Data::divide ( Data * outro ) {
 	std::cerr << "[ATENCAO - realizando uma divisao com valores incosistentes!]" << std::endl;
 	return Data ( 0 );//Default data return
 }
-//////////
+//--------------------------------------------------
 Data Data::bAnd ( Data * outro ) {
 	assert ( this->type() == Data::boolean );
 	assert ( outro->type() == Data::boolean );
 	return Data ( this->dataBool() and outro->dataBool() );
 }
-//////////
+//--------------------------------------------------
 Data Data::bOr ( Data * outro ) {
 	assert ( this->type() == Data::boolean );
 	assert ( outro->type() == Data::boolean );
 	return Data ( this->dataBool() or outro->dataBool() );
 }
 
-//////////
+//--------------------------------------------------
 Data Data::igual ( Data * outro ) {
 	if ( this->aritmetico() && outro->aritmetico() ) {
 		switch ( this->_type ) {
@@ -356,7 +356,7 @@ Data Data::igual ( Data * outro ) {
 	}
 }
 
-//////////
+//--------------------------------------------------
 Data Data::maior ( Data * outro ) {
 	if ( this->aritmetico() && outro->aritmetico() ) {
 		switch ( this->_type ) {
@@ -408,7 +408,7 @@ Data Data::maior ( Data * outro ) {
 
 	}
 }
-////////////
+//--------------------------------------------------
 Data Data::menor ( Data * outro ) {
 	return Data ( ! ( this->maior ( outro ).dataBool() && this->igual ( outro ).dataBool() ) );
 }
@@ -419,7 +419,7 @@ Data Data::menor ( Data * outro ) {
 bool Data::aritmetico() {
 	return ( this->_type == Data::integer || this->_type == Data::real );
 }
-//////////
+//--------------------------------------------------
 std::string Data::toString() {
 
 	// switch tipo de dado
@@ -446,7 +446,31 @@ std::string Data::toString() {
 		}
 	}
 }
+//--------------------------------------------------
+Data Data::createDefault ( Data::DataType tipo ) {
+	switch ( tipo ) {
+		case Data::integer: {
+			return Data ( 1 );
+			break;
+		}
 
+		case Data::real: {
+			float x = .1;
+			return Data ( x );
+			break;
+		}
+
+		case Data::boolean: {
+			return Data ( true );
+			break;
+		}
+
+		case Data::string: {
+			return Data ( std::string ( "" ) );
+			break;
+		}
+	}
+}
 
 /*Biblioteca escrotissima de templates
 //switch tipo de dado

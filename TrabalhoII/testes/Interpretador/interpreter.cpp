@@ -1,17 +1,23 @@
 #include "interpreter.h"
 typedef ITNode::OperationType optype;
-//////////
+
+//--------------------------------------------------
+Interpreter::Interpreter() {
+
+}
+
+//--------------------------------------------------
 bool Interpreter::isDefined ( std::string id ) {
 	return _idTable.find ( id )  != _idTable.end();
 }
-//////////
+//--------------------------------------------------
 ITNode::NodeType Interpreter::getITType ( std::string id ) {
 	ITNode	* aNode =  _idTable.at ( id );
 	ITNode::NodeType tipoNodo = aNode->getType();
 	return tipoNodo;
 
 }
-//////////
+//--------------------------------------------------
 Data Interpreter::processNodeValue ( ITNode * node ) {
 	switch ( node->getType() ) {
 		case ITNode::atrib:
@@ -97,7 +103,7 @@ Data Interpreter::processNodeValue ( ITNode * node ) {
 			);
 	}
 }
-//////////
+//--------------------------------------------------
 std::string Interpreter::processNode ( ITNode * node ) {
 	switch ( node->getType() ) {
 		case ITNode::atrib:
@@ -144,8 +150,7 @@ std::string Interpreter::processNode ( ITNode * node ) {
 			);
 	}
 }
-
-//////////
+//--------------------------------------------------
 void Interpreter::addId ( std::string id, ITNode * node ) {
 	assert ( ! ( isDefined ( id ) ) );
 	this->_idTable.insert ( std::pair<std::string, ITNode *> ( id, node ) );

@@ -68,13 +68,23 @@ public:
 
 	/*Verifica se o dado é aritmetico*/
 	bool aritmetico ();
-
+//--------------------------------------------------
 	/**
 	 * @brief Retorna uma string com a informação do dado
 	 *
 	 * @return std::__cxx11::string
 	 */
 	std::string toString();
+//--------------------------------------------------
+	/**
+	 * @brief Cria um objeto com valores padroes para o tipo de dado especificado
+	 *
+	 * @param tipo Tipo de dado do novo valor padrao
+	 * @return Data
+	 */
+	static Data createDefault ( DataType tipo );
+//--------------------------------------------------
+
 private:
 
 	void * _data;

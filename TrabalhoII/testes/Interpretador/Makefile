@@ -2,7 +2,7 @@
 FLEX=flex
 BISON=bison
 CC=clang++
-PARAM=-std=c++11 -fcxx-exceptions -Wno-deprecated-register
+PARAM= -std=c++11 -fcxx-exceptions -Wno-deprecated-register -Wno-switch
 OUTPUT=myparse
 
 all: flex yacc clang
