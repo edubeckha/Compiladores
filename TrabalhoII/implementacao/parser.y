@@ -42,7 +42,7 @@ static Tipos::Tipo tv = Tipos::indefinido;
  * Example: %type<node> expr
  */
 
-%type <node> expr line varlist unexpr declaracoes assignments condicionais elseIf definicoes param recString
+%type <node> expr line varlist unexpr declaracoes assignments condicionais elseIf definicoes param recString 
 %type <block> lines program corpoComplexo
 %type <operacao> tipoOperacao
 %type<tabelaEscopo> novoEscopo
@@ -111,6 +111,9 @@ assignments :
     		/*Assign em string*/
 /////////////////////////////////
             |T_ID T_ASSIGN recString T_FINALEXP  { AST::Node* node = symtab->assignVariable($1); $$ = new AST::BinOp(node, Tipos::assign, $3); }
+
+            /*Concatenação de duas strings. (por enquanto só aceita na forma id = "string0" + "string1";)*/
+            | T_ID T_ASSIGN T_STRING T_PLUS T_STRING T_FINALEXP {std::cout<<"assign de duas strings"<<std::endl; $$ = new AST::String($3); }
 ////////////////////////////////
         /*Reconhece uma ou mais declarações de retorno de uma função.*/
         | T_RETO unexpr T_FINALEXP { $$ = new AST::Retorno($2); }
@@ -120,14 +123,15 @@ assignments :
 recString : 
 		//////////////////////////////////////
 		T_STRING { $$ = new AST::String($1); }
-       ///////////////////////////////////////
         ;
+       ///////////////////////////////////////
+
 
 condicionais: 
-		    /*tratamento de expressoes condicionais do tipo if*/
+		/*tratamento de expressoes condicionais do tipo if*/
         T_IF T_PARA unexpr T_PARAF T_CHAVE novoEscopo lines mataEscopo T_CHAVEF elseIf { $$ = new AST::Condicao($3, $7, $10);}
 
-		    /*tratamento de lacos*/
+		/*tratamento de lacos*/
         | T_WHILE T_PARA unexpr T_PARAF T_CHAVE novoEscopo lines mataEscopo T_CHAVEF { $$ = new AST::Laco($3, $7);}
 		;
 
@@ -158,7 +162,10 @@ elseIf : {$$ = NULL;}
 unexpr : 
         unexpr tipoOperacao expr {$$ = new AST::BinOp($1, $2, $3);}
         | expr {$$ = $1;}
-		    ;
+        ///////////////////////////////////////
+        | T_STRING T_IGUAL T_STRING {AST::Node* n1 = new AST::String($1); AST::Node* n2 = new AST::String($1); std::cout<<"compara string"<<std::endl; $$ = new AST::BinOp(n1, Tipos::igual, n2);}
+        ///////////////////////////////////////
+		;
 
 /*tratamento de todas as expressoes utilizadas no programa*/
 expr    : T_PARA unexpr T_PARAF {$$ = $2;}
