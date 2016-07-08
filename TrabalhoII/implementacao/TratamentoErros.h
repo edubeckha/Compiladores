@@ -4,7 +4,7 @@
 
 namespace Tipos {
 	enum Tipo { inteiro, real, booleano, indefinido, complexo};
-	enum Operation { plus, sub, times, divi, assign, maior, menor, maiorigual, menorigual, ande, ore, unibool, unario, declaracao, igual, diferente, coercao, defineIndiceArranjo, defineCondicaoLaco, usoClasse };
+	enum Operation { plus, sub, times, divi, assign, maior, menor, maiorigual, menorigual, ande, ore, unibool, chamadaFuncao, unario, declaracao, igual, diferente, coercao, defineIndiceArranjo, defineCondicaoLaco, usoClasse };
 
 	Tipo opUnaria( Tipo tipoRecebido, Operation op );
 	Tipo opBinaria( Tipo tipoNodoEsquerda, Tipo tipoNodoDireita, Operation op );

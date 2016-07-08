@@ -78,35 +78,55 @@ void SymbolTable::realizaCoercao ( std::string id ) {
 }
 //////////
 /*Cria uma nova funcao na tabela de simbolos*/
-AST::Node * SymbolTable::newFunction ( std::string id, Tipos::Tipo tipoVariavel, std::vector<ST::Symbol *> parametros ) {
+AST::Node * SymbolTable::newFunction ( std::string id, Tipos::Tipo tipoVariavel, std::vector<AST::Variable *> parametros ) {
 	if ( checkId ( id ) ) {
 		yyerror ( "Erro semantico: função %s já existe.\n", id.c_str() );
-
 	} else {
-		Symbol entry ( tipoVariavel, function, parametros, false );
+		Symbol entry ( tipoVariavel, funcao, parametros, false );
 		addSymbol ( id, entry );
 	}
 
-	return NULL;//?
+	return new AST::Funcao(id, tipoVariavel, parametros);//?
 }
 //////////
 /*Define o corpo da funcao e caso ela nao foi declarada, a mesma eh criada*/
-AST::Node * SymbolTable::assignFunction ( std::string id, Tipos::Tipo tipoVariavel, std::vector<ST::Symbol *> next, AST::Node * body ) {
+AST::Node * SymbolTable::assignFunction ( std::string id, Tipos::Tipo tipoVariavel, std::vector<AST::Variable *> parametros, AST::Node * body ) {
 	if ( ! checkId ( id ) ) {
-		this->newFunction ( id, tipoVariavel, next );
+		this->newFunction ( id, tipoVariavel, parametros );
 	}
-
 	ST::Symbol tmp = this->getFunction ( id );
-
-	for ( int i = 0; i < next.size(); i++ ) {
-		if ( tmp.parametros.at ( i )->type != next.at ( i )->type ) {
+	for ( int i = 0; i < parametros.size(); i++ ) {
+		if ( tmp.parametros.at ( i )->tipo != parametros.at ( i )->tipo ) {
 			std::cout << "Atenção: tipo de parametro incompativel. \n" << std::endl;
 		}
 	}
-
 	entryList[id].initialized = true;
-	return NULL;//?
+	return new AST::Funcao(id, tipoVariavel, parametros);//?
 }
+
+AST::Node* SymbolTable::useFunction (std::string id ){
+	if ( !checkId ( id ) ) {
+		if ( tabelaOrigem != NULL ) {
+			return tabelaOrigem->useVariable ( id );
+		} else {
+			yyerror ( "Erro semantico: funcao %s ainda nao declarada.\n", id.c_str() );
+		}
+	}
+
+	if(entryList[id].kind != funcao){
+		yyerror ( "Erro semantico: %s nao representa uma funcao.\n", id.c_str() );
+		//temErro = true
+	}
+
+	AST::Funcao* func = new AST::Funcao ( id, entryList[id].type, entryList[id].parametros );
+	if ( !entryList[id].initialized ) {
+		yyerror ( "Erro semantico: variavel %s ainda nao inicializada.\n", id.c_str() );
+		//temErro = true
+	}
+
+	return  func; //Creates variable node anyway
+}
+
 //////////
 Symbol SymbolTable::getSymbol ( std::string id ) {
 	assert ( checkId ( id ) );

@@ -8,12 +8,12 @@
 
 
 extern void yyerror ( const char * s, ... );
-namespace AST {class Node; class Variable; class Classe; class Objeto; class ConstrutorClasse; class Block; class Atributo;}
+namespace AST {class Node; class Variable; class Classe; class Objeto; class ConstrutorClasse; class Block; class Atributo; class Funcao;}
 namespace ST {
 
 	class Symbol;
 	class SymbolTable;
-	enum Kind { variable, arranjo,  function, classe, objeto, atributo };
+	enum Kind { variable, arranjo,  funcao , classe, objeto, atributo };
 
 	typedef std::map<std::string, Symbol> SymbolList; //Set of Symbols
 
@@ -23,7 +23,7 @@ namespace ST {
 		Kind kind;              /*Kind of symbol: variable, function, etc.*/
 		int64_t value;        /*Space to store a value while we are doing interpretation.*/
 		bool initialized;       /*Defines if symbol has been initialized or not.*/
-		std::vector<ST::Symbol *> parametros; /*Stores the parameters of function*/
+		std::vector<AST::Variable *> parametros; /*Stores the parameters of function*/
 		SymbolTable* tabelaClasse;
 		AST::Classe* classePertencente;
 		AST::Variable* var;
@@ -31,10 +31,11 @@ namespace ST {
 		/*Construtor de simbolos para variaveis*/
 		Symbol ( Tipos::Tipo type, Kind kind, int64_t value, bool initialized ) :
 			type ( type ), kind ( kind ), value ( value ), initialized ( initialized ) {  }
+			
 		Symbol() {type = Tipos::indefinido; kind = variable; value = 0; initialized = false;}
 
 		/*Construtor de simbolos para funcoes*/
-		Symbol ( Tipos::Tipo type, Kind kind, std::vector<ST::Symbol *> parametros, bool initialized ) :
+		Symbol ( Tipos::Tipo type, Kind kind, std::vector<AST::Variable *> parametros, bool initialized ) :
 			type ( type ), kind ( kind ), parametros ( parametros ), initialized ( initialized ) { }
 
 		/*Construtor de simbolos para classes*/
@@ -89,10 +90,13 @@ namespace ST {
 		ST::Symbol getFunction ( std::string id ) {return entryList[id];};
 
 		/*Cria uma nova função*/
-		AST::Node * newFunction ( std::string id, Tipos::Tipo tipoVariavel, std::vector<ST::Symbol *> parametros );
+		AST::Node * newFunction ( std::string id, Tipos::Tipo tipoVariavel, std::vector<AST::Variable *> parametros );
 
 		/*Atribui uma função*/
-		AST::Node * assignFunction ( std::string id, Tipos::Tipo tipoVariavel, std::vector<ST::Symbol *> next, AST::Node * body );
+		AST::Node * assignFunction ( std::string id, Tipos::Tipo tipoVariavel, std::vector<AST::Variable *> next, AST::Node * body );
+
+		/*Utilizacao de funcao*/
+		AST::Node* useFunction (std::string id );
 
 		/*Criacao de nova classe*/
 		AST::Classe* newClass (std::string id, ST::SymbolTable* tabelaSimbolosClasse, AST::Block* escopoClasse);

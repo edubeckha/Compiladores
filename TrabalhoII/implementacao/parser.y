@@ -3,8 +3,7 @@
 #include "st.h"
 ST::SymbolTable* symtab = new ST::SymbolTable();  /* main symbol table */
 AST::Block *programRoot; /* the root node of our program AST:: */
-std::vector<AST::Variable*> teste;
-std::vector<ST::Symbol*> parametros;
+std::vector<AST::Variable*> parametros;
 extern int yylex();
 extern void yyerror(const char* s, ...);
 static Tipos::Tipo tv = Tipos::indefinido;
@@ -105,7 +104,7 @@ possibilidadesEscopoClasse:
             ;
 
 funcoesObjetos: 
-        T_ID T_DOT T_ID T_PARA T_PARAF T_FINALEXP {std::cout << "usando funcoes das classes" << std::endl;}
+        T_ID T_DOT T_ID T_PARA T_PARAF T_FINALEXP {AST::Classe* c = symtab->useClass(symtab->useObjeto($1)->classePertencente->id); $$ = new AST::BinOp(symtab->useFunction($3), Tipos::chamadaFuncao, symtab->useObjeto($1));}
         ;
 
 declaracaoObjetosClasse:
@@ -121,11 +120,10 @@ declaracoes :
         |tipoVariavel T_ID T_ARRA unexpr T_ARRAF T_FINALEXP {AST::Node* var = symtab->newVariable($2, tv, NULL); $$ = new AST::UniOp(new AST::Arranjo($4 ,var), Tipos::declaracao, tv);};
 
         /*declaracao de funcoes*/
-        | T_FUN tipoVariavel  T_ID novoEscopo T_PARA param T_PARAF mataEscopo T_FINALEXP {
-          AST::Node* node = symtab->newFunction($3, $2, parametros);
-          $$ = new AST::Funcao($3, $2, teste);
+        | tipoVariavel T_ID novoEscopo T_PARA param T_PARAF mataEscopo T_FINALEXP {
+          AST::Node* node = symtab->newFunction($2, $1, parametros);
+          $$ = new AST::Funcao($2, $1, parametros);
           parametros.clear();
-          teste.clear();
         }
         ;
 
@@ -159,13 +157,12 @@ condicionais:
 
 definicoes:
         /*definição da função previamente declarada.*/
-        T_DEFI T_FUN tipoVariavel  T_ID novoEscopo T_PARA param T_PARAF lines mataEscopo T_END T_DEFI {
-          AST::Node* var = symtab->assignFunction($4, $3, parametros, $9);
-          $$ = new AST::DefineFuncao($4, $3, teste, $9);
+        tipoVariavel T_ID novoEscopo T_PARA param T_PARAF lines mataEscopo T_END T_DEFI {
+          AST::Node* var = symtab->assignFunction($2, $1, parametros, $7);
+          $$ = new AST::DefineFuncao($2, $1, parametros, $7);
         }
         ;
         
-
 /*Trata da parte do else no laco if*/
 elseIf : {$$ = NULL;}
     		| T_ELSE T_CHAVE novoEscopo lines mataEscopo T_CHAVEF {$$ = $4;}
@@ -196,6 +193,8 @@ tipoVariavel :
         | T_DREAL { tv = Tipos::real; }
         | T_DBOOL { tv = Tipos::booleano; }
         ;
+
+
 /*define todos os tipos de operacoes que possamos ter no programa*/
 tipoOperacao : 
         T_PLUS {$$ = Tipos::plus;}
@@ -211,6 +210,8 @@ tipoOperacao :
         | T_IGUAL {$$ = Tipos::igual;}
         | T_DIFERENTE {$$ = Tipos::diferente;}
         ;
+
+
 /*define uma ou mais variaveis de acordo com a vontade do usuario*/
 varlist : 
         T_ID {$$ = symtab->newVariable($1, tv, NULL); }
@@ -228,19 +229,13 @@ mataEscopo : {symtab = symtab->tabelaOrigem;}
 /*define um ou mais parametros de acordo com a vontade do usuario*/
 param : 
       tipoVariavel  T_ID T_COMMA param {
-        ST::Symbol* smb = new ST::Symbol(tv, ST::variable, 0, false);
-        symtab->addSymbol($2, *smb);
-        parametros.push_back(smb);
         AST::Variable* vari = new AST::Variable($2, tv, $4);
-        teste.push_back(vari);
+        parametros.push_back(vari);
         $$ = vari;
       }
       |tipoVariavel  T_ID {
-        ST::Symbol* smb = new ST::Symbol(tv, ST::variable, 0, false);
-        symtab->addSymbol($2, *smb);
-        parametros.push_back(smb);
         AST::Variable* vari = new AST::Variable($2, tv, NULL);
-        teste.push_back(vari);
+        parametros.push_back(vari);
         $$ = vari;
       }
       | {$$ = NULL;}

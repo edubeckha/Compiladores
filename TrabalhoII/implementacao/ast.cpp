@@ -142,6 +142,14 @@ void BinOp::printTree() {
 		std::cout << "teste de uso de classe" << std::endl;
 		break;
 
+	case Tipos::chamadaFuncao:
+		std::cout << "Chamada da funcao ";
+		left->printTree();
+		std::cout << " do ";
+		right->printTree();
+		std::cout << std::endl;
+		break;
+
 	default:
 		std::cout << "Operador nao tratado" << std::endl;
 		break;
@@ -191,7 +199,6 @@ void UniOp::printTree() {
 		std::cout << " para real)";
 		node->tipo = Tipos::real;
 		break;
-
 	default:
 		std::cout << "Operacao nao reconhecida!!!" << std::endl;
 	}
