@@ -17,7 +17,7 @@ x = FALSE;
 x;
 x = TRUE;
 x;
-x = ~ x;
+x = ! x;
 x;
 x = x AND TRUE;
 x;
