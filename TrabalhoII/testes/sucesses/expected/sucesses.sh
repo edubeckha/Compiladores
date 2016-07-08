@@ -1,8 +1,11 @@
 #!/bin/bash
 
 SUCESSES=$HOME/projetos/compilladores_parte2/TrabalhoII/testes/sucesses
+ERRORS = $HOME/projetos/compilladores_parte2/TrabalhoII/testes/errors
 
-make
+make all
+
+echo "Testando casos de sucesso: não geram erros"
 
 for i in {0..6}; do
 

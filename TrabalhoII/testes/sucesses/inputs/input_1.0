@@ -1,6 +1,6 @@
 int a,b,c;
 real r;
-bool x,y,z;
+bool x;
 
 a = 20-5/7;
 b = 3+a;
@@ -8,14 +8,32 @@ c = -(b);
 
 r = 8.3 * 2;
 
-x = a >= b;
-y = ~ x;
-z = x OR z;
-
 a;
 b;
 c;
 r;
+
+x = FALSE;
 x;
-y;
-z;
+x = TRUE;
+x;
+x = ~ x;
+x;
+x = x AND TRUE;
+x;
+x = x OR TRUE;
+x;
+
+x = a == b;
+x;
+x = a != b;
+x;
+x = a > b;
+x;
+x = a < b;
+x;
+x = a >= b;
+x;
+x = a <= b;
+x;
+
