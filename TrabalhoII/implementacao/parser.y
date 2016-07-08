@@ -35,7 +35,7 @@ static Tipos::Tipo tv = Tipos::indefinido;
 %token <booleano> T_BOOLTRUE T_BOOLFALSE
 %token <name> T_ID
 %token <String> T_STRING
-%token T_NL T_ASSIGN T_FINALEXP T_IGUAL T_DINT T_DREAL T_DBOOL  T_COMMA T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_DIFERENTE T_UNIBOOL T_PARA T_PARAF T_ARRA T_ARRAF T_IF T_THEN T_ELSE T_END T_WHILE T_DO  T_TYPE T_FUN T_RETO T_CHAVE T_CHAVEF T_DSTRING
+%token T_NL T_ASSIGN T_FINALEXP T_IGUAL T_DINT T_DREAL T_DBOOL  T_COMMA T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_DIFERENTE T_UNIBOOL T_PARA T_PARAF T_ARRA T_ARRAF T_IF T_THEN T_ELSE T_END T_WHILE T_DO  T_TYPE T_FUN T_RETO T_CHAVE T_CHAVEF T_DSTRING T_SUBSTRG
 
 /* type defines the type of our nonterminal symbols.
  * Types should match the names used in the union.
@@ -99,6 +99,7 @@ declaracoes :
           parametros.clear();
           teste.clear();
         }
+        | T_ID T_SUBSTRG T_PARA T_INT T_COMMA T_INT T_PARAF T_FINALEXP {std::cout<<"substring"<<std::endl; $$ = NULL;}
         ;
 
 assignments : 
@@ -108,12 +109,12 @@ assignments :
     		/*assign em arranjos*/
     		|T_ID T_ARRA unexpr T_ARRAF T_ASSIGN unexpr T_FINALEXP {AST::Node* node = symtab->assignVariable($1); $$ = new AST::BinOp(new AST::Arranjo($3, node), Tipos::assign, $6);}
 
-    		/*Assign em string*/
 /////////////////////////////////
+    		/*Assign em string*/
             |T_ID T_ASSIGN recString T_FINALEXP  { AST::Node* node = symtab->assignVariable($1); $$ = new AST::BinOp(node, Tipos::assign, $3); }
 
-            /*Concatenação de duas strings. (por enquanto só aceita na forma id = "string0" + "string1";)*/
-            | T_ID T_ASSIGN T_STRING T_PLUS T_STRING T_FINALEXP {std::cout<<"assign de duas strings"<<std::endl; $$ = new AST::String($3); }
+            /*Concatenação de duas strings.*/
+            | T_ID T_ASSIGN T_STRING T_PLUS T_STRING T_FINALEXP { AST::Node* node = symtab->assignVariable($1);std::cout<<"assign de duas strings"<<std::endl; AST::Node* n1 = new AST::String($3); AST::Node* n2 = new AST::String($5); $$ = new AST::BinOp(node, Tipos::assign, new AST::BinOp(n1, Tipos::plus, n2)); }
 ////////////////////////////////
         /*Reconhece uma ou mais declarações de retorno de uma função.*/
         | T_RETO unexpr T_FINALEXP { $$ = new AST::Retorno($2); }
@@ -163,7 +164,7 @@ unexpr :
         unexpr tipoOperacao expr {$$ = new AST::BinOp($1, $2, $3);}
         | expr {$$ = $1;}
         ///////////////////////////////////////
-        | T_STRING T_IGUAL T_STRING {AST::Node* n1 = new AST::String($1); AST::Node* n2 = new AST::String($1); std::cout<<"compara string"<<std::endl; $$ = new AST::BinOp(n1, Tipos::igual, n2);}
+        | T_STRING T_IGUAL T_STRING {AST::Node* n1 = new AST::String($1); AST::Node* n2 = new AST::String($1); $$ = new AST::BinOp(n1, Tipos::igual, n2);}
         ///////////////////////////////////////
 		;
 

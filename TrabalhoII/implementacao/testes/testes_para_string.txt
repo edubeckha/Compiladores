@@ -20,6 +20,15 @@ if (a == b) { int a; a = 10;}
 
 if ("as"=="d"){string a; a = "teste";}
 
+-------------------------------------------
+
+string a;
+string b;
+a = "a";
+b = "b";
+if (a ==  b) {int a; int b; a = 10; b = 20; a = a+b;}
+
+
 *******************************************
 ///////////////////////////////////////////
 Funcionando parcialmente:
@@ -29,6 +38,14 @@ comparação de strings:
 
 *******************************************
 
+
+*******************************************
+Concatenação de strings:
+*******************************************
+string a;
+a = "as" + "asdf";
+A operacao de soma esperava inteiro ou real como parâmetro, mas recebeu booleano.
+Erro semantico: operacao de assign esperava dois tipos compativeis, mas recebeu string e inteiro
 
 *******************************************
 ///////////////////////////////////////////

@@ -67,6 +67,8 @@ strg \"([^\"\\\\]|\\\\.)*\"
 "{"					{return T_CHAVE;}
 "}"					{return T_CHAVEF;}
 
+".substring"		{return T_SUBSTRG;}
+
 ";"					{return T_FINALEXP;}
 "\n"                {return T_NL;}
 {nome}              {yylval.name = strdup(yytext); return T_ID;}
