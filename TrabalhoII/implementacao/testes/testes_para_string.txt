@@ -28,11 +28,41 @@ a = "a";
 b = "b";
 if (a ==  b) {int a; int b; a = 10; b = 20; a = a+b;}
 
+*******************************************
+Concatenação de strings:
+
+string a;
+a = "fasf"+"fde"+"re"+"age";
 
 *******************************************
 ///////////////////////////////////////////
 Funcionando parcialmente:
 ///////////////////////////////////////////
+*******************************************
+string a;
+a = "a";
+string b, c, d;
+b =a;
+c =b;
+d = c;
+if (a == b ){int a; c = "fas"; a = 10;}
+Erro semantico: operacao de assign esperava dois tipos compativeis, mas recebeu indefinido e string
+Declaracao de variavel string : a
+Atribuicao de valor para variavel string : a (string a)
+Declaracao de variavel string : b, c, d
+Atribuicao de valor para variavel string : b variavel string : a
+Atribuicao de valor para variavel string : c variavel string : b
+Atribuicao de valor para variavel string : d variavel string : c
+Expressao condicional 
++se: 
+(variavel string : a (igual) variavel string : b)
++entao: 
+Declaracao de variavel inteira : a
+Atribuicao de valor para variavel indefinida : c (string fas)
+Atribuicao de valor para variavel inteira : a (valor inteiro 10)
+
+Fim expressao condicional
+
 *******************************************
 comparação de strings:
 

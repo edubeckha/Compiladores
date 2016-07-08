@@ -206,4 +206,18 @@ namespace AST {
 		void printTree();
 	};
 
+	class Substring : public Node {
+	public:
+
+		const char * aux;
+		int inicio;
+		int fim;
+
+		Substring ( const char * aux, int inicio, int fim ) : aux ( aux ), inicio(inicio), fim(fim) {
+			tipo = Tipos::string;
+		}
+
+		void printTree();
+	};
+
 }

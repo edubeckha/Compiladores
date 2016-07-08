@@ -68,6 +68,7 @@ strg \"([^\"\\\\]|\\\\.)*\"
 "}"					{return T_CHAVEF;}
 
 ".substring"		{return T_SUBSTRG;}
+".tamanho" 			{return T_TAMANHO;}
 
 ";"					{return T_FINALEXP;}
 "\n"                {return T_NL;}

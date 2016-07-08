@@ -35,14 +35,14 @@ static Tipos::Tipo tv = Tipos::indefinido;
 %token <booleano> T_BOOLTRUE T_BOOLFALSE
 %token <name> T_ID
 %token <String> T_STRING
-%token T_NL T_ASSIGN T_FINALEXP T_IGUAL T_DINT T_DREAL T_DBOOL  T_COMMA T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_DIFERENTE T_UNIBOOL T_PARA T_PARAF T_ARRA T_ARRAF T_IF T_THEN T_ELSE T_END T_WHILE T_DO  T_TYPE T_FUN T_RETO T_CHAVE T_CHAVEF T_DSTRING T_SUBSTRG
+%token T_NL T_ASSIGN T_FINALEXP T_IGUAL T_DINT T_DREAL T_DBOOL  T_COMMA T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_DIFERENTE T_UNIBOOL T_PARA T_PARAF T_ARRA T_ARRAF T_IF T_THEN T_ELSE T_END T_WHILE T_DO  T_TYPE T_FUN T_RETO T_CHAVE T_CHAVEF T_DSTRING T_SUBSTRG T_TAMANHO
 
 /* type defines the type of our nonterminal symbols.
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
 
-%type <node> expr line varlist unexpr declaracoes assignments condicionais elseIf definicoes param recString 
+%type <node> expr line varlist unexpr declaracoes assignments condicionais elseIf definicoes param concString
 %type <block> lines program corpoComplexo
 %type <operacao> tipoOperacao
 %type<tabelaEscopo> novoEscopo
@@ -99,7 +99,9 @@ declaracoes :
           parametros.clear();
           teste.clear();
         }
-        | T_ID T_SUBSTRG T_PARA T_INT T_COMMA T_INT T_PARAF T_FINALEXP {std::cout<<"substring"<<std::endl; $$ = NULL;}
+        | T_ID T_SUBSTRG T_PARA T_INT T_COMMA T_INT T_PARAF T_FINALEXP {std::cout<<$1<<" substring"<<std::endl; AST::Node* node = symtab->useVariable($1); $$ = new AST::Substring("$1teste", $4, $6);}
+
+        | T_ID T_TAMANHO T_PARA T_PARAF T_FINALEXP {std::cout<<"tamanho"<<std::endl; $$ = symtab->useVariable($1);}
         ;
 
 assignments : 
@@ -111,22 +113,24 @@ assignments :
 
 /////////////////////////////////
     		/*Assign em string*/
-            |T_ID T_ASSIGN recString T_FINALEXP  { AST::Node* node = symtab->assignVariable($1); $$ = new AST::BinOp(node, Tipos::assign, $3); }
+            |T_ID T_ASSIGN concString T_FINALEXP  { AST::Node* node = symtab->assignVariable($1); $$ = new AST::BinOp(node, Tipos::assign, $3); }
 
             /*Concatenação de duas strings.*/
-            | T_ID T_ASSIGN T_STRING T_PLUS T_STRING T_FINALEXP { AST::Node* node = symtab->assignVariable($1);std::cout<<"assign de duas strings"<<std::endl; AST::Node* n1 = new AST::String($3); AST::Node* n2 = new AST::String($5); $$ = new AST::BinOp(node, Tipos::assign, new AST::BinOp(n1, Tipos::plus, n2)); }
+           | T_ID T_ASSIGN concString {std::cout<<"assign de duas strings"<<std::endl; AST::Node* node = symtab->assignVariable($1); $$ = new AST::BinOp(node, Tipos::assign, $3); }
 ////////////////////////////////
         /*Reconhece uma ou mais declarações de retorno de uma função.*/
         | T_RETO unexpr T_FINALEXP { $$ = new AST::Retorno($2); }
         ;
 
-/*reconhece o conteudo atribuido a uma variavel do tipo string.*/
-recString : 
-		//////////////////////////////////////
-		T_STRING { $$ = new AST::String($1); }
+
+/*Regras para reconhece o conteudo atribuido a uma variavel do tipo string e fazer a concatenação de strings.*/
+concString : 
+        //////////////////////////////////////
+        T_STRING T_PLUS concString {std::cout<<"concString + 1"<<std::endl; AST::Node* n1 = new AST::String($1); $$ = new AST::BinOp(n1, Tipos::plus, $3); }
+
+        | T_STRING T_FINALEXP {std::cout<<"consString ends"<<std::endl; $$ =  new AST::String($1); }
         ;
        ///////////////////////////////////////
-
 
 condicionais: 
 		/*tratamento de expressoes condicionais do tipo if*/

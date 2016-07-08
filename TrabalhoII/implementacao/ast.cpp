@@ -295,8 +295,16 @@ void Retorno::printTree() {
 	}
 }
 ///////////////
+/*Imprime o valor de uma variavel do tipo string.*/
 void String::printTree() {
 	std::string strs = std::string(aux);
 		strs = strs.substr(1,strs.size()-2);
 	std::cout << "(string " << strs << ")";
+}
+
+/*Imprime o valor de uma variavel do tipo string.*/
+void Substring::printTree() {
+	std::string strs = std::string(aux);
+		strs = strs.substr(inicio,fim);
+	std::cout << "(substring " << strs << ")";
 }
