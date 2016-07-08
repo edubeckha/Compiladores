@@ -94,6 +94,14 @@ ITNode * ITNode::createDef ( ITNode * leftSon ) {
 
 }
 //--------------------------------------------------
+ITNode * ITNode::createAtrib ( ITNode * leftSon, ITNode * rightSon ) {
+	ITNode * newNode = new ITNode;
+	newNode->_leftSon = leftSon;
+	newNode->_rightSon = rightSon;
+	newNode->_type = ITNode::atrib;
+	return newNode;
+}
+//--------------------------------------------------
 
 
 

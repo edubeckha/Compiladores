@@ -99,8 +99,8 @@ std::string Data::dataString() {
 /************************************************
  ***************OPERADORES**********************/
 Data Data::sum ( Data * outro ) {
-	assert ( aritmetico() );
-	assert ( outro->aritmetico() );
+	assert ( arithmetic() );
+	assert ( outro->arithmetic() );
 
 	switch ( this->_type ) {
 		case Data::integer: {
@@ -146,8 +146,8 @@ Data Data::sum ( Data * outro ) {
 }
 //--------------------------------------------------
 Data Data::subtrair ( Data * outro ) {
-	assert ( aritmetico() );
-	assert ( outro->aritmetico() );
+	assert ( arithmetic() );
+	assert ( outro->arithmetic() );
 
 	switch ( this->_type ) {
 		case Data::integer: {
@@ -192,8 +192,8 @@ Data Data::subtrair ( Data * outro ) {
 }
 //--------------------------------------------------
 Data Data::multiply ( Data * outro ) {
-	assert ( aritmetico() );
-	assert ( outro->aritmetico() );
+	assert ( arithmetic() );
+	assert ( outro->arithmetic() );
 
 	switch ( this->_type ) {
 		case Data::integer: {
@@ -238,8 +238,8 @@ Data Data::multiply ( Data * outro ) {
 }
 //--------------------------------------------------
 Data Data::divide ( Data * outro ) {
-	assert ( aritmetico() );
-	assert ( outro->aritmetico() );
+	assert ( arithmetic() );
+	assert ( outro->arithmetic() );
 
 	switch ( this->_type ) {
 		case Data::integer: {
@@ -300,8 +300,8 @@ Data Data::bOr ( Data * outro ) {
 }
 
 //--------------------------------------------------
-Data Data::igual ( Data * outro ) {
-	if ( this->aritmetico() && outro->aritmetico() ) {
+Data Data::equals ( Data * outro ) {
+	if ( this->arithmetic() && outro->arithmetic() ) {
 		switch ( this->_type ) {
 			case Data::integer: {
 				switch ( outro->_type ) {
@@ -357,8 +357,8 @@ Data Data::igual ( Data * outro ) {
 }
 
 //--------------------------------------------------
-Data Data::maior ( Data * outro ) {
-	if ( this->aritmetico() && outro->aritmetico() ) {
+Data Data::greater ( Data * outro ) {
+	if ( this->arithmetic() && outro->arithmetic() ) {
 		switch ( this->_type ) {
 			case Data::integer: {
 				switch ( outro->_type ) {
@@ -409,14 +409,14 @@ Data Data::maior ( Data * outro ) {
 	}
 }
 //--------------------------------------------------
-Data Data::menor ( Data * outro ) {
-	return Data ( ! ( this->maior ( outro ).dataBool() && this->igual ( outro ).dataBool() ) );
+Data Data::lesser ( Data * outro ) {
+	return Data ( ! ( this->greater ( outro ).dataBool() && this->equals ( outro ).dataBool() ) );
 }
 
 
 /************************************************
  ***************AUXILIARES***********************/
-bool Data::aritmetico() {
+bool Data::arithmetic() {
 	return ( this->_type == Data::integer || this->_type == Data::real );
 }
 //--------------------------------------------------

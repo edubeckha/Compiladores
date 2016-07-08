@@ -34,40 +34,160 @@ class Data {
 public:
 	/*Tipo de dado*/
 	enum DataType {integer, real, boolean, string};
-
-	/*Construtores para os tipos de dados aceitos*/
+//--------------------------------------------------
+	/**
+	 * @brief Cria um dado contendo um inteiro
+	 * 
+	 * @param inteiro inteiro inicial
+	 */
 	Data ( int inteiro );
-	Data ( float real );
-	Data ( bool booleano );
-	Data ( std::string String );
-	Data ( const Data & other );
+//--------------------------------------------------
 
-	/*Obtém o tipo do dado*/
+	/**
+	 * @brief Cria um dado contendo um real
+	 * 
+	 * @param real Real inicial
+	 */
+	Data ( float real );
+//--------------------------------------------------
+	Data ( bool booleano );
+	/**
+	 * @brief Cria um dado contendo um booleano
+	 * 
+	 * @param Booleano Booleano inicial
+	 */
+	Data ( std::string String );
+//--------------------------------------------------
+
+	/**
+	 * @brief Controi um novo dado a partir de um dado existente
+	 * 
+	 * @param other Dado já existente
+	 */
+	Data ( const Data & other );
+//--------------------------------------------------
+
+
+	/**
+	 * @brief Obtém o tipo do dado
+	 * 
+	 * @return Data::DataType
+	 */
 	DataType type() {
 		return _type;
 	}
+//--------------------------------------------------
 
-	/*Obtem o valor do dado*/
+	/**
+	* @brief Retorna o dado armazenado como um inteiro
+	* 
+	* @return int
+	*/
 	int dataInt();
-	float dataFloat();
-	bool dataBool();
-	std::string dataString();
+//--------------------------------------------------
 
+	/**
+	* @brief Retorna o dado armazenado como um float
+	* 
+	* @return float
+	*/
+	float dataFloat();
+//--------------------------------------------------
+
+	/**
+	* @brief Retorna o dado armazenado como um booleano
+	* 
+	* @return bool
+	*/
+	bool dataBool();
+//--------------------------------------------------
+
+	/**
+	 * @brief Retorna o dado armazenado como uma string
+	 * 
+	 * @return std::string
+	 */
+	std::string dataString();
+//--------------------------------------------------
 	/*Operadores*/
 
+	/**
+	 * @brief Soma
+	 * 
+	 * @param outro Dado a ser somado
+	 * @return Data
+	 */
 	Data sum ( Data * outro );
+//--------------------------------------------------
+
 	Data subtrair ( Data * outro );
+//--------------------------------------------------
+
+	/**
+	 * @brief Subtração
+	 * 
+	 * @param outro Dado a ser subtraido
+	 * @return Data
+	 */
 	Data multiply ( Data * outro );
+//--------------------------------------------------
+
+	/**
+	 * @brief Divisão
+	 * 
+	 * @param outro Dado a ser dividio
+	 * @return Data
+	 */
 	Data divide ( Data * outro );
+//--------------------------------------------------
+
+	/**
+	 * @brief Ou booleano
+	 * 
+	 * @param outro Dado a ser comparado
+	 * @return Data
+	 */
 	Data bOr ( Data * outro );
+//--------------------------------------------------
+
+	/**
+	 * @brief E booleano
+	 * 
+	 * @param outro Dado a ser comparado
+	 * @return Data
+	 */
 	Data bAnd ( Data * outro );
-	Data maior ( Data * outro );
-	Data menor ( Data * outro );
-	Data igual ( Data * outro );
+//--------------------------------------------------
+
+	/**
+	 * @brief Comparacao de maior
+	 * 
+	 * @param outro Dado a ser comparado
+	 * @return Data
+	 */
+	Data greater ( Data * outro );
+//--------------------------------------------------
+
+	/**
+	 * @brief Comparacao de menor
+	 * 
+	 * @param outro Dado a ser comparado
+	 * @return Data
+	 */
+	Data lesser ( Data * outro );
+//--------------------------------------------------
+	/**
+	 * @brief Comparacao de igualdade
+	 * 
+	 * @param outro Dado a ser comparado
+	 * @return Data
+	 */
+	Data equals ( Data * outro );
+//--------------------------------------------------
 
 
 	/*Verifica se o dado é aritmetico*/
-	bool aritmetico ();
+	bool arithmetic ();
 //--------------------------------------------------
 	/**
 	 * @brief Retorna uma string com a informação do dado
@@ -84,11 +204,25 @@ public:
 	 */
 	static Data createDefault ( DataType tipo );
 //--------------------------------------------------
+	
+	
+//--------------------------------------------------
 
 private:
 
+	/**
+	 * @brief Dado armazenado
+	 * 
+	 */
 	void * _data;
+//--------------------------------------------------
+
+	/**
+	 * @brief Tipo do dado armazenado
+	 * 
+	 */
 	DataType _type;
+//--------------------------------------------------
 
 
 };

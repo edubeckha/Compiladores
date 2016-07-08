@@ -30,11 +30,6 @@
 #include "data.h"
 #include <string>
 
-
-
-
-
-
 class ITNode {
 public:
 
@@ -135,11 +130,32 @@ public:
 	 */
 	static ITNode * createDef ( ITNode * leftSon );
 //--------------------------------------------------
+	/**
+	 * @brief Cria um nodo para atribuicao de valor a variavel
+	 * 
+	 * @param leftSon A variavel a ser atribuido o valor
+	 * @param rightSon O valor a ser atribuido
+	 * @return ITNode*
+	 */
+	static ITNode * createAtrib (ITNode * leftSon, ITNode * rightSon);
+//--------------------------------------------------
 
 
 
+	/**
+	 * @brief Filho a esquerda
+	 * 
+	 */
 	ITNode * _leftSon = nullptr;//Filho a esquerda
+	/**
+	 * @brief Filho a direita
+	 * 
+	 */
 	ITNode * _rightSon = nullptr;//Filho a direita
+	/**
+	 * @brief Nodo pai
+	 * 
+	 */
 	ITNode * _parent = nullptr;//Nodo pai
 
 
