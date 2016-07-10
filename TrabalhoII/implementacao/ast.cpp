@@ -149,7 +149,7 @@ void BinOp::printTree() {
 		right->printTree();
 		std::cout << std::endl;
 		break;
-
+	
 	default:
 		std::cout << "Operador nao tratado" << std::endl;
 		break;
@@ -294,7 +294,7 @@ void Retorno::printTree() {
 }
 
 void Classe::printTree(){
-	std::cout << "Declaracao de classe";
+	std::cout << " classe ";
 
 	if(corpoClasse != NULL){
 		std::cout << " com corpo: " << std::endl;
@@ -303,19 +303,44 @@ void Classe::printTree(){
 	else {
 		std::cout << " sem corpo." << std::endl;
 	}
+
+	std::cout << "Construtor da classe: " << std::endl;
+	construtorClasse->printTree();
 }
 
 void Objeto::printTree(){
-	std::cout << "Declaracao de objeto de nome " << id << " da classe " << classePertencente->id << std::endl;
+	std::cout << " objeto de nome " << id << " da classe " << classePertencente->id << std::endl;
 }
 
 void ConstrutorClasse::printTree(){
-	
+	std::cout << "Parametros passados:" << std::endl;
+
+	for(Variable* v : parametros){
+		std::cout << "+" << Tipos::tipoParaString(v->tipo, true); std::cout << " " << v->id << ", " << std::endl;
+	}
+
+	std::cout << "com o seguinte corpo: " << std::endl;
+	corpoConstrutor->printTree();
 }
 
 void Atributo::printTree(){
-	std::cout << "atributo da classe " << classePertencente->id << " de nome " << var->id;
+	std::cout << " atributo da classe " << classePertencente->id << " de nome " << var->id;
 }
+
+void Objeto::verificaParametros(std::vector<Variable* > parametros){
+	if(parametros.size() != classePertencente->construtorClasse->parametros.size()){
+		std::cout << "Erro: esperava-se " << parametros.size() << " parametros, mas recebeu-se " << classePertencente->construtorClasse->parametros.size() << std::endl;
+	return;
+	}
+
+	for(int i = 0 ; i < classePertencente->construtorClasse->parametros.size(); i++){
+		if(parametros.at(i)->tipo != classePertencente->construtorClasse->parametros.at(i)->tipo){
+			std::cout << "Erro: esperava-se " << Tipos::tipoParaString(classePertencente->construtorClasse->parametros.at(i)->tipo, true) << " mas recebeu-se " << Tipos::tipoParaString(parametros.at(i)->tipo, true) << std::endl;
+		}
+	}
+}
+
+
 
 
 

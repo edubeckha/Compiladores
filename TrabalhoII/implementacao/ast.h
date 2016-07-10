@@ -184,8 +184,9 @@ namespace AST {
 	class ConstrutorClasse : public Node {
 	public:
 		std::string id;
-		std::vector<ST::Symbol *> parametros;
-		ConstrutorClasse ( std::string id, std::vector<ST::Symbol *> parametros ) : id ( id ), parametros ( parametros ) {
+		std::vector<AST::Variable *> parametros;
+		AST::Block* corpoConstrutor;
+		ConstrutorClasse ( std::string id, std::vector<AST::Variable *> parametros, AST::Block* corpoConstrutor ) : id ( id ), parametros ( parametros ), corpoConstrutor (corpoConstrutor) {
 		}
 		void printTree();
 	};
@@ -195,8 +196,9 @@ namespace AST {
 		std::string id;
 		Block* corpoClasse;
 		ST::SymbolTable* tabelaSimbolos;
+		AST::ConstrutorClasse* construtorClasse;
 
-		Classe(std::string id, Block* corpoClasse, ST::SymbolTable* tabelaSimbolos) : id(id), corpoClasse(corpoClasse), tabelaSimbolos(tabelaSimbolos) { }
+		Classe(std::string id, Block* corpoClasse, ST::SymbolTable* tabelaSimbolos, AST::ConstrutorClasse* construtorClasse) : id(id), corpoClasse(corpoClasse), tabelaSimbolos(tabelaSimbolos), construtorClasse(construtorClasse) { }
 
 		Classe(std::string id, ST::SymbolTable* tabelaSimbolos) : id(id), tabelaSimbolos(tabelaSimbolos) { }
 
@@ -220,6 +222,7 @@ namespace AST {
 		AST::Classe* classePertencente;
 
 		Objeto(std::string id, AST::Classe* classePertencente) : id(id), classePertencente(classePertencente) { }
+		void verificaParametros(std::vector<Variable* > parametros);
 		void printTree();
 	};
 }

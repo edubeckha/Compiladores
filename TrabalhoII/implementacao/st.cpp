@@ -37,16 +37,14 @@ AST::Node * SymbolTable::assignVariable ( std::string id ) {
 }
 
 AST::Node * SymbolTable::useVariable ( std::string id ) {
-	AST::Variable * retorno = new AST::Variable ( id, entryList[id].type, NULL );
+	AST::Variable * retorno;
 
 	if ( !checkId ( id ) ) {
-
-		if ( tabelaOrigem != NULL ) {
+			if ( tabelaOrigem != NULL ) {
 			return tabelaOrigem->useVariable ( id );
 
 		} else {
 			yyerror ( "Erro semantico: variavel %s ainda nao declarada.\n", id.c_str() );
-
 		}
 
 		AST::Variable * retErro = new AST::Variable ( id, entryList[id].type, NULL );
@@ -56,11 +54,11 @@ AST::Node * SymbolTable::useVariable ( std::string id ) {
 
 	if ( !entryList[id].initialized && ! ( entryList[id].type == Tipos::complexo ) ) {
 		yyerror ( "Erro semantico: variavel %s ainda nao inicializada.\n", id.c_str() );
-
+		retorno = new AST::Variable ( id, entryList[id].type, NULL );
 		retorno->temErro ( true );
 	}
 
-	return retorno; //Creates variable node anyway
+	return new AST::Variable ( id, entryList[id].type, NULL ); //Creates variable node anyway
 }
 //////////
 /*Retorna o tipo de simbolo, passando um id como parametro*/
@@ -86,7 +84,7 @@ AST::Node * SymbolTable::newFunction ( std::string id, Tipos::Tipo tipoVariavel,
 		addSymbol ( id, entry );
 	}
 
-	return new AST::Funcao(id, tipoVariavel, parametros);//?
+	return new AST::Funcao(id, tipoVariavel, parametros);
 }
 //////////
 /*Define o corpo da funcao e caso ela nao foi declarada, a mesma eh criada*/
@@ -101,14 +99,17 @@ AST::Node * SymbolTable::assignFunction ( std::string id, Tipos::Tipo tipoVariav
 		}
 	}
 	entryList[id].initialized = true;
-	return new AST::Funcao(id, tipoVariavel, parametros);//?
+	return new AST::Funcao(id, tipoVariavel, parametros);
 }
 
-AST::Node* SymbolTable::useFunction (std::string id ){
+AST::Funcao* SymbolTable::useFunction (std::string id ){
 	if ( !checkId ( id ) ) {
+		std::cout << "teste aq 1" << std::endl;
 		if ( tabelaOrigem != NULL ) {
-			return tabelaOrigem->useVariable ( id );
+			std::cout << "teste aq 2" << std::endl;
+			return tabelaOrigem->useFunction ( id );
 		} else {
+			std::cout << "teste aq 3" << std::endl;
 			yyerror ( "Erro semantico: funcao %s ainda nao declarada.\n", id.c_str() );
 		}
 	}
@@ -134,19 +135,18 @@ Symbol SymbolTable::getSymbol ( std::string id ) {
 	return retorno;
 }
 
-AST::Classe* SymbolTable::newClass(std::string id, ST::SymbolTable* tabelaSimbolosClasse, AST::Block* escopoClasse){
-	AST::Classe * classe = new AST::Classe ( id, escopoClasse, tabelaSimbolosClasse );
+AST::Classe* SymbolTable::newClass(std::string id, ST::SymbolTable* tabelaSimbolosClasse, AST::Block* escopoClasse, AST::ConstrutorClasse* construtor){
 
 	if ( checkId ( id ) ) {
 		yyerror ( "Erro semantico: ja existe uma classe com o nome %s\n", id.c_str() );
 	}
 
 	else {
-		Symbol entry ( tabelaSimbolosClasse );
+		Symbol entry ( tabelaSimbolosClasse, construtor );
 		addSymbol ( id, entry );
 	}
 
-	return classe;
+	return new AST::Classe ( id, escopoClasse, tabelaSimbolosClasse, construtor );
 }
 
 AST::Classe* SymbolTable::useClass(std::string id){
@@ -161,7 +161,7 @@ AST::Classe* SymbolTable::useClass(std::string id){
 		yyerror("Erro semantico: objeto nao tenta referenciar uma classe \n");
 	}
 
-	AST::Classe* c  = new AST::Classe(id, classe.tabelaClasse);
+	AST::Classe* c  = new AST::Classe(id, NULL, classe.tabelaClasse, classe.construtor);
 
 	return c;
 }
@@ -193,7 +193,8 @@ AST::Objeto* SymbolTable::useObjeto(std::string id){
 	}
 
 	AST::Objeto* c  = new AST::Objeto(id, objeto.classePertencente);
-
+	std::cout << "um testiasdasdpdsanosdanjsdanjopasddasde" << std::endl;
+	objeto.classePertencente->printTree();
 	return c;
 }
 
@@ -239,6 +240,10 @@ AST::Atributo* SymbolTable::useAtributo(std::string id){
 	AST::Atributo* a  = new AST::Atributo(atributo.var, atributo.classePertencente);
 
 	return a;
+}
+
+void SymbolTable::printTable(){
+	std::cout << entryList.size() << std::endl;
 }
 
 

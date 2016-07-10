@@ -26,8 +26,8 @@ nome [a-z]+
 \.{digs} 			{yylval.doubler = std::atof(yytext); return T_DOUBLE;}
 {digs}\.		 	{yylval.doubler = std::atof(yytext); return T_DOUBLE;}
 
-"TRUE"				{return T_BOOLTRUE;}
-"FALSE"				{return T_BOOLFALSE;}
+"true"				{return T_BOOLTRUE;}
+"false"				{return T_BOOLFALSE;}
 
 "+"                 {return T_PLUS;}
 "-"                 {return T_SUB;}

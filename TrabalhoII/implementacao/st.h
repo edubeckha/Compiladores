@@ -25,6 +25,7 @@ namespace ST {
 		bool initialized;       /*Defines if symbol has been initialized or not.*/
 		std::vector<AST::Variable *> parametros; /*Stores the parameters of function*/
 		SymbolTable* tabelaClasse;
+		AST::ConstrutorClasse* construtor;
 		AST::Classe* classePertencente;
 		AST::Variable* var;
 
@@ -39,7 +40,7 @@ namespace ST {
 			type ( type ), kind ( kind ), parametros ( parametros ), initialized ( initialized ) { }
 
 		/*Construtor de simbolos para classes*/
-		Symbol(SymbolTable* tabelaClasse) : tabelaClasse(tabelaClasse) {kind = classe; initialized = true;}
+		Symbol(SymbolTable* tabelaClasse, AST::ConstrutorClasse* construtor) : tabelaClasse(tabelaClasse), construtor(construtor) {kind = classe; initialized = true;}
 
 		/*Construtor de simbolos para objetos*/
 		Symbol(AST::Classe* classePertencente) : classePertencente(classePertencente) {kind = objeto; initialized = true;}
@@ -96,10 +97,10 @@ namespace ST {
 		AST::Node * assignFunction ( std::string id, Tipos::Tipo tipoVariavel, std::vector<AST::Variable *> next, AST::Node * body );
 
 		/*Utilizacao de funcao*/
-		AST::Node* useFunction (std::string id );
+		AST::Funcao* useFunction (std::string id );
 
 		/*Criacao de nova classe*/
-		AST::Classe* newClass (std::string id, ST::SymbolTable* tabelaSimbolosClasse, AST::Block* escopoClasse);
+		AST::Classe* newClass (std::string id, ST::SymbolTable* tabelaSimbolosClasse, AST::Block* escopoClasse, AST::ConstrutorClasse* construtor);
 
 		/*Utiliza classe*/
 		AST::Classe* useClass(std::string id);
@@ -118,6 +119,8 @@ namespace ST {
 
 		/*Atribui variavel a um atributo de classe*/
 		AST::Atributo * assignAtributo ( AST::Variable* var, AST::Classe* classePertencente );
+
+		void printTable();
 	};
 
 }

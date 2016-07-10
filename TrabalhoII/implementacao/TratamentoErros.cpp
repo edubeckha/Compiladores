@@ -50,6 +50,7 @@ Tipo Tipos::opUnaria ( Tipo tipoRecebido, Operation op ) {
 
 	return tipoRecebido;
 }
+
 //////////
 /*Verifica erros semanticos em operacoes binarias*/
 Tipo Tipos::opBinaria ( Tipo tipoNodoEsquerda, Tipo tipoNodoDireita, Operation op ) {

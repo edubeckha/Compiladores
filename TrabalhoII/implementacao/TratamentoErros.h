@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <vector>
 
 namespace Tipos {
 	enum Tipo { inteiro, real, booleano, indefinido, complexo};
@@ -19,4 +20,5 @@ namespace Tipos {
 	std::string tipoParaString( Tipo tipo, bool ehMasc );
 	std::string opParaString( Operation tipo );
 	bool necessitaCoersao( Tipo tipoNodoEsquerda, Tipo tipoNodoDireita );
+
 }
