@@ -4,6 +4,10 @@ using namespace Tipos;
 
 /*Verifica se dois nodos precisam realizar coersao de real para inteiro a partir do tipo dos mesmos*/
 bool Tipos::necessitaCoersao ( Tipo tipoNodoEsquerda, Tipo tipoNodoDireita ) {
+	if (tipoNodoEsquerda == string)
+	{
+		return false;
+	}
 	if ( tipoNodoEsquerda == real || tipoNodoDireita == real ) {
 		if ( tipoNodoEsquerda == inteiro || tipoNodoDireita == inteiro ) {
 			return true;
@@ -78,6 +82,10 @@ Tipo Tipos::opBinaria ( Tipo tipoNodoEsquerda, Tipo tipoNodoDireita, Operation o
 		if ( op == plus || op == sub || op == times || op == divi ) {
 			if ( tipoNodoEsquerda == real || tipoNodoDireita == real ) {
 				return real;
+			}
+
+			if ( tipoNodoEsquerda == string || tipoNodoDireita == string ) {
+				return string;
 			}
 
 			if ( tipoNodoEsquerda != inteiro && tipoNodoEsquerda != real ) {

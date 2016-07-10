@@ -28,11 +28,54 @@ a = "a";
 b = "b";
 if (a ==  b) {int a; int b; a = 10; b = 20; a = a+b;}
 
+-------------------------------------------
+
+string a;
+a = "assdfs";
+string b;
+b = "ae";
+bool c;
+c = a == b;
+
 *******************************************
 Concatenação de strings:
 
 string a;
 a = "fasf"+"fde"+"re"+"age";
+
+-------------------------------------------
+
+*******************************************
+Tamanho da string:
+
+
+*******************************************
+Todas as partes de funções juntas:
+
+a = "afsf";
+a.tamanho();
+a.substring(1,3);
+a = "afs" + "asfe";
+string b;
+b = "fafe";
+if( a == b ) { int c; c = 10;}
+Declaracao de variavel string : a
+Atribuicao de valor para variavel string : a (string afsf)
+(tamanho da string: "a" end nodo: 0x1cca370)
+(substring da string: "a" inicio: 1 fim: 3 end nodo: 0x1cca460)
+Atribuicao de valor para variavel string : a ((string afs) (soma string) (string asfe))
+Declaracao de variavel string : b
+Atribuicao de valor para variavel string : b (string fafe)
+Expressao condicional 
++se: 
+(variavel string : a (igual) variavel string : b)
++entao: 
+Declaracao de variavel inteira : c
+Atribuicao de valor para variavel inteira : c (valor inteiro 10)
+
+Fim expressao condicional
+
+
 
 *******************************************
 ///////////////////////////////////////////
@@ -63,6 +106,7 @@ Atribuicao de valor para variavel inteira : a (valor inteiro 10)
 
 Fim expressao condicional
 
+
 *******************************************
 comparação de strings:
 
@@ -76,6 +120,21 @@ string a;
 a = "as" + "asdf";
 A operacao de soma esperava inteiro ou real como parâmetro, mas recebeu booleano.
 Erro semantico: operacao de assign esperava dois tipos compativeis, mas recebeu string e inteiro
+
+*******************************************
+Tamanho da string:
+
+Falta integrar com o interpretador para tratar o tamanho
+string a;
+a = "assdfs";
+a.tamanho();
+
+*******************************************
+Substring:
+
+string a;
+a = "assdfs";
+a.substring(1,2);
 
 *******************************************
 ///////////////////////////////////////////

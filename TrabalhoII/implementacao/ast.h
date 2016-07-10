@@ -208,12 +208,25 @@ namespace AST {
 
 	class Substring : public Node {
 	public:
-
-		const char * aux;
+		std::string id;
+		AST::Node* aux;
 		int inicio;
 		int fim;
 
-		Substring ( const char * aux, int inicio, int fim ) : aux ( aux ), inicio(inicio), fim(fim) {
+		Substring (std::string id, AST::Node* aux, int inicio, int fim ) : id(id), aux ( aux ), inicio(inicio), fim(fim) {
+			tipo = Tipos::string;
+		}
+
+		void printTree();
+	};
+
+	/*Classe para o tamanho de strings*/
+	class Tamanho : public Node {
+	public:
+		std::string id;
+		AST::Node * aux;
+
+		Tamanho ( std::string id, AST::Node* aux ) : id(id), aux ( aux ) {
 			tipo = Tipos::string;
 		}
 
