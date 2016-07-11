@@ -116,7 +116,7 @@ funcoesObjetos:
         AST::Classe* c = symtab->useObjeto($1)->classePertencente; 
         std::cout << "um teste aqasoihjdasiosd" << std::endl;
         c->tabelaSimbolos->printTable();
-        symtab->useObjeto($1)->verificaParametros(symtab->useFunction($3)->parametros); 
+        symtab->useObjeto($1)->verificaParametros(c->tabelaSimbolos->useFunction($3)->parametros); 
         $$ = new AST::BinOp(c->tabelaSimbolos->useFunction($3), Tipos::chamadaFuncao, symtab->useObjeto($1));}
         ;
 
