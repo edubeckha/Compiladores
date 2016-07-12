@@ -6,7 +6,7 @@ using namespace ST;
 
 extern SymbolTable symtab;
 
-AST::Node * SymbolTable::newVariable ( std::string id, Tipos::Tipo tipoVariavel, AST::Node * next ) {
+AST::Node * SymbolTable::newVariable ( std::string id, Tipos::Tipo tipoVariavel, AST::Node * next, bool inicializada  ) {
 	AST::Variable * retorno = new AST::Variable ( id, tipoVariavel, next );
 
 	if ( checkId ( id ) ) {
@@ -17,7 +17,7 @@ AST::Node * SymbolTable::newVariable ( std::string id, Tipos::Tipo tipoVariavel,
 
 	else {
 	//std::cout << Tipos::tipoParaString(tipoVariavel, true) << std::endl;
-		Symbol entry ( tipoVariavel, variable, 0, false );
+		Symbol entry ( tipoVariavel, variable, 0, inicializada );
 		addSymbol ( id, entry );
 	}
 
@@ -60,12 +60,12 @@ AST::Node * SymbolTable::useVariable ( std::string id ) {
 
 	return new AST::Variable ( id, entryList[id].type, NULL ); //Creates variable node anyway
 }
-//////////
+
 /*Retorna o tipo de simbolo, passando um id como parametro*/
 Tipos::Tipo SymbolTable::returnType ( std::string id ) {
 	return entryList[id].type;
 }
-//////////
+
 /*Realiza a coersao de um tipo na tabela de simbolos*/
 void SymbolTable::realizaCoercao ( std::string id ) {
 	if ( !checkId ( id ) ) {
@@ -74,20 +74,19 @@ void SymbolTable::realizaCoercao ( std::string id ) {
 
 	entryList[id].type = Tipos::real;
 }
-//////////
+
 /*Cria uma nova funcao na tabela de simbolos*/
 AST::Node * SymbolTable::newFunction ( std::string id, Tipos::Tipo tipoVariavel, std::vector<AST::Variable *> parametros ) {
 	if ( checkId ( id ) ) {
 		yyerror ( "Erro semantico: função %s já existe.\n", id.c_str() );
 	} else {
-		std::cout << "tipo de funcao " << Tipos::tipoParaString(tipoVariavel, true);
 		Symbol entry ( tipoVariavel, funcao, parametros, false );
 		addSymbol ( id, entry );
 	}
 
 	return new AST::Funcao(id, tipoVariavel, parametros);
 }
-//////////
+
 /*Define o corpo da funcao e caso ela nao foi declarada, a mesma eh criada*/
 AST::Node * SymbolTable::assignFunction ( std::string id, Tipos::Tipo tipoVariavel, std::vector<AST::Variable *> parametros, AST::Node * body ) {
 	if ( ! checkId ( id ) ) {
@@ -126,7 +125,7 @@ AST::Funcao* SymbolTable::useFunction (std::string id ){
 	return  func; //Creates variable node anyway
 }
 
-//////////
+
 Symbol SymbolTable::getSymbol ( std::string id ) {
 	assert ( checkId ( id ) );
 	ST::Symbol retorno = this->entryList.at ( id );

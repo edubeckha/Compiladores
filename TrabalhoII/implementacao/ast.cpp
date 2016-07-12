@@ -143,7 +143,7 @@ void BinOp::printTree() {
 		break;
 
 	case Tipos::chamadaFuncao:
-		std::cout << "Chamada da funcao ";
+		std::cout << "Chamada da ";
 		left->printTree();
 		std::cout << " do ";
 		right->printTree();
@@ -155,7 +155,7 @@ void BinOp::printTree() {
 		break;
 	}
 }
-//////////
+
 /*Imprime cada linha de insercao respectivamente*/
 void Block::printTree() {
 	for ( Node * line : lines ) {
@@ -163,7 +163,7 @@ void Block::printTree() {
 		std::cout << std::endl;
 	}
 }
-//////////
+
 /*Imprime as informacoes das variaveis criadas no programa, juntamente com seu tipo*/
 void Variable::printTree() {
 	if ( next != NULL ) {
@@ -174,7 +174,7 @@ void Variable::printTree() {
 		std::cout << "variavel " << Tipos::tipoParaString ( tipo, false ) << " : " << id;
 	}
 }
-//////////
+
 /*Imprime uma operacao unaria. A unica por enquanto no programa eh a operacao de declaracao (tanto de arranjos como variaveis "comuns")*/
 void UniOp::printTree() {
 	switch ( op ) {
@@ -248,7 +248,7 @@ void Laco::printTree() {
 //////////
 /*Imprime quando ocorre a declaração de um função.*/
 void Funcao::printTree() {
-	std::cout << "Declaração da função " << Tipos::tipoParaString ( tipo, false ) << ": " << id << std::endl;
+	std::cout << " função " << Tipos::tipoParaString ( tipo, false ) << ": " << id << std::endl;
 	std::cout << "+parametros:" << std::endl;
 
 	if ( parametros.size() == 0 ) {

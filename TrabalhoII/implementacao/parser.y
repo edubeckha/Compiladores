@@ -89,8 +89,8 @@ line    : T_NL {$$ = NULL; }
 
 declaracaoClasse :
             /*declaracao de classes*/
-            T_CLASSE T_ID T_CHAVE novoEscopo construtorClasse escopoClasse mataEscopo T_CHAVEF {
-            AST::Classe* c = symtab->newClass($2, $4, $6, $5); 
+            T_CLASSE T_ID T_CHAVE novoEscopo escopoClasse construtorClasse mataEscopo T_CHAVEF {
+            AST::Classe* c = symtab->newClass($2, $4, $5, $6); 
             $$ = new AST::UniOp(c, Tipos::declaracao, Tipos::indefinido); }
             ;
 
@@ -140,10 +140,10 @@ funcoesObjetosAssign :
 
 declaracoes : 
     	/*declaracao de variaveis*/
-    	tipoVariavel  varlist T_FINALEXP { $$ = new AST::UniOp($2, Tipos::declaracao, tv);}
+    	tipoVariavel  varlist T_FINALEXP { $$ = new AST::UniOp($2, Tipos::declaracao, $1);}
 
 		/*declaracao de arranjos*/
-        |tipoVariavel T_ID T_ARRA unexpr T_ARRAF T_FINALEXP {AST::Node* var = symtab->newVariable($2, tv, NULL); $$ = new AST::UniOp(new AST::Arranjo($4 ,var), Tipos::declaracao, tv);};
+        |tipoVariavel T_ID T_ARRA unexpr T_ARRAF T_FINALEXP {AST::Node* var = symtab->newVariable($2, $1, NULL, false); $$ = new AST::UniOp(new AST::Arranjo($4 ,var), Tipos::declaracao, $1);};
 
         /*declaracao de funcoes*/
         | tipoVariavel T_ID novoEscopo T_PARA param T_PARAF mataEscopo T_FINALEXP {
@@ -189,8 +189,9 @@ condicionais:
 definicoes:
         /*definição da função previamente declarada.*/
         tipoVariavel T_ID novoEscopo T_PARA param T_PARAF T_CHAVE lines mataEscopo T_CHAVEF {
-          AST::Node* var = symtab->assignFunction($2, tv, parametros, $8);
+          AST::Node* var = symtab->assignFunction($2, $1, parametros, $8);
           $$ = new AST::DefineFuncao($2, $1, parametros, $8);
+          parametros.clear();
         }
         ;
         
@@ -203,7 +204,7 @@ elseIf : {$$ = NULL;}
 unexpr : 
         unexpr tipoOperacao expr {$$ = new AST::BinOp($1, $2, $3);}
         | expr {$$ = $1;}
-		    ;
+		;
 
 /*tratamento de todas as expressoes utilizadas no programa*/
 expr    : T_PARA unexpr T_PARAF {$$ = $2;}
@@ -212,7 +213,6 @@ expr    : T_PARA unexpr T_PARAF {$$ = $2;}
         | T_BOOLTRUE { $$ = new AST::Boolean(true); }
         | T_BOOLFALSE { $$ = new AST::Boolean(false); }
         | T_ID { $$ = symtab->useVariable($1); }
-        | T_ID T_DOT T_ID {std::cout << "teste em atributosss" << std::endl;}
         | T_SUB expr {$$ = new AST::UniOp($2, Tipos::unario, $2->tipo);}
         | T_UNIBOOL expr {$$ = new AST::UniOp($2, Tipos::unibool, Tipos::booleano);}
         | T_ID T_ARRA expr T_ARRAF {$$ = new AST::Arranjo($3, symtab->useVariable($1));} 
@@ -221,9 +221,9 @@ expr    : T_PARA unexpr T_PARAF {$$ = $2;}
 
 /*define todos os tipos de variaveis que possamos ter no programa*/
 tipoVariavel : 
-        T_DINT { tv = Tipos::inteiro; } 
-        | T_DREAL { tv = Tipos::real; }
-        | T_DBOOL { tv = Tipos::booleano; }
+        T_DINT { tv = Tipos::inteiro; $$ = Tipos::inteiro; } 
+        | T_DREAL { tv = Tipos::real;  $$ = Tipos::real; }
+        | T_DBOOL { tv = Tipos::booleano; $$ = Tipos::booleano; }
         ;
 
 /*define todos os tipos de operacoes que possamos ter no programa*/
@@ -245,8 +245,8 @@ tipoOperacao :
 
 /*define uma ou mais variaveis de acordo com a vontade do usuario*/
 varlist : 
-        T_ID {$$ = symtab->newVariable($1, tv, NULL); }
-        | varlist T_COMMA T_ID { $$ = symtab->newVariable($3, tv, $1); }
+        T_ID {$$ = symtab->newVariable($1, tv, NULL, false); }
+        | varlist T_COMMA T_ID { $$ = symtab->newVariable($3, tv, $1, false); }
         ;
 
 /*define um novo escopo para as mais diferentes estruturas, como lacos condicionais, funcoes, etc. Para isso, a mesma cria uma nova
@@ -260,16 +260,15 @@ mataEscopo : {symtab = symtab->tabelaOrigem;}
 /*define um ou mais parametros de acordo com a vontade do usuario*/
 param : 
       tipoVariavel  T_ID T_COMMA param {
-        AST::Variable* vari = new AST::Variable($2, tv, $4);
-
-        symtab->newVariable($2, tv, NULL);
+        AST::Variable* vari = new AST::Variable($2, $1, $4);
+        symtab->newVariable($2, $1, NULL, true);
         parametros.push_back(vari);
         $$ = vari;
       }
       |tipoVariavel  T_ID {
-        AST::Variable* vari = new AST::Variable($2, tv, NULL);
+        AST::Variable* vari = new AST::Variable($2, $1, NULL);
         parametros.push_back(vari);
-        symtab->newVariable($2, tv, NULL);
+        symtab->newVariable($2, $1, NULL, true);
         $$ = vari;
       }
       | {$$ = NULL;}

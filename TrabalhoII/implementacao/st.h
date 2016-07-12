@@ -64,7 +64,7 @@ namespace ST {
 		void addSymbol ( std::string id, Symbol newsymbol ) {entryList[id] = newsymbol;}
 
 		/*Cria uma nova variavel*/
-		AST::Node * newVariable ( std::string id, Tipos::Tipo tipo,  AST::Node * next );
+		AST::Node * newVariable ( std::string id, Tipos::Tipo tipo,  AST::Node * next, bool inicializada );
 
 		/*Atribui variavel*/
 		AST::Node * assignVariable ( std::string id );
