@@ -80,6 +80,7 @@ AST::Node * SymbolTable::newFunction ( std::string id, Tipos::Tipo tipoVariavel,
 	if ( checkId ( id ) ) {
 		yyerror ( "Erro semantico: função %s já existe.\n", id.c_str() );
 	} else {
+		std::cout << "tipo de funcao " << Tipos::tipoParaString(tipoVariavel, true);
 		Symbol entry ( tipoVariavel, funcao, parametros, false );
 		addSymbol ( id, entry );
 	}
@@ -104,12 +105,9 @@ AST::Node * SymbolTable::assignFunction ( std::string id, Tipos::Tipo tipoVariav
 
 AST::Funcao* SymbolTable::useFunction (std::string id ){
 	if ( !checkId ( id ) ) {
-		std::cout << "teste aq 1" << std::endl;
 		if ( tabelaOrigem != NULL ) {
-			std::cout << "teste aq 2" << std::endl;
 			return tabelaOrigem->useFunction ( id );
 		} else {
-			std::cout << "teste aq 3" << std::endl;
 			yyerror ( "Erro semantico: funcao %s ainda nao declarada.\n", id.c_str() );
 		}
 	}
@@ -193,8 +191,6 @@ AST::Objeto* SymbolTable::useObjeto(std::string id){
 	}
 
 	AST::Objeto* c  = new AST::Objeto(id, objeto.classePertencente);
-	std::cout << "um testiasdasdpdsanosdanjsdanjopasddasde" << std::endl;
-	objeto.classePertencente->printTree();
 	return c;
 }
 
@@ -242,8 +238,5 @@ AST::Atributo* SymbolTable::useAtributo(std::string id){
 	return a;
 }
 
-void SymbolTable::printTable(){
-	std::cout << entryList.size() << std::endl;
-}
 
 

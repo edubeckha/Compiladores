@@ -119,8 +119,6 @@ namespace ST {
 
 		/*Atribui variavel a um atributo de classe*/
 		AST::Atributo * assignAtributo ( AST::Variable* var, AST::Classe* classePertencente );
-
-		void printTable();
 	};
 
 }

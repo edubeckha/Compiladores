@@ -45,8 +45,8 @@ bool variaveisEscopoClasse = false;
  * Example: %type<node> expr
  */
 
-%type <node> expr line varlist unexpr declaracoes assignments condicionais elseIf definicoes param paramFuncao funcoesObjetos declaracaoClasse possibilidadesEscopoClasse
-%type <block> lines program escopoClasse 
+%type <node> expr line varlist unexpr declaracoes assignments condicionais elseIf definicoes param paramFuncao funcoesObjetos funcoesObjetosAssign declaracaoClasse possibilidadesEscopoClasse possibilidadesEscopoConstrutor
+%type <block> lines program escopoClasse escopoConstrutor
 %type <constClasse> construtorClasse
 %type <operacao> tipoOperacao
 %type<tabelaEscopo> novoEscopo
@@ -95,12 +95,22 @@ declaracaoClasse :
             ;
 
 construtorClasse :
-            T_ID T_PARA novoEscopo param T_PARAF T_CHAVE lines mataEscopo T_CHAVEF {$$ = new AST::ConstrutorClasse($1, parametros, $7); parametros.clear();}
+            T_ID T_PARA novoEscopo param T_PARAF T_CHAVE escopoConstrutor mataEscopo T_CHAVEF {$$ = new AST::ConstrutorClasse($1, parametros, $7); parametros.clear();}
             ;
+
+possibilidadesEscopoConstrutor :
+            declaracoes { $$ = $1; }
+            | assignments { $$ = $1; }
+            | funcoesObjetos {$$ = $1; }
 
 escopoClasse :
             possibilidadesEscopoClasse {$$ = new AST::Block(); if($1 != NULL) $$->lines.push_back($1);} 
             | escopoClasse possibilidadesEscopoClasse {if($2 != NULL) $1->lines.push_back($2); }
+            ;
+
+escopoConstrutor :
+            possibilidadesEscopoConstrutor {$$ = new AST::Block(); if($1 != NULL) $$->lines.push_back($1);} 
+            | escopoConstrutor possibilidadesEscopoConstrutor {if($2 != NULL) $1->lines.push_back($2); }
             ;
 
 possibilidadesEscopoClasse:
@@ -114,10 +124,18 @@ possibilidadesEscopoClasse:
 funcoesObjetos: 
         T_ID T_DOT T_ID T_PARA paramFuncao T_PARAF T_FINALEXP {
         AST::Classe* c = symtab->useObjeto($1)->classePertencente; 
-        std::cout << "um teste aqasoihjdasiosd" << std::endl;
-        c->tabelaSimbolos->printTable();
-        symtab->useObjeto($1)->verificaParametros(c->tabelaSimbolos->useFunction($3)->parametros); 
-        $$ = new AST::BinOp(c->tabelaSimbolos->useFunction($3), Tipos::chamadaFuncao, symtab->useObjeto($1));}
+        symtab->useObjeto($1)->verificaParametros($3, parametrosFuncao); 
+        $$ = new AST::BinOp(c->tabelaSimbolos->useFunction($3), Tipos::chamadaFuncao, symtab->useObjeto($1));
+        parametrosFuncao.clear();}
+        ;
+
+funcoesObjetosAssign : 
+        T_ID T_DOT T_ID T_PARA paramFuncao T_PARAF {
+        AST::Classe* c = symtab->useObjeto($1)->classePertencente; 
+        symtab->useObjeto($1)->verificaParametros($3, parametrosFuncao); 
+        $$ = new AST::BinOp(c->tabelaSimbolos->useFunction($3), Tipos::chamadaFuncao, symtab->useObjeto($1));
+        std::cout << Tipos::tipoParaString(c->tabelaSimbolos->useFunction($3)->tipo, true);
+        parametrosFuncao.clear();}
         ;
 
 declaracoes : 
@@ -138,7 +156,7 @@ declaracoes :
         | T_ID T_ID T_ASSIGN T_NEW T_ID T_PARA paramFuncao T_PARAF T_FINALEXP { 
         std::string pri = $1; std::string seg = $5; if(pri != seg) { std::cout << "Erro na declaracao do objeto: classe deve ser compativel com o tipo de objeto declarado." << std::endl; } 
         AST::Objeto* obj = symtab->newObjeto($2, symtab->useClass($1));
-        obj->verificaParametros(parametrosFuncao);
+        obj->verificaParametrosConstrutor(parametrosFuncao);
         $$ = new AST::UniOp(obj, Tipos::declaracao, Tipos::indefinido );
         parametrosFuncao.clear();}
         ;
@@ -171,7 +189,7 @@ condicionais:
 definicoes:
         /*definição da função previamente declarada.*/
         tipoVariavel T_ID novoEscopo T_PARA param T_PARAF T_CHAVE lines mataEscopo T_CHAVEF {
-          AST::Node* var = symtab->assignFunction($2, $1, parametros, $8);
+          AST::Node* var = symtab->assignFunction($2, tv, parametros, $8);
           $$ = new AST::DefineFuncao($2, $1, parametros, $8);
         }
         ;
@@ -198,6 +216,7 @@ expr    : T_PARA unexpr T_PARAF {$$ = $2;}
         | T_SUB expr {$$ = new AST::UniOp($2, Tipos::unario, $2->tipo);}
         | T_UNIBOOL expr {$$ = new AST::UniOp($2, Tipos::unibool, Tipos::booleano);}
         | T_ID T_ARRA expr T_ARRAF {$$ = new AST::Arranjo($3, symtab->useVariable($1));} 
+        | funcoesObjetosAssign {$$ = $1;}
         ;
 
 /*define todos os tipos de variaveis que possamos ter no programa*/
@@ -206,7 +225,6 @@ tipoVariavel :
         | T_DREAL { tv = Tipos::real; }
         | T_DBOOL { tv = Tipos::booleano; }
         ;
-
 
 /*define todos os tipos de operacoes que possamos ter no programa*/
 tipoOperacao : 
@@ -243,20 +261,24 @@ mataEscopo : {symtab = symtab->tabelaOrigem;}
 param : 
       tipoVariavel  T_ID T_COMMA param {
         AST::Variable* vari = new AST::Variable($2, tv, $4);
+
+        symtab->newVariable($2, tv, NULL);
         parametros.push_back(vari);
         $$ = vari;
       }
       |tipoVariavel  T_ID {
         AST::Variable* vari = new AST::Variable($2, tv, NULL);
         parametros.push_back(vari);
+        symtab->newVariable($2, tv, NULL);
         $$ = vari;
       }
       | {$$ = NULL;}
       ;
+
+
 /*recebe os parametros da funcao e da inicializacao de objetos*/
 paramFuncao :
     T_INT T_COMMA paramFuncao {
-    std::cout << "inteiro mais " << std::endl;
         AST::Variable* vari = new AST::Variable(std::to_string($1), Tipos::inteiro, $3);
         parametrosFuncao.push_back(vari);
     }

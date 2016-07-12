@@ -222,7 +222,8 @@ namespace AST {
 		AST::Classe* classePertencente;
 
 		Objeto(std::string id, AST::Classe* classePertencente) : id(id), classePertencente(classePertencente) { }
-		void verificaParametros(std::vector<Variable* > parametros);
+		void verificaParametrosConstrutor(std::vector<Variable* > parametros);
+		void verificaParametros(std::string id, std::vector<Variable* > parametros);
 		void printTree();
 	};
 }

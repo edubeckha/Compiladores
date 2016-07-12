@@ -74,6 +74,8 @@ Tipo Tipos::opBinaria ( Tipo tipoNodoEsquerda, Tipo tipoNodoDireita, Operation o
 		}
 
 		break;
+	case chamadaFuncao:
+		break;
 
 	default:
 		if ( op == plus || op == sub || op == times || op == divi ) {

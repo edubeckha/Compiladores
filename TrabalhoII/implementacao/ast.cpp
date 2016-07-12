@@ -199,8 +199,10 @@ void UniOp::printTree() {
 		std::cout << " para real)";
 		node->tipo = Tipos::real;
 		break;
+
 	default:
-		std::cout << "Operacao nao reconhecida!!!" << std::endl;
+		std::cout << "Operacao " << Tipos::opParaString(op);
+		std::cout << " nao reconhecida!!!" << std::endl;
 	}
 }
 //////////
@@ -229,7 +231,6 @@ AST::Node * AST::realizaCoercao ( std::string id, AST::Node * left, AST::Node * 
 		std::cout << "Erro semantico: operacao de assign esperava dois tipos compativeis, mas recebeu " << Tipos::tipoParaString ( right->tipo, true ) << " e " << Tipos::tipoParaString ( left->tipo, true ) << std::endl;
 		return new AST::UniOp ( left, Tipos::coercao, Tipos::real );
 	}
-
 	return left;
 }
 //////////
@@ -327,7 +328,7 @@ void Atributo::printTree(){
 	std::cout << " atributo da classe " << classePertencente->id << " de nome " << var->id;
 }
 
-void Objeto::verificaParametros(std::vector<Variable* > parametros){
+void Objeto::verificaParametrosConstrutor(std::vector<Variable* > parametros){
 	if(parametros.size() != classePertencente->construtorClasse->parametros.size()){
 		std::cout << "Erro: esperava-se " << parametros.size() << " parametros, mas recebeu-se " << classePertencente->construtorClasse->parametros.size() << std::endl;
 	return;
@@ -336,6 +337,19 @@ void Objeto::verificaParametros(std::vector<Variable* > parametros){
 	for(int i = 0 ; i < classePertencente->construtorClasse->parametros.size(); i++){
 		if(parametros.at(i)->tipo != classePertencente->construtorClasse->parametros.at(i)->tipo){
 			std::cout << "Erro: esperava-se " << Tipos::tipoParaString(classePertencente->construtorClasse->parametros.at(i)->tipo, true) << " mas recebeu-se " << Tipos::tipoParaString(parametros.at(i)->tipo, true) << std::endl;
+		}
+	}
+}
+
+void Objeto::verificaParametros(std::string id, std::vector<Variable* > parametros){
+	if(parametros.size() != classePertencente->tabelaSimbolos->useFunction(id)->parametros.size()){
+		std::cout << "Erro: esperava-se " << parametros.size() << " parametros, mas recebeu-se " << classePertencente->tabelaSimbolos->useFunction(id)->parametros.size() << std::endl;
+	return;
+	}
+
+	for(int i = 0 ; i < classePertencente->tabelaSimbolos->useFunction(id)->parametros.size(); i++){
+		if(parametros.at(i)->tipo != classePertencente->tabelaSimbolos->useFunction(id)->parametros.at(i)->tipo){
+			std::cout << "Erro: esperava-se " << Tipos::tipoParaString(classePertencente->tabelaSimbolos->useFunction(id)->parametros.at(i)->tipo, true) << " mas recebeu-se " << Tipos::tipoParaString(parametros.at(i)->tipo, true) << std::endl;
 		}
 	}
 }
