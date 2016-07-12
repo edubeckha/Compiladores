@@ -7,7 +7,7 @@
 #include "st.h"
 
 extern void yyerror ( const char * s, ... );
-namespace ST {class SymbolTable;};
+namespace ST {class SymbolTable; class Symbol;};
 extern ST::SymbolTable * symbolTable;
 namespace AST {
 
@@ -179,17 +179,51 @@ namespace AST {
 		void printTree();
 	};
 
-	/*Classe para tratamento de tipos compostos*/
-	class Complexo : public Node {
+
+
+	class ConstrutorClasse : public Node {
 	public:
-		ST::SymbolTable * tabSim;
-		Node * var;
-		AST::Block * escopoComplexo;
-
-		Complexo ( Node * var, Block * escopoComplexo, ST::SymbolTable * tabelaEscopo ) : var ( var ), escopoComplexo ( escopoComplexo ) {
-			tabSim = tabelaEscopo;
+		std::string id;
+		std::vector<AST::Variable *> parametros;
+		AST::Block* corpoConstrutor;
+		ConstrutorClasse ( std::string id, std::vector<AST::Variable *> parametros, AST::Block* corpoConstrutor ) : id ( id ), parametros ( parametros ), corpoConstrutor (corpoConstrutor) {
 		}
+		void printTree();
+	};
 
+	class Classe : public Node {
+	public:
+		std::string id;
+		Block* corpoClasse;
+		ST::SymbolTable* tabelaSimbolos;
+		AST::ConstrutorClasse* construtorClasse;
+
+		Classe(std::string id, Block* corpoClasse, ST::SymbolTable* tabelaSimbolos, AST::ConstrutorClasse* construtorClasse) : id(id), corpoClasse(corpoClasse), tabelaSimbolos(tabelaSimbolos), construtorClasse(construtorClasse) { }
+
+		Classe(std::string id, ST::SymbolTable* tabelaSimbolos) : id(id), tabelaSimbolos(tabelaSimbolos) { }
+
+		void printTree();
+	};
+
+	class Atributo : public Node {
+	public:
+		AST::Variable* var;
+		AST::Classe* classePertencente;
+
+		Atributo(AST::Variable* var, AST::Classe* classePertencente) : var (var), classePertencente(classePertencente) { 
+			tipo = var->tipo; }
+
+		void printTree();
+	};
+
+	class Objeto : public Node {
+	public:
+		std::string id;
+		AST::Classe* classePertencente;
+
+		Objeto(std::string id, AST::Classe* classePertencente) : id(id), classePertencente(classePertencente) { }
+		void verificaParametrosConstrutor(std::vector<Variable* > parametros);
+		void verificaParametros(std::string id, std::vector<Variable* > parametros);
 		void printTree();
 	};
 }

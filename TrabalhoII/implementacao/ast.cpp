@@ -138,12 +138,24 @@ void BinOp::printTree() {
 		std::cout << ")";
 		break;
 
+	case Tipos::usoClasse:
+		std::cout << "teste de uso de classe" << std::endl;
+		break;
+
+	case Tipos::chamadaFuncao:
+		std::cout << "Chamada da ";
+		left->printTree();
+		std::cout << " do ";
+		right->printTree();
+		std::cout << std::endl;
+		break;
+	
 	default:
 		std::cout << "Operador nao tratado" << std::endl;
 		break;
 	}
 }
-//////////
+
 /*Imprime cada linha de insercao respectivamente*/
 void Block::printTree() {
 	for ( Node * line : lines ) {
@@ -151,7 +163,7 @@ void Block::printTree() {
 		std::cout << std::endl;
 	}
 }
-//////////
+
 /*Imprime as informacoes das variaveis criadas no programa, juntamente com seu tipo*/
 void Variable::printTree() {
 	if ( next != NULL ) {
@@ -162,7 +174,7 @@ void Variable::printTree() {
 		std::cout << "variavel " << Tipos::tipoParaString ( tipo, false ) << " : " << id;
 	}
 }
-//////////
+
 /*Imprime uma operacao unaria. A unica por enquanto no programa eh a operacao de declaracao (tanto de arranjos como variaveis "comuns")*/
 void UniOp::printTree() {
 	switch ( op ) {
@@ -189,7 +201,8 @@ void UniOp::printTree() {
 		break;
 
 	default:
-		std::cout << "Operacao nao reconhecida!!!" << std::endl;
+		std::cout << "Operacao " << Tipos::opParaString(op);
+		std::cout << " nao reconhecida!!!" << std::endl;
 	}
 }
 //////////
@@ -211,19 +224,6 @@ void Condicao::printTree() {
 	std::cout << "\nFim expressao condicional" << std::endl;
 }
 //////////
-/*Imprime a estrutura do numero complexo, com seu id e componentes*/
-void Complexo::printTree() {
-	std::cout << "Definicao tipo: " << dynamic_cast<Variable *> ( var )->id << std::endl;
-	std::cout << "+componentes:" << std::endl;
-
-	for ( Node * line : escopoComplexo->lines ) {
-		line->printTree();
-		std::cout << std::endl;
-	}
-
-	std::cout << "Fim definicao" << std::endl;
-}
-//////////
 /*Realiza coercao dos nodos necessarios*/
 AST::Node * AST::realizaCoercao ( std::string id, AST::Node * left, AST::Node * right, ST::SymbolTable * symtab ) {
 	if ( Tipos::necessitaCoersao ( left->tipo, right->tipo ) ) {
@@ -231,7 +231,6 @@ AST::Node * AST::realizaCoercao ( std::string id, AST::Node * left, AST::Node * 
 		std::cout << "Erro semantico: operacao de assign esperava dois tipos compativeis, mas recebeu " << Tipos::tipoParaString ( right->tipo, true ) << " e " << Tipos::tipoParaString ( left->tipo, true ) << std::endl;
 		return new AST::UniOp ( left, Tipos::coercao, Tipos::real );
 	}
-
 	return left;
 }
 //////////
@@ -249,7 +248,7 @@ void Laco::printTree() {
 //////////
 /*Imprime quando ocorre a declaração de um função.*/
 void Funcao::printTree() {
-	std::cout << "Declaração da função " << Tipos::tipoParaString ( tipo, false ) << ": " << id << std::endl;
+	std::cout << " função " << Tipos::tipoParaString ( tipo, false ) << ": " << id << std::endl;
 	std::cout << "+parametros:" << std::endl;
 
 	if ( parametros.size() == 0 ) {
@@ -294,6 +293,70 @@ void Retorno::printTree() {
 		ret->printTree();
 	}
 }
+
+void Classe::printTree(){
+	std::cout << " classe de nome " << id << std::endl;
+
+	std::cout << "Construtor da classe: " << std::endl;
+	construtorClasse->printTree();
+	
+	if(corpoClasse != NULL){
+		std::cout << "Corpo da classe: " << std::endl;
+		corpoClasse->printTree();
+	}
+	else {
+		std::cout << "A classe não possui corpo." << std::endl;
+	}
+
+
+}
+
+void Objeto::printTree(){
+	std::cout << "objeto de nome " << id << " da classe " << classePertencente->id << std::endl;
+}
+
+void ConstrutorClasse::printTree(){
+	std::cout << "Parametros passados:" << std::endl;
+
+	for(Variable* v : parametros){
+		std::cout << "+" << Tipos::tipoParaString(v->tipo, true); std::cout << " " << v->id << ", " << std::endl;
+	}
+
+	std::cout << "com o seguinte corpo: " << std::endl;
+	corpoConstrutor->printTree();
+}
+
+void Atributo::printTree(){
+	std::cout << " atributo da classe " << classePertencente->id << " de nome " << var->id;
+}
+
+void Objeto::verificaParametrosConstrutor(std::vector<Variable* > parametros){
+	if(parametros.size() != classePertencente->construtorClasse->parametros.size()){
+		std::cout << "Erro: esperava-se " << classePertencente->construtorClasse->parametros.size() << " parametros, mas recebeu-se " << parametros.size() << std::endl;
+	return;
+	}
+
+	for(int i = 0 ; i < classePertencente->construtorClasse->parametros.size(); i++){
+		if(parametros.at(i)->tipo != classePertencente->construtorClasse->parametros.at(i)->tipo){
+			std::cout << "Erro: esperava-se " << Tipos::tipoParaString(classePertencente->construtorClasse->parametros.at(i)->tipo, true) << " mas recebeu-se " << Tipos::tipoParaString(parametros.at(i)->tipo, true) << std::endl;
+		}
+	}
+}
+
+void Objeto::verificaParametros(std::string id, std::vector<Variable* > parametros){
+	if(parametros.size() != classePertencente->tabelaSimbolos->useFunction(id)->parametros.size()){
+		std::cout << "Erro: esperava-se " << parametros.size() << " parametros, mas recebeu-se " << classePertencente->tabelaSimbolos->useFunction(id)->parametros.size() << std::endl;
+	return;
+	}
+
+	for(int i = 0 ; i < classePertencente->tabelaSimbolos->useFunction(id)->parametros.size(); i++){
+		if(parametros.at(i)->tipo != classePertencente->tabelaSimbolos->useFunction(id)->parametros.at(i)->tipo){
+			std::cout << "Erro: esperava-se " << Tipos::tipoParaString(classePertencente->tabelaSimbolos->useFunction(id)->parametros.at(i)->tipo, true) << " mas recebeu-se " << Tipos::tipoParaString(parametros.at(i)->tipo, true) << std::endl;
+		}
+	}
+}
+
+
 
 
 

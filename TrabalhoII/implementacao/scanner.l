@@ -26,8 +26,8 @@ nome [a-z]+
 \.{digs} 			{yylval.doubler = std::atof(yytext); return T_DOUBLE;}
 {digs}\.		 	{yylval.doubler = std::atof(yytext); return T_DOUBLE;}
 
-"TRUE"				{return T_BOOLTRUE;}
-"FALSE"				{return T_BOOLFALSE;}
+"true"				{return T_BOOLTRUE;}
+"false"				{return T_BOOLFALSE;}
 
 "+"                 {return T_PLUS;}
 "-"                 {return T_SUB;}
@@ -67,6 +67,10 @@ nome [a-z]+
 
 "{"					{return T_CHAVE;}
 "}"					{return T_CHAVEF;}
+
+"class"				{return T_CLASSE;}
+"."					{return T_DOT;}
+"new"				{return T_NEW;}
 
 ";"					{return T_FINALEXP;}
 "\n"                {return T_NL;}
