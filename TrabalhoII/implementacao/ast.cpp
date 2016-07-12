@@ -295,22 +295,24 @@ void Retorno::printTree() {
 }
 
 void Classe::printTree(){
-	std::cout << " classe ";
-
-	if(corpoClasse != NULL){
-		std::cout << " com corpo: " << std::endl;
-		corpoClasse->printTree();
-	}
-	else {
-		std::cout << " sem corpo." << std::endl;
-	}
+	std::cout << " classe de nome " << id << std::endl;
 
 	std::cout << "Construtor da classe: " << std::endl;
 	construtorClasse->printTree();
+	
+	if(corpoClasse != NULL){
+		std::cout << "Corpo da classe: " << std::endl;
+		corpoClasse->printTree();
+	}
+	else {
+		std::cout << "A classe não possui corpo." << std::endl;
+	}
+
+
 }
 
 void Objeto::printTree(){
-	std::cout << " objeto de nome " << id << " da classe " << classePertencente->id << std::endl;
+	std::cout << "objeto de nome " << id << " da classe " << classePertencente->id << std::endl;
 }
 
 void ConstrutorClasse::printTree(){
@@ -330,7 +332,7 @@ void Atributo::printTree(){
 
 void Objeto::verificaParametrosConstrutor(std::vector<Variable* > parametros){
 	if(parametros.size() != classePertencente->construtorClasse->parametros.size()){
-		std::cout << "Erro: esperava-se " << parametros.size() << " parametros, mas recebeu-se " << classePertencente->construtorClasse->parametros.size() << std::endl;
+		std::cout << "Erro: esperava-se " << classePertencente->construtorClasse->parametros.size() << " parametros, mas recebeu-se " << parametros.size() << std::endl;
 	return;
 	}
 
