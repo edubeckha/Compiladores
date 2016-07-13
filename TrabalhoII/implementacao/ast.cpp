@@ -375,5 +375,5 @@ void Substring::printTree() {
 
 // Imprime o valor de uma variavel do tipo string.
 void Tamanho::printTree() {
-	std::cout << "(tamanho da string: \""<<id<< ")";
+	std::cout << "(tamanho da string: \""<<id<< "\")";
 }

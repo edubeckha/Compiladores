@@ -1,31 +1,46 @@
 #!/bin/bash
 
-SUCESSES=../testes/sucesses
+SUCESSES="../testes/sucesses"
 
 make all
-
+echo "*******************************************"
 echo "Teste dos casos de sucesso: não geram erros"
+echo "*******************************************"
+cor=0
 
-for i in {0..1}; do
+for i in {0..6}; do
+./myparse < ${SUCESSES}/inputs/input_1.${i} > output
 
-./myparse < $SUCESSES/inputs/input_1.$i > output
+diff -bBw ${SUCESSES}/expected/expected_1.${i} output  > differ
 
-diff $SUCESSES/expected/expected_1.$i output  > differ
-
-echo Teste da versão 1.$i
+echo "===================="
+echo "Teste da versão 1.${i}"
 
 if [ -s differ ];
 then
-	echo "** Falha no teste da versão 1.$i"
+	echo ""
+	echo "** Falha no teste da versão 1.${i}"
+	echo ""
 	echo ****Esperado:
-	cat $SUCESSES/expected/expected_1.$i
+	echo ""
+	cat ${SUCESSES}/expected/expected_1.${i}
+	echo ""
 	echo ****Obtido: 
 	cat output
+	echo ""
 else
-	echo "** Sucesso no teste da versão 1.$i"
+	echo ""
+	echo "** Sucesso no teste da versão 1.${i}"
+	let cor++
+	echo ""
 fi
 
 done
+echo "---------------"
+echo "Fim dos testes."
+echo "---------------"
+echo Passou em ${cor}.
+echo Falhou em $(( i - cor )).
 
 rm output
 rm differ
