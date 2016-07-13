@@ -43,8 +43,8 @@ strg \"([^\"\\\\]|\\\\.)*\"
 ">="				{return T_MAIORIGUAL;}
 "<="				{return T_MENORIGUAL;}
 
-"AND"				{return T_AND;}
-"OR"				{return T_OR;}
+"&&"				{return T_AND;}
+"||"				{return T_OR;}
 "~"					{return T_UNIBOOL;}
 
 "("					{return T_PARA;}
@@ -53,15 +53,10 @@ strg \"([^\"\\\\]|\\\\.)*\"
 "]"					{return T_ARRAF;}
 
 "while"				{return T_WHILE;}
-"do"				{return T_DO;}
 "if"				{return T_IF;}
 "then"				{return T_THEN;}
 "else"				{return T_ELSE;}
-"end"				{return T_END;}
 
-"type"				{return T_TYPE;}
-
-"fun" 				{return T_FUN;}
 "return" 			{return T_RETO;}
 
 "{"					{return T_CHAVE;}

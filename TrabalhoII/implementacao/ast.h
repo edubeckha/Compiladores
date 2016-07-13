@@ -180,7 +180,7 @@ namespace AST {
 	};
 
 
-
+	/*Nodo que representa o construtor da classe. O mesmo tem um id, uma lista de parametros e um block que representa o seu corpo*/
 	class ConstrutorClasse : public Node {
 	public:
 		std::string id;
@@ -191,6 +191,7 @@ namespace AST {
 		void printTree();
 	};
 
+	/*Nodo que representa uma classe. O mesmo tem um id, um block que representa o corpo da classe, uma tabela de simbolos com seus simbolos e seu construtor*/
 	class Classe : public Node {
 	public:
 		std::string id;
@@ -205,6 +206,7 @@ namespace AST {
 		void printTree();
 	};
 
+	/*Nodo que representa um atributo de uma determinada classe*/
 	class Atributo : public Node {
 	public:
 		AST::Variable* var;
@@ -216,6 +218,7 @@ namespace AST {
 		void printTree();
 	};
 
+	/*Nodo que representa o objeto de uma classe. O mesmo tem um id e a classe a qual pertence*/
 	class Objeto : public Node {
 	public:
 		std::string id;
@@ -226,8 +229,8 @@ namespace AST {
 		void verificaParametros(std::string id, std::vector<Variable* > parametros);
 		void printTree();
 	};
-////////////////////////////////////
-		/*Classe para tratamento de strings*/
+
+	/*Nodo que representa strings*/
 	class String : public Node {
 	public:
 
@@ -240,6 +243,7 @@ namespace AST {
 		void printTree();
 	};
 
+	/*Nodo que representa substrings*/
 	class Substring : public Node {
 	public:
 		std::string id;

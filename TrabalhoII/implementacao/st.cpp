@@ -3,9 +3,9 @@
 #include "ast.h"
 
 using namespace ST;
-
 extern SymbolTable symtab;
 
+/*Cria uma nova variavle na tabela de simbolos*/
 AST::Node * SymbolTable::newVariable ( std::string id, Tipos::Tipo tipoVariavel, AST::Node * next, bool inicializada  ) {
 	AST::Variable * retorno = new AST::Variable ( id, tipoVariavel, next );
 
@@ -23,7 +23,8 @@ AST::Node * SymbolTable::newVariable ( std::string id, Tipos::Tipo tipoVariavel,
 
 	return retorno; //Creates variable node anyway
 }
-//////////
+
+/*Assign em variaveis*/
 AST::Node * SymbolTable::assignVariable ( std::string id ) {
 	if(!checkId(id)){
         if(tabelaOrigem != NULL){
@@ -36,6 +37,7 @@ AST::Node * SymbolTable::assignVariable ( std::string id ) {
     return new AST::Variable(id, entryList[id].type, NULL); //Creates variable node anyway
 }
 
+/*Retorna um nodo do tipo variavel para uso*/
 AST::Node * SymbolTable::useVariable ( std::string id ) {
 	AST::Variable * retorno;
 
@@ -102,6 +104,7 @@ AST::Node * SymbolTable::assignFunction ( std::string id, Tipos::Tipo tipoVariav
 	return new AST::Funcao(id, tipoVariavel, parametros);
 }
 
+/*Retorna uma funcao ja declarada para uso*/
 AST::Funcao* SymbolTable::useFunction (std::string id ){
 	if ( !checkId ( id ) ) {
 		if ( tabelaOrigem != NULL ) {
@@ -125,13 +128,14 @@ AST::Funcao* SymbolTable::useFunction (std::string id ){
 	return  func; //Creates variable node anyway
 }
 
-
+/*Retorna um simbolo da tabela de simbolos*/
 Symbol SymbolTable::getSymbol ( std::string id ) {
 	assert ( checkId ( id ) );
 	ST::Symbol retorno = this->entryList.at ( id );
 	return retorno;
 }
 
+/*Adiciona uma nova classe na tabela de simbolos e retorna um nodo classe para uso a partir dessa operacao*/
 AST::Classe* SymbolTable::newClass(std::string id, ST::SymbolTable* tabelaSimbolosClasse, AST::Block* escopoClasse, AST::ConstrutorClasse* construtor){
 
 	if ( checkId ( id ) ) {
@@ -146,6 +150,7 @@ AST::Classe* SymbolTable::newClass(std::string id, ST::SymbolTable* tabelaSimbol
 	return new AST::Classe ( id, escopoClasse, tabelaSimbolosClasse, construtor );
 }
 
+/*Retorna o nodo de uma classe previamente definida*/
 AST::Classe* SymbolTable::useClass(std::string id){
 	if(!checkId(id)){
 		yyerror("Erro semantico: classe referida nao existe \n");
@@ -163,9 +168,8 @@ AST::Classe* SymbolTable::useClass(std::string id){
 	return c;
 }
 
+/*Cria um novo objeto na tabela de simbolos e retorna um nodo do tipo objeto para uso*/
 AST::Objeto* SymbolTable::newObjeto(std::string id, AST::Classe* classePertencente){
-	AST::Objeto* objeto = new AST::Objeto ( id, classePertencente );
-
 	if ( checkId ( id ) ) {
 		yyerror ( "Erro semantico: ja existe um objeto com o nome %s\n", id.c_str() );
 	}
@@ -174,9 +178,10 @@ AST::Objeto* SymbolTable::newObjeto(std::string id, AST::Classe* classePertencen
 		addSymbol ( id, entry );
 	}
 
-	return objeto;
+	return new AST::Objeto ( id, classePertencente );
 }
 
+/*Retorna um objeto previamente declarado*/
 AST::Objeto* SymbolTable::useObjeto(std::string id){
 	if(!checkId(id)){
 		yyerror("Erro semantico: objeto nao existe \n");
@@ -207,6 +212,7 @@ AST::Atributo* SymbolTable::newAtributo(AST::Variable* var, AST::Classe* classeP
 	return atri;
 }
 
+/*Assign em atributos de uma classe*/
 AST::Atributo* SymbolTable::assignAtributo ( AST::Variable* var, AST::Classe* classePertencente ){
 	AST::Atributo * retorno = new AST::Atributo ( var, classePertencente );
 

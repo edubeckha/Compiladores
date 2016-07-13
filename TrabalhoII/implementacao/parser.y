@@ -37,26 +37,18 @@ bool variaveisEscopoClasse = false;
 %token <doubler> T_DOUBLE
 %token <booleano> T_BOOLTRUE T_BOOLFALSE
 %token <name> T_ID
-<<<<<<< HEAD
-%token T_NL T_ASSIGN T_FINALEXP T_IGUAL T_DINT T_DREAL T_DBOOL  T_COMMA T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_DIFERENTE T_UNIBOOL T_PARA T_PARAF T_ARRA T_ARRAF T_IF T_THEN T_ELSE T_END T_WHILE T_DO T_DEFI T_TYPE T_FUN T_RETO T_CHAVE T_CHAVEF T_CLASSE T_DOT T_NEW
-=======
-%token <String> T_STRING
-%token T_NL T_ASSIGN T_FINALEXP T_IGUAL T_DINT T_DREAL T_DBOOL  T_COMMA T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_DIFERENTE T_UNIBOOL T_PARA T_PARAF T_ARRA T_ARRAF T_IF T_THEN T_ELSE T_END T_WHILE T_DO  T_TYPE T_FUN T_RETO T_CHAVE T_CHAVEF T_DSTRING T_SUBSTRG T_TAMANHO
->>>>>>> string
+%token <String> T_STRING  
+%token T_NL T_ASSIGN T_FINALEXP T_IGUAL T_DINT T_DREAL T_DBOOL  T_COMMA T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_DIFERENTE T_UNIBOOL T_PARA T_PARAF T_ARRA T_ARRAF T_IF T_THEN T_ELSE T_WHILE T_RETO T_CHAVE T_CHAVEF T_CLASSE T_DOT T_NEW T_DSTRING T_SUBSTRG T_TAMANHO
 
 /* type defines the type of our nonterminal symbols.
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
 
-<<<<<<< HEAD
-%type <node> expr line varlist unexpr declaracoes assignments condicionais elseIf definicoes param paramFuncao funcoesObjetos funcoesObjetosAssign declaracaoClasse possibilidadesEscopoClasse possibilidadesEscopoConstrutor
+%type <node> expr line varlist unexpr declaracoes assignments condicionais elseIf definicoes param paramFuncao funcoesObjetos funcoesObjetosAssign declaracaoClasse possibilidadesEscopoClasse possibilidadesEscopoConstrutor concString
 %type <block> lines program escopoClasse escopoConstrutor
 %type <constClasse> construtorClasse
-=======
-%type <node> expr line varlist unexpr declaracoes assignments condicionais elseIf definicoes param concString
-%type <block> lines program corpoComplexo
->>>>>>> string
+
 %type <operacao> tipoOperacao
 %type<tabelaEscopo> novoEscopo
 %type<tipoVariavel> tipoVariavel
@@ -104,24 +96,29 @@ declaracaoClasse :
             ;
 
 construtorClasse :
+            /*declaracao do construtor de classes*/
             T_ID T_PARA novoEscopo param T_PARAF T_CHAVE escopoConstrutor mataEscopo T_CHAVEF {$$ = new AST::ConstrutorClasse($1, parametros, $7); parametros.clear();}
             ;
 
+/*possibilidades que o escopo de um construtor pode receber*/
 possibilidadesEscopoConstrutor :
             declaracoes { $$ = $1; }
             | assignments { $$ = $1; }
             | funcoesObjetos {$$ = $1; }
 
+/*determina o escopo da classe*/
 escopoClasse :
             possibilidadesEscopoClasse {$$ = new AST::Block(); if($1 != NULL) $$->lines.push_back($1);} 
             | escopoClasse possibilidadesEscopoClasse {if($2 != NULL) $1->lines.push_back($2); }
             ;
 
+/*determina o escopo do construtor*/
 escopoConstrutor :
             possibilidadesEscopoConstrutor {$$ = new AST::Block(); if($1 != NULL) $$->lines.push_back($1);} 
             | escopoConstrutor possibilidadesEscopoConstrutor {if($2 != NULL) $1->lines.push_back($2); }
             ;
 
+/*possibilidades que o escopo de uma classe pode receber*/
 possibilidadesEscopoClasse:
             declaracoes {$$ = $1;}
             | assignments {$$ = $1;}
@@ -130,6 +127,7 @@ possibilidadesEscopoClasse:
             | funcoesObjetos {$$ = $1;}
             ;
 
+/*representa as funcoes sendo chamadas diretamente por um objeto declarado a partir da criacao de uma classe qualquer*/
 funcoesObjetos: 
         T_ID T_DOT T_ID T_PARA paramFuncao T_PARAF T_FINALEXP {
         AST::Classe* c = symtab->useObjeto($1)->classePertencente; 
@@ -138,6 +136,7 @@ funcoesObjetos:
         parametrosFuncao.clear();}
         ;
 
+/*representa o assign em funcoes de um objeto declarado a partir de uma classe*/
 funcoesObjetosAssign : 
         T_ID T_DOT T_ID T_PARA paramFuncao T_PARAF {
         AST::Classe* c = symtab->useObjeto($1)->classePertencente; 
@@ -150,7 +149,6 @@ funcoesObjetosAssign :
 
 declaracoes : 
     	/*declaracao de variaveis*/
-
     	tipoVariavel  varlist T_FINALEXP { $$ = new AST::UniOp($2, Tipos::declaracao, $1);}
 
 		/*declaracao de arranjos*/
@@ -160,6 +158,7 @@ declaracoes :
         | tipoVariavel T_ID novoEscopo T_PARA param T_PARAF mataEscopo T_FINALEXP {
           AST::Node* node = symtab->newFunction($2, $1, parametros);
           $$ = node;
+          }
 
          /*declaracao de objetos de uma classe*/
         | T_ID T_ID T_ASSIGN T_NEW T_ID T_PARA paramFuncao T_PARAF T_FINALEXP { 
@@ -170,6 +169,7 @@ declaracoes :
         parametrosFuncao.clear();}
         | T_ID T_SUBSTRG T_PARA T_INT T_COMMA T_INT T_PARAF T_FINALEXP {AST::Node* node = symtab->useVariable($1); $$ = new AST::Substring($1, node, $4, $6);}
 
+        /*representa o tamanho de uma string*/
         | T_ID T_TAMANHO T_PARA T_PARAF T_FINALEXP {AST::Node* node = symtab->useVariable($1); $$ = new AST::Tamanho($1, node); }
 
         ;
@@ -254,7 +254,7 @@ tipoVariavel :
         T_DINT { tv = Tipos::inteiro; $$ = Tipos::inteiro; } 
         | T_DREAL { tv = Tipos::real;  $$ = Tipos::real; }
         | T_DBOOL { tv = Tipos::booleano; $$ = Tipos::booleano; }
-        | T_DSTRING { tv = Tipos::string; $$ = Tipos::string}
+        | T_DSTRING { tv = Tipos::string; $$ = Tipos::string; }
         ;
 
 /*define todos os tipos de operacoes que possamos ter no programa*/

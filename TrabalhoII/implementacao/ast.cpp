@@ -8,19 +8,19 @@ void Integer::printTree() {
 	std::cout << "(valor inteiro " << value << ")";
 	return;
 }
-//////////
+
 /*Imprime o valor do nodo quando o mesmo for real*/
 void Doubler::printTree() {
 	std::cout << "(valor real " << value << ")";
 	return;
 }
-//////////
+
 /*Imprime o valor do nodo quando o mesmo for booleano*/
 void Boolean::printTree() {
 	std::cout << "(valor booleano " << tipoParaString() << ")";
 	return;
 }
-//////////
+
 /*Imprime o arranjo, seu tipo e seu indice quando o nodo for do tipo arranjo*/
 void Arranjo::printTree() {
 	std::cout << "arranjo " <<
@@ -29,7 +29,7 @@ void Arranjo::printTree() {
 	indice->printTree();
 	std::cout << "}";
 }
-//////////
+
 /*Imprime o valor das operacoes binarias criadas na gramatica. Cada case influencia em uma operacao diferente*/
 void BinOp::printTree() {
 
@@ -205,7 +205,7 @@ void UniOp::printTree() {
 		std::cout << " nao reconhecida!!!" << std::endl;
 	}
 }
-//////////
+
 /*Imprime a condicao, quando a mesma aparecer na arvore.
 Deve-se atentar ao fato de que a mesma imprimira o corpo do else somente
 se ha algum nodo compondo este corpo*/
@@ -223,7 +223,7 @@ void Condicao::printTree() {
 
 	std::cout << "\nFim expressao condicional" << std::endl;
 }
-//////////
+
 /*Realiza coercao dos nodos necessarios*/
 AST::Node * AST::realizaCoercao ( std::string id, AST::Node * left, AST::Node * right, ST::SymbolTable * symtab ) {
 	if ( Tipos::necessitaCoersao ( left->tipo, right->tipo ) ) {
@@ -233,7 +233,7 @@ AST::Node * AST::realizaCoercao ( std::string id, AST::Node * left, AST::Node * 
 	}
 	return left;
 }
-//////////
+
 /*Imprime o laco while declarado pelo usuario. O mesmo imprime tanto a condicao quanto o corpo da estrutura na ordem em que os mesmos aparecem*/
 void Laco::printTree() {
 	std::cout << "Laco" << std::endl;
@@ -245,7 +245,7 @@ void Laco::printTree() {
 	std::cout << "\n";
 	std::cout << "Fim laco" << std::endl;
 }
-//////////
+
 /*Imprime quando ocorre a declaração de um função.*/
 void Funcao::printTree() {
 	std::cout << " função " << Tipos::tipoParaString ( tipo, false ) << ": " << id << std::endl;
@@ -261,7 +261,7 @@ void Funcao::printTree() {
 
 	std::cout << "Fim declaração." << std::endl;
 }
-//////////
+
 /*Imprime quando ocorre uma definição de uma função.*/
 void DefineFuncao::printTree() {
 	std::cout << "Definição de função " << Tipos::tipoParaString ( tipo, false ) << ": " << id << std::endl;
@@ -284,7 +284,7 @@ void DefineFuncao::printTree() {
 
 	std::cout << "Fim definição." << std::endl;
 }
-//////////
+
 /*Imprime sempre que houver um retorno em uma função.*/
 void Retorno::printTree() {
 	std::cout << "Retorno de função: " << std::endl;
@@ -293,7 +293,7 @@ void Retorno::printTree() {
 		ret->printTree();
 	}
 }
-///////////////
+
 /*Imprime o valor de uma variavel do tipo string.*/
 void String::printTree() {
 	std::string strs = std::string(aux);
@@ -301,6 +301,7 @@ void String::printTree() {
 	std::cout << "(string " << strs << ")";
 }
 
+/*IMprime o nome da classe*/
 void Classe::printTree(){
 	std::cout << " classe de nome " << id << std::endl;
 
@@ -314,14 +315,9 @@ void Classe::printTree(){
 	else {
 		std::cout << "A classe não possui corpo." << std::endl;
 	}
-
-
 }
 
-void Objeto::printTree(){
-	std::cout << "objeto de nome " << id << " da classe " << classePertencente->id << std::endl;
-}
-
+/*Imprime os parametros passados para o construtor passado e seu corpo*/
 void ConstrutorClasse::printTree(){
 	std::cout << "Parametros passados:" << std::endl;
 
@@ -333,10 +329,7 @@ void ConstrutorClasse::printTree(){
 	corpoConstrutor->printTree();
 }
 
-void Atributo::printTree(){
-	std::cout << " atributo da classe " << classePertencente->id << " de nome " << var->id;
-}
-
+/*Verifica os parametros do construtor de uma dada classe, no momento que um objeto dessa classe for criado*/
 void Objeto::verificaParametrosConstrutor(std::vector<Variable* > parametros){
 	if(parametros.size() != classePertencente->construtorClasse->parametros.size()){
 		std::cout << "Erro: esperava-se " << classePertencente->construtorClasse->parametros.size() << " parametros, mas recebeu-se " << parametros.size() << std::endl;
@@ -350,6 +343,7 @@ void Objeto::verificaParametrosConstrutor(std::vector<Variable* > parametros){
 	}
 }
 
+/*Verifica os parametros da funcao passada na utilizacao da mesma assim for chamado essa funcao de um objeto previamente declarado*/
 void Objeto::verificaParametros(std::string id, std::vector<Variable* > parametros){
 	if(parametros.size() != classePertencente->tabelaSimbolos->useFunction(id)->parametros.size()){
 		std::cout << "Erro: esperava-se " << parametros.size() << " parametros, mas recebeu-se " << classePertencente->tabelaSimbolos->useFunction(id)->parametros.size() << std::endl;
@@ -362,6 +356,17 @@ void Objeto::verificaParametros(std::string id, std::vector<Variable* > parametr
 		}
 	}
 }
+
+/*Imprime o nome do objeto, juntamente com o id da classe pertencente ao mesmo*/
+void Objeto::printTree(){
+	std::cout << "objeto de nome " << id << " da classe " << classePertencente->id << std::endl;
+}
+
+void Atributo::printTree(){
+	std::cout << " atributo da classe " << classePertencente->id << " de nome " << var->id;
+}
+
+
 
 /*Imprime o valor de uma variavel do tipo string.*/
 void Substring::printTree() {

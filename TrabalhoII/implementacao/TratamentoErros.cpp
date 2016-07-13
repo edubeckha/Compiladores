@@ -16,7 +16,7 @@ bool Tipos::necessitaCoersao ( Tipo tipoNodoEsquerda, Tipo tipoNodoDireita ) {
 
 	return false;
 }
-//////////
+
 /*Verifica erros semanticos em operacoes unitarias, como operador unario, unario para booleano e definicoes de indices de arranjo e de condicoes de lacos do tipo if e while*/
 Tipo Tipos::opUnaria ( Tipo tipoRecebido, Operation op ) {
 	switch ( op ) {
@@ -55,7 +55,7 @@ Tipo Tipos::opUnaria ( Tipo tipoRecebido, Operation op ) {
 	return tipoRecebido;
 }
 
-//////////
+
 /*Verifica erros semanticos em operacoes binarias*/
 Tipo Tipos::opBinaria ( Tipo tipoNodoEsquerda, Tipo tipoNodoDireita, Operation op ) {
 	switch ( op ) {
@@ -125,7 +125,7 @@ Tipo Tipos::opBinaria ( Tipo tipoNodoEsquerda, Tipo tipoNodoDireita, Operation o
 
 	return inteiro;
 }
-//////////
+
 /*Mostra na tela erros de condicoes em lacos*/
 void Tipos::erroCondicao ( Operation operacao, Tipo primeiroRecebido, Tipo segundoRecebido, Tipo primeiroEsperado, Tipo segundoEsperado ) {
 	std::cout << "A condicao do laco obteve uma operacao de " << opParaString ( operacao ) << " esperava " << tipoParaString ( primeiroEsperado, true );
@@ -136,7 +136,7 @@ void Tipos::erroCondicao ( Operation operacao, Tipo primeiroRecebido, Tipo segun
 
 	std::cout << " mas recebeu " << tipoParaString ( primeiroRecebido, true ) << " e " << tipoParaString ( segundoRecebido, true ) << std::endl;
 }
-//////////
+
 /*Mostra na tela erros de condicoes de tipagem*/
 void Tipos::erroTipagem ( Operation operacao, Tipo primeiroTipo, Tipo segundoTipo, Tipo recebido ) {
 	std::cout << "A operacao de " + opParaString ( operacao ) + " esperava " + tipoParaString ( primeiroTipo, true );
@@ -147,25 +147,25 @@ void Tipos::erroTipagem ( Operation operacao, Tipo primeiroTipo, Tipo segundoTip
 
 	std::cout << " como parâmetro, mas recebeu " << tipoParaString ( recebido, true ) << "." << std::endl;
 }
-//////////
+
 /*Mostra na tela erros de tipos incompativeis entre variaveis*/
 void Tipos::tiposIncompativeis ( Tipo primeiroTipo, Tipo segundoTipo, Operation operacao ) {
 	std::cout << "Erro semantico: operacao de " << opParaString ( operacao ) << " esperava dois tipos compativeis, mas recebeu " <<
 			  tipoParaString ( primeiroTipo, true ) << " e " << tipoParaString ( segundoTipo, true ) << std::endl;
 }
-//////////
+
 /*Mostra na tela erros de indice dos arranjos*/
 void Tipos::erroIndiceArranjo ( Tipo primeiroTipo, Tipo segundoTipo ) {
 	std::cout << "Erro semantico: indice do arranjo esperava  " <<
 			  tipoParaString ( primeiroTipo, true ) << " mas recebeu " << tipoParaString ( segundoTipo, true ) << std::endl;
 }
-//////////
+
 /*Mostra na tela erros de condicao dos lacos*/
 void Tipos::erroCondicaoLaco ( Tipo esperado, Tipo recebido ) {
 	std::cout << "Erro semantico: laco da condicao esperava " <<
 			  tipoParaString ( esperado, true ) << " mas recebeu " << tipoParaString ( recebido, true ) << std::endl;
 }
-//////////
+
 /*Converte um tipo passado como parametro para string a fim de ser impresso*/
 std::string Tipos::tipoParaString ( Tipo tipo, bool ehMasc ) {
 	std::string retorno;
@@ -181,11 +181,11 @@ std::string Tipos::tipoParaString ( Tipo tipo, bool ehMasc ) {
 	case booleano:
 		retorno = "boolean";
 		break;
-///////////////////
+
 	case string:
 		return "string";
 		break;
-///////////////////
+
 	default:
 		retorno = "indefinid";
 		break;
@@ -197,7 +197,7 @@ std::string Tipos::tipoParaString ( Tipo tipo, bool ehMasc ) {
 
 
 }
-//////////
+
 /*Converte uma operacao passada como parametro para string a fim de ser impressa*/
 std::string Tipos::opParaString ( Operation op ) {
 	switch ( op ) {
