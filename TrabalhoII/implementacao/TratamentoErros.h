@@ -4,7 +4,7 @@
 #include <vector>
 
 namespace Tipos {
-	enum Tipo { inteiro, real, booleano, indefinido, complexo};
+	enum Tipo { inteiro, real, booleano, indefinido, complexo, string};
 	enum Operation { plus, sub, times, divi, assign, maior, menor, maiorigual, menorigual, ande, ore, unibool, chamadaFuncao, unario, declaracao, igual, diferente, coercao, defineIndiceArranjo, defineCondicaoLaco, usoClasse };
 
 	Tipo opUnaria( Tipo tipoRecebido, Operation op );

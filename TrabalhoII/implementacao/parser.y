@@ -20,7 +20,7 @@ bool variaveisEscopoClasse = false;
 %union {
     int integer;
     double doubler;
-    const char* string;
+    const char* String;
     const char* booleano;
     AST::Node *node;
     AST::Block *block;
@@ -35,19 +35,28 @@ bool variaveisEscopoClasse = false;
  */
 %token <integer> T_INT
 %token <doubler> T_DOUBLE
-%token <string> T_DSTRING
 %token <booleano> T_BOOLTRUE T_BOOLFALSE
 %token <name> T_ID
+<<<<<<< HEAD
 %token T_NL T_ASSIGN T_FINALEXP T_IGUAL T_DINT T_DREAL T_DBOOL  T_COMMA T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_DIFERENTE T_UNIBOOL T_PARA T_PARAF T_ARRA T_ARRAF T_IF T_THEN T_ELSE T_END T_WHILE T_DO T_DEFI T_TYPE T_FUN T_RETO T_CHAVE T_CHAVEF T_CLASSE T_DOT T_NEW
+=======
+%token <String> T_STRING
+%token T_NL T_ASSIGN T_FINALEXP T_IGUAL T_DINT T_DREAL T_DBOOL  T_COMMA T_MAIOR T_MENOR T_MAIORIGUAL T_MENORIGUAL T_AND T_OR T_DIFERENTE T_UNIBOOL T_PARA T_PARAF T_ARRA T_ARRAF T_IF T_THEN T_ELSE T_END T_WHILE T_DO  T_TYPE T_FUN T_RETO T_CHAVE T_CHAVEF T_DSTRING T_SUBSTRG T_TAMANHO
+>>>>>>> string
 
 /* type defines the type of our nonterminal symbols.
  * Types should match the names used in the union.
  * Example: %type<node> expr
  */
 
+<<<<<<< HEAD
 %type <node> expr line varlist unexpr declaracoes assignments condicionais elseIf definicoes param paramFuncao funcoesObjetos funcoesObjetosAssign declaracaoClasse possibilidadesEscopoClasse possibilidadesEscopoConstrutor
 %type <block> lines program escopoClasse escopoConstrutor
 %type <constClasse> construtorClasse
+=======
+%type <node> expr line varlist unexpr declaracoes assignments condicionais elseIf definicoes param concString
+%type <block> lines program corpoComplexo
+>>>>>>> string
 %type <operacao> tipoOperacao
 %type<tabelaEscopo> novoEscopo
 %type<tipoVariavel> tipoVariavel
@@ -138,8 +147,10 @@ funcoesObjetosAssign :
         parametrosFuncao.clear();}
         ;
 
+
 declaracoes : 
     	/*declaracao de variaveis*/
+
     	tipoVariavel  varlist T_FINALEXP { $$ = new AST::UniOp($2, Tipos::declaracao, $1);}
 
 		/*declaracao de arranjos*/
@@ -149,8 +160,6 @@ declaracoes :
         | tipoVariavel T_ID novoEscopo T_PARA param T_PARAF mataEscopo T_FINALEXP {
           AST::Node* node = symtab->newFunction($2, $1, parametros);
           $$ = node;
-          parametros.clear();
-        }
 
          /*declaracao de objetos de uma classe*/
         | T_ID T_ID T_ASSIGN T_NEW T_ID T_PARA paramFuncao T_PARAF T_FINALEXP { 
@@ -159,6 +168,10 @@ declaracoes :
         obj->verificaParametrosConstrutor(parametrosFuncao);
         $$ = new AST::UniOp(obj, Tipos::declaracao, Tipos::indefinido );
         parametrosFuncao.clear();}
+        | T_ID T_SUBSTRG T_PARA T_INT T_COMMA T_INT T_PARAF T_FINALEXP {AST::Node* node = symtab->useVariable($1); $$ = new AST::Substring($1, node, $4, $6);}
+
+        | T_ID T_TAMANHO T_PARA T_PARAF T_FINALEXP {AST::Node* node = symtab->useVariable($1); $$ = new AST::Tamanho($1, node); }
+
         ;
 
 assignments : 
@@ -172,11 +185,26 @@ assignments :
         |T_ID T_DOT T_ID T_ASSIGN unexpr T_FINALEXP { AST::Classe* c = symtab->useObjeto($1)->classePertencente; AST::Atributo* atri = c->tabelaSimbolos->assignAtributo((AST::Variable*) c->tabelaSimbolos->assignVariable($3), symtab->useObjeto($1)->classePertencente); 
         $$ = new AST::BinOp(atri, Tipos::assign, $5); }
 
+
+    	/*Assign em string*/
+        |T_ID T_ASSIGN concString T_FINALEXP  { AST::Node* node = symtab->assignVariable($1); $$ = new AST::BinOp(node, Tipos::assign, $3); }
+
+        /*Concatenação de duas strings.*/
+        | T_ID T_ASSIGN concString {AST::Node* node = symtab->assignVariable($1); $$ = new AST::BinOp(node, Tipos::assign, $3); }
+
         /*Reconhece uma ou mais declarações de retorno de uma função.*/
-        | T_RETO unexpr T_FINALEXP {
-            $$ = new AST::Retorno($2);
-        }
+        | T_RETO unexpr T_FINALEXP { $$ = new AST::Retorno($2); }
         ;
+
+
+/*Regras para reconhece o conteudo atribuido a uma variavel do tipo string e fazer a concatenação de strings.*/
+concString : 
+        
+        T_STRING T_PLUS concString {AST::Node* n1 = new AST::String($1); $$ = new AST::BinOp(n1, Tipos::plus, $3); }
+
+        | T_STRING T_FINALEXP {$$ =  new AST::String($1); }
+        ;
+       
 
 condicionais: 
 		/*tratamento de expressoes condicionais do tipo if*/
@@ -204,6 +232,8 @@ elseIf : {$$ = NULL;}
 unexpr : 
         unexpr tipoOperacao expr {$$ = new AST::BinOp($1, $2, $3);}
         | expr {$$ = $1;}
+
+        | T_STRING T_IGUAL T_STRING {AST::Node* n1 = new AST::String($1); AST::Node* n2 = new AST::String($1); $$ = new AST::BinOp(n1, Tipos::igual, n2);}
 		;
 
 /*tratamento de todas as expressoes utilizadas no programa*/
@@ -224,6 +254,7 @@ tipoVariavel :
         T_DINT { tv = Tipos::inteiro; $$ = Tipos::inteiro; } 
         | T_DREAL { tv = Tipos::real;  $$ = Tipos::real; }
         | T_DBOOL { tv = Tipos::booleano; $$ = Tipos::booleano; }
+        | T_DSTRING { tv = Tipos::string; $$ = Tipos::string}
         ;
 
 /*define todos os tipos de operacoes que possamos ter no programa*/
@@ -274,7 +305,6 @@ param :
       | {$$ = NULL;}
       ;
 
-
 /*recebe os parametros da funcao e da inicializacao de objetos*/
 paramFuncao :
     T_INT T_COMMA paramFuncao {
@@ -318,7 +348,3 @@ paramFuncao :
         parametrosFuncao.push_back(vari);
     }
     ;
-
-%%
-
-

@@ -4,6 +4,10 @@ using namespace Tipos;
 
 /*Verifica se dois nodos precisam realizar coersao de real para inteiro a partir do tipo dos mesmos*/
 bool Tipos::necessitaCoersao ( Tipo tipoNodoEsquerda, Tipo tipoNodoDireita ) {
+	if (tipoNodoEsquerda == string)
+	{
+		return false;
+	}
 	if ( tipoNodoEsquerda == real || tipoNodoDireita == real ) {
 		if ( tipoNodoEsquerda == inteiro || tipoNodoDireita == inteiro ) {
 			return true;
@@ -83,6 +87,10 @@ Tipo Tipos::opBinaria ( Tipo tipoNodoEsquerda, Tipo tipoNodoDireita, Operation o
 				return real;
 			}
 
+			if ( tipoNodoEsquerda == string || tipoNodoDireita == string ) {
+				return string;
+			}
+
 			if ( tipoNodoEsquerda != inteiro && tipoNodoEsquerda != real ) {
 				Tipos::erroTipagem ( op, inteiro, real, booleano );
 				break;
@@ -140,7 +148,7 @@ void Tipos::erroTipagem ( Operation operacao, Tipo primeiroTipo, Tipo segundoTip
 	std::cout << " como parâmetro, mas recebeu " << tipoParaString ( recebido, true ) << "." << std::endl;
 }
 //////////
-/*Mostra na tela erros de tipos incompativeis entre variavei*/
+/*Mostra na tela erros de tipos incompativeis entre variaveis*/
 void Tipos::tiposIncompativeis ( Tipo primeiroTipo, Tipo segundoTipo, Operation operacao ) {
 	std::cout << "Erro semantico: operacao de " << opParaString ( operacao ) << " esperava dois tipos compativeis, mas recebeu " <<
 			  tipoParaString ( primeiroTipo, true ) << " e " << tipoParaString ( segundoTipo, true ) << std::endl;
@@ -173,7 +181,11 @@ std::string Tipos::tipoParaString ( Tipo tipo, bool ehMasc ) {
 	case booleano:
 		retorno = "boolean";
 		break;
-
+///////////////////
+	case string:
+		return "string";
+		break;
+///////////////////
 	default:
 		retorno = "indefinid";
 		break;

@@ -226,5 +226,45 @@ namespace AST {
 		void verificaParametros(std::string id, std::vector<Variable* > parametros);
 		void printTree();
 	};
-}
+////////////////////////////////////
+		/*Classe para tratamento de strings*/
+	class String : public Node {
+	public:
 
+		const char * aux;
+
+		String ( const char * aux ) : aux ( aux ) {
+			tipo = Tipos::string;
+		}
+
+		void printTree();
+	};
+
+	class Substring : public Node {
+	public:
+		std::string id;
+		AST::Node* aux;
+		int inicio;
+		int fim;
+
+		Substring (std::string id, AST::Node* aux, int inicio, int fim ) : id(id), aux ( aux ), inicio(inicio), fim(fim) {
+			tipo = Tipos::string;
+		}
+
+		void printTree();
+	};
+
+	/*Classe para o tamanho de strings*/
+	class Tamanho : public Node {
+	public:
+		std::string id;
+		AST::Node * aux;
+
+		Tamanho ( std::string id, AST::Node* aux ) : id(id), aux ( aux ) {
+			tipo = Tipos::string;
+		}
+
+		void printTree();
+	};
+
+}

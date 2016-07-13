@@ -25,3 +25,86 @@
  */
 
 #include "itree.h"
+//--------------------------------------------------
+ITNode::ITNode() : _value ( Data ( 666 ) ) {
+	//_value = Data ( 666 );//Valor padrão - bem definido pra saber onde deu erro;
+}
+
+//--------------------------------------------------
+ITNode::NodeType ITNode::getType() {
+	return _type;
+}
+
+//--------------------------------------------------
+std::string ITNode::getId() {
+	return _id;
+}
+//--------------------------------------------------
+ITNode::OperationType ITNode::getOpType() {
+	return _opType;
+}
+//--------------------------------------------------
+Data ITNode::getData() {
+	return _value;
+}
+//--------------------------------------------------
+void ITNode::updateData ( Data newData ) {
+	this->_value = newData;
+}
+//--------------------------------------------------
+ITNode * ITNode::createBinOp ( ITNode::OperationType operation, ITNode * leftSon, ITNode * rightSon ) {
+	ITNode  * newNode = new ITNode;
+	newNode->_leftSon = leftSon;
+	newNode->_rightSon = rightSon;
+	newNode->_type = ITNode::binOp;
+	newNode->_opType = operation;
+	return newNode;
+}
+//--------------------------------------------------
+ITNode * ITNode::createValue ( Data valor ) {
+	ITNode * newNode = new ITNode;
+	newNode->_type = ITNode::value;
+	newNode->_value = Data ( valor );
+	return newNode;
+
+}
+//--------------------------------------------------
+ITNode * ITNode::createVar ( std::string id ) {
+	ITNode * newNode = new ITNode;
+	newNode->_id = std::string ( id );
+	newNode->_type = ITNode::variable;
+	return newNode;
+
+}
+//--------------------------------------------------
+ITNode * ITNode::createDefVar ( std::string id, Data::DataType tipo ) {
+	ITNode * newNode = new ITNode;
+	newNode->_id = id;
+	newNode->_value = Data::createDefault ( tipo );
+	newNode->_type = ITNode::variable;
+	return newNode;
+}
+//--------------------------------------------------
+
+ITNode * ITNode::createDef ( ITNode * leftSon ) {
+	ITNode * newNode = new ITNode;
+	newNode->_leftSon = leftSon;
+	newNode->_type = ITNode::def;
+	return newNode;
+
+}
+//--------------------------------------------------
+ITNode * ITNode::createAtrib ( ITNode * leftSon, ITNode * rightSon ) {
+	ITNode * newNode = new ITNode;
+	newNode->_leftSon = leftSon;
+	newNode->_rightSon = rightSon;
+	newNode->_type = ITNode::atrib;
+	return newNode;
+}
+//--------------------------------------------------
+
+
+
+
+
+

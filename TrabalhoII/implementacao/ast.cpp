@@ -293,6 +293,13 @@ void Retorno::printTree() {
 		ret->printTree();
 	}
 }
+///////////////
+/*Imprime o valor de uma variavel do tipo string.*/
+void String::printTree() {
+	std::string strs = std::string(aux);
+	strs = strs.substr(1,strs.size()-2);
+	std::cout << "(string " << strs << ")";
+}
 
 void Classe::printTree(){
 	std::cout << " classe de nome " << id << std::endl;
@@ -356,12 +363,12 @@ void Objeto::verificaParametros(std::string id, std::vector<Variable* > parametr
 	}
 }
 
+/*Imprime o valor de uma variavel do tipo string.*/
+void Substring::printTree() {
+	std::cout << "(substring da string: \"" <<id<< "\" inicio: "<<inicio<<" fim: "<<fim<<" end nodo: " <<aux << ")";
+}
 
-
-
-
-
-
-
-
-
+// Imprime o valor de uma variavel do tipo string.
+void Tamanho::printTree() {
+	std::cout << "(tamanho da string: \""<<id<<"\" end nodo: " <<aux << ")";
+}
