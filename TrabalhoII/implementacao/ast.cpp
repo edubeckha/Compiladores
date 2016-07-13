@@ -370,10 +370,10 @@ void Atributo::printTree(){
 
 /*Imprime o valor de uma variavel do tipo string.*/
 void Substring::printTree() {
-	std::cout << "(substring da string: \"" <<id<< "\" inicio: "<<inicio<<" fim: "<<fim<<" end nodo: " <<aux << ")";
+	std::cout << "(substring da string: \"" <<id<< "\" inicio: "<<inicio<<" fim: "<<fim<< ")";
 }
 
 // Imprime o valor de uma variavel do tipo string.
 void Tamanho::printTree() {
-	std::cout << "(tamanho da string: \""<<id<<"\" end nodo: " <<aux << ")";
+	std::cout << "(tamanho da string: \""<<id<< ")";
 }
