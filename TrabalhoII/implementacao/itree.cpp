@@ -27,6 +27,7 @@
 #include "itree.h"
 //--------------------------------------------------
 ITNode::ITNode() : _value ( Data ( 666 ) ) {
+	std::cout<<"new node"<<std::endl;
 	//_value = Data ( 666 );//Valor padrão - bem definido pra saber onde deu erro;
 }
 

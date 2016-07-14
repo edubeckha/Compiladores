@@ -503,7 +503,14 @@ Data Data::createDefault ( Data::DataType tipo ) {
 		std::cerr << "[ATENCAO - tipo de dado desconhecido.]" << std::endl;
 	}
 }
-
+//--------------------------------------------------
+Data  Data::subString ( int inicio, int fim ) {
+	return Data (this->dataString().substr(inicio, fim));
+}
+//--------------------------------------------------
+Data  Data::tamanho ( ) {
+	return Data ((int)this->dataString().length());
+}
 /*Biblioteca escrotissima de templates
 //switch tipo de dado
 	switch ( this->_type ) {

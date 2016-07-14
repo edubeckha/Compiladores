@@ -204,6 +204,22 @@ public:
 	 */
 	static Data createDefault ( DataType tipo );
 //--------------------------------------------------
+	/**
+	 * @brief substring de uma string
+	 * 
+	 * @param outro Dado formado pela substring 
+	 * @return Data
+	 */
+	Data subString ( int inicio, int fim );
+//--------------------------------------------------
+	/**
+	 * @brief tamanho de uma string
+	 * 
+	 * @param outro Dado formado pelo tamanho da string
+	 * @return Data
+	 */
+	Data tamanho ();
+//--------------------------------------------------
 	
 	
 //--------------------------------------------------
