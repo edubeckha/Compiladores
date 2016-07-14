@@ -27,7 +27,6 @@
 #include "itree.h"
 //--------------------------------------------------
 ITNode::ITNode() : _value ( Data ( 666 ) ) {
-	std::cout<<"new node"<<std::endl;
 	//_value = Data ( 666 );//Valor padrão - bem definido pra saber onde deu erro;
 }
 
@@ -103,9 +102,28 @@ ITNode * ITNode::createAtrib ( ITNode * leftSon, ITNode * rightSon ) {
 	return newNode;
 }
 //--------------------------------------------------
-
-
-
+// *************************************************
+// *************************************************
+// *************************************************
+// *************************************************
+// *************************************************
+// *************************************************
+ITNode * ITNode::Substring ( ITNode * leftSon, ITNode * rightSon ) {
+	ITNode * newNode = new ITNode;
+	newNode->_leftSon = leftSon;
+	newNode->_rightSon = rightSon;
+	newNode->_type = ITNode::substring;
+	return newNode;
+}
+//--------------------------------------------------
+ITNode * ITNode::Range ( ITNode * leftSon, ITNode * rightSon ) {
+	ITNode * newNode = new ITNode;
+	newNode->_leftSon = leftSon;
+	newNode->_rightSon = rightSon;
+	newNode->_type = ITNode::value;
+	return newNode;
+}
+//--------------------------------------------------
 
 
 

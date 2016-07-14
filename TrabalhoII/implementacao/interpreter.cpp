@@ -84,7 +84,14 @@ Data Interpreter::processNodeValue ( ITNode * node ) {
 
 	case ITNode::function:
 		_case ( return Data ( 666 ); );
-
+// ******************************************************
+// ******************************************************
+// ******************************************************
+	case ITNode::substring:
+		_case ( return Data ( node->Substring( node, node ) ); );
+// ******************************************************
+// ******************************************************
+// ******************************************************
 	case ITNode::value:
 		_case (
 			return node->getData();
@@ -140,7 +147,17 @@ std::string Interpreter::processNode ( ITNode * node ) {
 			node->updateData ( processNodeValue ( node ) );
 			return node->getData().toString();
 		);
-
+// ******************************************************
+// ******************************************************
+// ******************************************************
+	case ITNode::substring:
+		_case (
+			node->updateData ( processNodeValue ( node ) );
+			return node->getData().toString();
+		);
+// ******************************************************
+// ******************************************************
+// ******************************************************
 	case ITNode::function:
 		_case (
 			return "FUNCAO NAO IMPLEMENTADA!\n";

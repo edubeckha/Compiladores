@@ -37,7 +37,7 @@ public:
 	 * @brief Tipos de nodos
 	 *
 	 */
-	enum NodeType {variable, binOp, atrib, def, value, function};//Gonna grow!
+	enum NodeType {variable, binOp, atrib, def, value, function, substring};//Gonna grow!
 //--------------------------------------------------
 	/**
 	 * @brief Tipos de operacao
@@ -138,6 +138,24 @@ public:
 	 * @return ITNode*
 	 */
 	static ITNode * createAtrib (ITNode * leftSon, ITNode * rightSon);
+//--------------------------------------------------
+	/**
+	 * @brief Cria um nodo para obter a substring de uma variavel
+	 * 
+	 * @param leftSon A variavel a ser obtida a substring
+	 * @param rightSon range da substring
+	 * @return ITNode*
+	 */
+	static ITNode * Substring (ITNode * leftSon, ITNode * rightSon);
+//--------------------------------------------------
+	/**
+	 * @brief Cria um nodo para armazenar os valores de inicio e fim da substring
+	 * 
+	 * @param leftSon inicio da substring
+	 * @param rightSon fim da substring
+	 * @return ITNode*
+	 */
+	static ITNode * Range (ITNode * leftSon, ITNode * rightSon);
 //--------------------------------------------------
 
 
