@@ -332,7 +332,7 @@ void ConstrutorClasse::printTree(){
 /*Verifica os parametros do construtor de uma dada classe, no momento que um objeto dessa classe for criado*/
 void Objeto::verificaParametrosConstrutor(std::vector<Variable* > parametros){
 	if(parametros.size() != classePertencente->construtorClasse->parametros.size()){
-		std::cout << "Erro: esperava-se " << classePertencente->construtorClasse->parametros.size() << " parametros, mas recebeu-se " << parametros.size() << std::endl;
+		std::cout << "Erro: esperava-se " << classePertencente->construtorClasse->parametros.size() << " parametro(s), mas recebeu-se " << parametros.size() << std::endl;
 	return;
 	}
 
@@ -346,7 +346,7 @@ void Objeto::verificaParametrosConstrutor(std::vector<Variable* > parametros){
 /*Verifica os parametros da funcao passada na utilizacao da mesma assim for chamado essa funcao de um objeto previamente declarado*/
 void Objeto::verificaParametros(std::string id, std::vector<Variable* > parametros){
 	if(parametros.size() != classePertencente->tabelaSimbolos->useFunction(id)->parametros.size()){
-		std::cout << "Erro: esperava-se " << parametros.size() << " parametros, mas recebeu-se " << classePertencente->tabelaSimbolos->useFunction(id)->parametros.size() << std::endl;
+		std::cout << "Erro: esperava-se " << classePertencente->tabelaSimbolos->useFunction(id)->parametros.size() << " parametro(s), mas recebeu-se " << parametros.size() << std::endl;
 	return;
 	}
 
@@ -362,6 +362,7 @@ void Objeto::printTree(){
 	std::cout << "objeto de nome " << id << " da classe " << classePertencente->id << std::endl;
 }
 
+/*Imprime o nome do atributo e a classe a qual ele pertence*/
 void Atributo::printTree(){
 	std::cout << " atributo da classe " << classePertencente->id << " de nome " << var->id;
 }
