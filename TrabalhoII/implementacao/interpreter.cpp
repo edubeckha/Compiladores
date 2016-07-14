@@ -85,6 +85,32 @@ Data Interpreter::processNodeValue ( ITNode * node ) {
 	case ITNode::function:
 		_case ( return Data ( 666 ); );
 
+// ******************************************************
+// ******************************************************
+// ******************************************************
+	case ITNode::substring:
+		_case (
+			assert ( node->_leftSon->getType() == ITNode::variable );
+			assert ( node->_rightSon->getType() == ITNode::range );
+			int * intervalo = processNodeValue ( node->_rightSon ).dataRange();
+			std::string substring = processNodeValue ( node->_leftSon ).subString ( intervalo[0], intervalo[1] ).dataString();
+			return Data ( substring );
+		);
+
+	case ITNode::range:
+		_case (
+			assert ( node->_leftSon->getType() == ITNode::value );
+			assert ( node->_rightSon->getType() == ITNode::value );
+			assert ( processNodeValue ( node->_leftSon ).type() == Data::integer );
+			assert ( processNodeValue ( node->_rightSon ).type() == Data::integer );
+
+			return Data ( processNodeValue ( node->_leftSon ).dataInt(), processNodeValue ( node->_rightSon ).dataInt() );
+
+		);
+
+// ******************************************************
+// ******************************************************
+// ******************************************************
 	case ITNode::value:
 		_case (
 			return node->getData();
@@ -120,6 +146,9 @@ std::string Interpreter::processNode ( ITNode * node ) {
 		} else
 			if ( aNode->getData().arithmetic() && newData.arithmetic() ) {
 				atribuible = true;
+
+			} else {
+				std::cout << aNode->getData().type() << " - " << newData.type() << std::endl;
 			}
 
 
@@ -141,6 +170,22 @@ std::string Interpreter::processNode ( ITNode * node ) {
 			return node->getData().toString();
 		);
 
+// ******************************************************
+// ******************************************************
+// ******************************************************
+	case ITNode::substring:
+		_case (
+			node->updateData ( processNodeValue ( node ) );
+			return node->getData().toString();
+		);
+
+	case ITNode::range: {
+			_case ( return processNodeValue ( node ).toString(); );
+		}
+
+// ******************************************************
+// ******************************************************
+// ******************************************************
 	case ITNode::function:
 		_case (
 			return "FUNCAO NAO IMPLEMENTADA!\n";

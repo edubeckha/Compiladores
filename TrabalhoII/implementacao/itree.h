@@ -28,143 +28,163 @@
 #define ITREE_H
 //Local Includes
 #include "data.h"
+//Global Includes
 #include <string>
 
-class ITNode {
+class ITNode
+{
 public:
 
-	/**
-	 * @brief Tipos de nodos
-	 *
-	 */
-	enum NodeType {variable, binOp, atrib, def, value, function};//Gonna grow!
+    /**
+     * @brief Tipos de nodos
+     *
+     */
+    enum NodeType {variable, binOp, atrib, def, value, function, substring, range};//Gonna grow!
 //--------------------------------------------------
-	/**
-	 * @brief Tipos de operacao
-	 *
-	 */
-	enum OperationType {sum, min, mult, div, band, bor, eq};
+    /**
+     * @brief Tipos de operacao
+     *
+     */
+    enum OperationType {sum, min, mult, div, band, bor, eq};
 //--------------------------------------------------
-	/**
-	 * @brief Construtor Default
-	 *
-	 */
-	ITNode();
+    /**
+     * @brief Construtor Default
+     *
+     */
+    ITNode();
 //--------------------------------------------------
-	/**
-	 * @brief Retorna o tipo do nodo
-	 *
-	 * @return ITNode::NodeType
-	 */
-	NodeType getType();
+    /**
+     * @brief Retorna o tipo do nodo
+     *
+     * @return ITNode::NodeType
+     */
+    NodeType getType();
 //--------------------------------------------------
-	/**
-	 * @brief Obtém o Identificador
-	 *
-	 * @return std::string
-	 */
-	std::string getId();
+    /**
+     * @brief Obtém o Identificador
+     *
+     * @return std::string
+     */
+    std::string getId();
 //--------------------------------------------------
-	/**
-	 * @brief Obtém o tipo de operacao
-	 *
-	 * @return ITNode::OperationType
-	 */
-	OperationType getOpType();
+    /**
+     * @brief Obtém o tipo de operacao
+     *
+     * @return ITNode::OperationType
+     */
+    OperationType getOpType();
 //--------------------------------------------------
-	/**
-	 * @brief Obtém o dado associado ao nodo
-	 *
-	 * @return Data
-	 */
-	Data getData();
+    /**
+     * @brief Obtém o dado associado ao nodo
+     *
+     * @return Data
+     */
+    Data getData();
 //--------------------------------------------------
-	/**
-	 * @brief Atualiza o valor do nodo
-	 *
-	 * @param newData Novo valor
-	 * @return void
-	 */
-	void updateData ( Data newData );
+    /**
+     * @brief Atualiza o valor do nodo
+     *
+     * @param newData Novo valor
+     * @return void
+     */
+    void updateData ( Data newData );
 //--------------------------------------------------
-	/**
-	 * @brief Cria um nodo de operacao binaria
-	 *
-	 * @param operation Obperacao a ser executada
-	 * @param leftSon Filho a esquerda do nodo
-	 * @param rightSon Filho a direita do nodo
-	 * @return ITNode*
-	 */
-	static ITNode * createBinOp ( OperationType operation, ITNode * leftSon, ITNode * rightSon );
+    /**
+     * @brief Cria um nodo de operacao binaria
+     *
+     * @param operation Obperacao a ser executada
+     * @param leftSon Filho a esquerda do nodo
+     * @param rightSon Filho a direita do nodo
+     * @return ITNode*
+     */
+    static ITNode * createBinOp ( OperationType operation, ITNode * leftSon, ITNode * rightSon );
 //--------------------------------------------------
-	/**
-	 * @brief Cria um nodo tipo variável, somente com seu identificador
-	 *
-	 * @param id Identificador da variavel
-	 * @return ITNode*
-	 */
-	static ITNode * createVar ( std::string id );
-	//--------------------------------------------------
-	/**
-	 * @brief Cria um nodo tipo variável, somente com seu identificador
-	 *
-	 * @param id Identificador da variavel
-	 * @return ITNode*
-	 */
-	static ITNode * createDefVar ( std::__cxx11::string id, Data::DataType tipo );
+    /**
+     * @brief Cria um nodo tipo variável, somente com seu identificador
+     *
+     * @param id Identificador da variavel
+     * @return ITNode*
+     */
+    static ITNode * createVar ( std::string id );
+    //--------------------------------------------------
+    /**
+     * @brief Cria um nodo tipo variável, somente com seu identificador
+     *
+     * @param id Identificador da variavel
+     * @return ITNode*
+     */
+    static ITNode * createDefVar ( std::string id, Data::DataType tipo );
 //--------------------------------------------------
-	/**
-	 * @brief Cria um nodo tipo valor, com o valor associado
-	 *
-	 * @param valor Valor associado ao nodo
-	 * @return ITNode*
-	 */
-	static ITNode * createValue ( Data valor );
-//--------------------------------------------------
-
-	/**
-	 * @brief Cria um nodo de definicao de variavel
-	 *
-	 * @param leftSon Nodo da variavel a ser definida
-	 * @return ITNode*
-	 */
-	static ITNode * createDef ( ITNode * leftSon );
-//--------------------------------------------------
-	/**
-	 * @brief Cria um nodo para atribuicao de valor a variavel
-	 * 
-	 * @param leftSon A variavel a ser atribuido o valor
-	 * @param rightSon O valor a ser atribuido
-	 * @return ITNode*
-	 */
-	static ITNode * createAtrib (ITNode * leftSon, ITNode * rightSon);
+    /**
+     * @brief Cria um nodo tipo valor, com o valor associado
+     *
+     * @param valor Valor associado ao nodo
+     * @return ITNode*
+     */
+    static ITNode * createValue ( Data valor );
 //--------------------------------------------------
 
+    /**
+     * @brief Cria um nodo de definicao de variavel
+     *
+     * @param leftSon Nodo da variavel a ser definida
+     * @return ITNode*
+     */
+    static ITNode * createDef ( ITNode * leftSon );
+//--------------------------------------------------
+    /**
+     * @brief Cria um nodo para atribuicao de valor a variavel
+     *
+     * @param leftSon A variavel a ser atribuido o valor
+     * @param rightSon O valor a ser atribuido
+     * @return ITNode*
+     */
+    static ITNode * createAtrib ( ITNode * leftSon, ITNode * rightSon );
+//--------------------------------------------------
+    /**
+     * @brief Cria um nodo para obter a substring de uma variavel
+     *
+     * @param leftSon A variavel a ser obtida a substring
+     * @param rightSon range da substring
+     * @return ITNode*
+     */
+    static ITNode * createSubstring ( ITNode * leftSon, ITNode * rightSon );
+//--------------------------------------------------
+    /**
+     * @brief Cria um nodo para armazenar os valores de inicio e fim da substring
+     *
+     * @param leftSon inicio da substring
+     * @param rightSon fim da substring
+     * @return ITNode*
+     */
+    static ITNode * createRange ( ITNode * leftSon, ITNode * rightSon );
+//--------------------------------------------------
 
 
-	/**
-	 * @brief Filho a esquerda
-	 * 
-	 */
-	ITNode * _leftSon = nullptr;//Filho a esquerda
-	/**
-	 * @brief Filho a direita
-	 * 
-	 */
-	ITNode * _rightSon = nullptr;//Filho a direita
-	/**
-	 * @brief Nodo pai
-	 * 
-	 */
-	ITNode * _parent = nullptr;//Nodo pai
+
+    /**
+     * @brief Filho a esquerda
+     *
+     */
+    ITNode * _leftSon = nullptr;//Filho a esquerda
+    /**
+     * @brief Filho a direita
+     *
+     */
+    ITNode * _rightSon = nullptr;//Filho a direita
+    /**
+     * @brief Nodo pai
+     *
+     */
+    ITNode * _parent = nullptr;//Nodo pai
 
 
 
 private:
-	std::string _id;//Identificador do nodo, caso seja variavel ou funcao
-	Data _value;//Valor de interpretação do nodo.
-	NodeType _type;//Tipo do nodo
-	OperationType _opType;//Tipo de operacao do nodo (se for alguma operacao);
+    std::string _id;//Identificador do nodo, caso seja variavel ou funcao
+    Data _value;//Valor de interpretação do nodo.
+    NodeType _type;//Tipo do nodo
+    OperationType _opType;//Tipo de operacao do nodo (se for alguma operacao);
 
 
 };
