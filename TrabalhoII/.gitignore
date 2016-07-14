@@ -1,3 +1,9 @@
 parser.cpp
 parser.h
+<<<<<<< HEAD
 implementacao.kdev4
+=======
+implementacao.kdev4
+scanner.cpp 
+myparse
+>>>>>>> bestBrach

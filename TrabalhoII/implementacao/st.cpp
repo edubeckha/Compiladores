@@ -12,7 +12,7 @@ AST::Node * SymbolTable::newVariable ( std::string id, Tipos::Tipo tipoVariavel,
 	if ( checkId ( id ) ) {
 		yyerror ( "Erro semantico: redefinicao da variavel %s\n", id.c_str() );
 		retorno->temErro ( true );
-
+	
 	}
 
 	else {
