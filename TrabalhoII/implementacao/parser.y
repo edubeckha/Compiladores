@@ -152,7 +152,7 @@ declaracoes :
     	tipoVariavel  varlist T_FINALEXP { $$ = new AST::UniOp($2, Tipos::declaracao, $1);}
 
 		/*declaracao de arranjos*/
-        |tipoVariavel T_ID T_ARRA unexpr T_ARRAF T_FINALEXP {AST::Node* var = symtab->newVariable($2, $1, NULL, false); $$ = new AST::UniOp(new AST::Arranjo($4 ,var), Tipos::declaracao, $1);};
+        |tipoVariavel T_ARRA unexpr T_ARRAF T_ID  T_FINALEXP {AST::Node* var = symtab->newVariable($5, $1, NULL, false); $$ = new AST::UniOp(new AST::Arranjo($3 ,var), Tipos::declaracao, $1);};
 
         /*declaracao de funcoes*/
         | tipoVariavel T_ID novoEscopo T_PARA param T_PARAF mataEscopo T_FINALEXP {

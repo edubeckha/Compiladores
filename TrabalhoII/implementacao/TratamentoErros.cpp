@@ -4,7 +4,7 @@ using namespace Tipos;
 
 /*Verifica se dois nodos precisam realizar coersao de real para inteiro a partir do tipo dos mesmos*/
 bool Tipos::necessitaCoersao ( Tipo tipoNodoEsquerda, Tipo tipoNodoDireita ) {
-	if (tipoNodoEsquerda == string)
+	if (tipoNodoEsquerda == string || tipoNodoEsquerda == booleano)
 	{
 		return false;
 	}
@@ -63,7 +63,6 @@ Tipo Tipos::opBinaria ( Tipo tipoNodoEsquerda, Tipo tipoNodoDireita, Operation o
 		if ( tipoNodoEsquerda != tipoNodoDireita ) {
 			Tipos::tiposIncompativeis ( tipoNodoEsquerda, tipoNodoDireita, op );
 		}
-
 		return tipoNodoEsquerda;
 
 	case ande:
@@ -77,9 +76,24 @@ Tipo Tipos::opBinaria ( Tipo tipoNodoEsquerda, Tipo tipoNodoDireita, Operation o
 			break;
 		}
 
-		break;
+		return tipoNodoEsquerda;
+
+	case ore:
+		if ( tipoNodoEsquerda != booleano ) {
+			Tipos::erroTipagem ( ande, booleano, indefinido, tipoNodoEsquerda );
+			break;
+		}
+
+		if ( tipoNodoDireita != booleano ) {
+			Tipos::erroTipagem ( ande, booleano, indefinido, tipoNodoEsquerda );
+			break;
+		}
+
+		return tipoNodoEsquerda;
+
+
 	case chamadaFuncao:
-		break;
+		return tipoNodoEsquerda;
 
 	default:
 		if ( op == plus || op == sub || op == times || op == divi ) {

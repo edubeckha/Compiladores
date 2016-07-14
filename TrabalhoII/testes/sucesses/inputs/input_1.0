@@ -8,32 +8,18 @@ c = -(b);
 
 r = 8.3 * 2;
 
-a;
-b;
-c;
-r;
 
-x = FALSE;
-x;
-x = TRUE;
-x;
-x = ! x;
-x;
-x = x AND TRUE;
-x;
-x = x OR TRUE;
-x;
+x = false;
+x = true;
+x = ~ x;
+x = x && true;
+x = x || true;
 
 x = a == b;
-x;
 x = a != b;
-x;
 x = a > b;
-x;
 x = a < b;
-x;
 x = a >= b;
-x;
 x = a <= b;
-x;
+
 

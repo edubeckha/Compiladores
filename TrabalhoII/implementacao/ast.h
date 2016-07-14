@@ -72,6 +72,7 @@ namespace AST {
 		Node * right;
 		BinOp ( Node * l, Tipos::Operation op, Node * r ) :
 			left ( l ), right ( r ), op ( op ) {
+
 			tipo = Tipos::opBinaria ( left->tipo, right->tipo, op );
 		}
 		void printTree();

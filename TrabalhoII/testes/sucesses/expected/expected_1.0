@@ -1,15 +1,19 @@
-2
-5
--5
-16.6
-FALSE
-TRUE
-FALSE
-FALSE
-TRUE
-FALSE
-TRUE
-FALSE
-TRUE
-FALSE
-TRUE
+Declaracao de variavel inteira : a, b, c
+Declaracao de variavel real : r
+Declaracao de variavel booleana : x
+Atribuicao de valor para variavel inteira : a (((valor inteiro 20) (subtracao inteira) (valor inteiro 5)) (divisao inteira) (valor inteiro 7))
+Atribuicao de valor para variavel inteira : b ((valor inteiro 3) (soma inteira) variavel inteira : a)
+Atribuicao de valor para variavel inteira : c (menor unariointeiro)variavel inteira : b
+Atribuicao de valor para variavel real : r ((valor real 8.3) (multiplicacao real) (valor inteiro 2))
+Atribuicao de valor para variavel booleana : x (valor booleano FALSE)
+Atribuicao de valor para variavel booleana : x (valor booleano TRUE)
+Atribuicao de valor para variavel booleana : x (menor unario booleano)variavel booleana : x
+Atribuicao de valor para variavel booleana : x (variavel booleana : x (AND) (valor booleano TRUE))
+Atribuicao de valor para variavel booleana : x (variavel booleana : x (OR) (valor booleano TRUE))
+Atribuicao de valor para variavel booleana : x (variavel inteira : a (igual) variavel inteira : b)
+Atribuicao de valor para variavel booleana : x (variavel inteira : a (diferente) variavel inteira : b)
+Atribuicao de valor para variavel booleana : x (variavel inteira : a (maior booleano) variavel inteira : b)
+Atribuicao de valor para variavel booleana : x (variavel inteira : a (menor booleano) variavel inteira : b)
+Atribuicao de valor para variavel booleana : x (variavel inteira : a (maior ou igual booleano) variavel inteira : b)
+Atribuicao de valor para variavel booleana : x (variavel inteira : a (menor ou igual booleano) variavel inteira : b)
+
